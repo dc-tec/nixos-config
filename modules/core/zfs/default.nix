@@ -71,7 +71,7 @@
         ensureHomeExistsScript = lib.concatStringsSep "\n" (map
           (path:
             ''
-              mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path};'')
+              mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}; chmod 0700 /home/roelc/.ssh'')
           config.dc-tec.core.zfs.ensureHomeExists);
       in
       {

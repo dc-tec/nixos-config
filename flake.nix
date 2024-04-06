@@ -45,6 +45,16 @@
 
     in 
     {
+      devShells = forAllSystems
+       (system:
+        let pkgs =nixpkgs.legacyPackages.${system};
+        in 
+        {
+          default = pkgs.mkShell {
+            NIX_CONFIG = "experimental-features = nix-command flakes";
+            nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default ];
+          };
+        });
       formatter = forAllSystems (system: 
         let pkgs = nixpkgs.legacyPackages.${system};
         in pkgs.nixpkgs-fmt
