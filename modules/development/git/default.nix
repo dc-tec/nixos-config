@@ -1,13 +1,19 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, ... }:
+
+{
   options.dc-tec.development.git = {
     enable = lib.mkOption {
       default = true;
       example = false;
+    };
+    email = lib.mkOption {
+      default = "roel@decort.tech";
+      example = "example@example.com";
    };
   };
-  
+
   config =
-    let 
+    let
       base = {
         home.packages = with pkgs; [ gitAndTools.gitflow ];
         programs.git = {
@@ -22,6 +28,9 @@
         };
       };
     in
-    home-manager.users.roelc = { ... }: base;
-    home-manager.users.root = { ... }: base;
+    {
+      home-manager.users.roelc = { ... }: base;
+      home-manager.users.root = { ... }: base;
+    };
 }
+
