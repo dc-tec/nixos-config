@@ -1,8 +1,8 @@
 let 
-  legion = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIJ3XBgAWMTPR/gR2v5zOmKZKUs8RYkKp+MK7tOzPn9G";
+  legion = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL+Jr/yT9Jzazr0mRg1ep2alG6fuqqtZ94PowZC8yHjp";
   hosts = [ legion ];
 
-  roelc = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIBU9qmqJ/OBagFNN+xKNcFVcpA5tB+OKbT30yC0Y4aD" ];
+  roelc = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFMv5eUMUemXu9U7hmGIqLCjtTrSX+O60Avwx10FVZxm" ];
   users = roelc;
 
 in 

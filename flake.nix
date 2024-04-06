@@ -36,7 +36,7 @@
 
     sharedModules = [ 
       ({...}: { nix.extraOptions = "experimental-features = nix-command flakes"; })
-      agenix.nixosModules.default 
+      agenix.nixosModules.age 
       impermanence.nixosModule 
       home-manager.nixosModule
 

@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
 
-#  dc-tec.core.zfs.homeDateLinks = [{
+#  dc-tec.core.zfs.homeDataLinks = [{
 #    directory = ".ssh";
 #    mode = "0700";
 #  }];

@@ -92,9 +92,13 @@
           isNormalUser = true;
           home = "/home/roelc";
           extraGroups = [ "systemd-journal" ];
+	  hashedPasswordFile = config.age.secrets."secrets/passwords/users/roelc".path;
         };
+	root.hashedPasswordFile = config.age.secrets."secrets/passwords/users/root".path;
       };
     };
+    age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;
+    age.secrets."secrets/passwords/users/root".file = ../../secrets/passwords/users/root.age;
   };
 }
 
