@@ -30,7 +30,7 @@
     environment.persistence."${config.dc-tec.cachePrefix}" = {
       hideMounts = true;
       directories = config.dc-tec.core.zfs.systemCacheLinks;
-      users.roelc.directories = config.dc-tec.core.zfs.homeDataLinks;
+      users.roelc.directories = config.dc-tec.core.zfs.homeCacheLinks;
     };
 
     environment.persistence."${config.dc-tec.dataPrefix}" = {
@@ -71,7 +71,8 @@
         ensureHomeExistsScript = lib.concatStringsSep "\n" (map
           (path:
             ''
-              mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}'')
+              mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}
+            '')
           config.dc-tec.core.zfs.ensureHomeExists);
       in
       {
