@@ -56,6 +56,13 @@
         z-lua
         bat
         eza
+	bottom
+      ];
+    };
+
+    fonts = {
+      packages = with pkgs; [
+	(nerdfonts.override { fonts = [ "0xProto" ]; })
       ];
     };
     
