@@ -8,7 +8,7 @@
   dc-tec.core.zfs.systemDataLinks = [{
     directory = "/root/.ssh/";
     mode = "0700";
-  ]};
+  }];
 
   home-manager.users.roelc = { ... }: {
     programs.ssh = {

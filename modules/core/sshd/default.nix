@@ -1,7 +1,6 @@
  { config, lib, ... }: {
  
   dc-tec.core.zfs = {
-   ensureHomeExists = [ ".ssh" ]; 
    ensureSystemExists = [ "$config.dc-tec.dataPrefix}/etc/ssh" ];
   };
   
