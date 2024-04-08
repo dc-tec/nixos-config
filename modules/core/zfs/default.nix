@@ -59,7 +59,7 @@
 
     environment.systemPackages = [
       (pkgs.writeScriptBin "zfsdiff" ''
-        doas zfs diff $(config.dc-tec.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/roelc/"
+        doas zfs diff ${config.dc-tec.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/roelc/"
       '')
     ];
 
@@ -71,7 +71,7 @@
         ensureHomeExistsScript = lib.concatStringsSep "\n" (map
           (path:
             ''
-              mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}; chmod 0700 /home/roelc/.ssh'')
+              mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}'')
           config.dc-tec.core.zfs.ensureHomeExists);
       in
       {
