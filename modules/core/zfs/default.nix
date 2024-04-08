@@ -82,6 +82,7 @@
         ensureHomePathsExist = {
           text = ''
             mkdir -p /home/roelc/
+            chown roelc:users /home/roelc
             ${ensureHomeExistsScript}
           '';
           deps = [ "users" "groups" ];
