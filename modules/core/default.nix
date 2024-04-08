@@ -53,6 +53,9 @@
         fzf
         git
         vim
+        z 
+        bat
+        eza
       ];
     };
     
