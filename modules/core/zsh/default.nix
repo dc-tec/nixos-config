@@ -6,6 +6,53 @@ let
       pkgs.autojump # jump to recent directory. ex "j nix"
       pkgs.comma    # nix run shortcut. ex ", cowsay neato"
     ];
+    programs.zsh = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestions = {
+        enable = true;
+      };
+      autocd = true;
+      history = {
+        expireDuplicatesFirst = true;
+        path = "${config.dc-tec.core.zfs.homeCacheLinks}/zsh_history";
+      };
+
+      oh-my-zsh = {
+        enable = true;
+        theme = "robbyrussell";
+        plugins = [
+          "autojump"
+          "comma"
+          "git"
+          "golang"
+          "kubectl"
+          "colored-man-pages"
+          "ssh-agent"
+          "zsh-interactive-cd"
+          "history"
+          "history-substring-search"
+          "helm"
+          "ansible"
+          "z"
+          "docker"
+          "aws"
+          "terraform"
+          "fzf"
+        ];
+      };
+      sessionVariables = { DEFAULT_USER = "roelc"; };
+      shellAliases = {
+        home = "cd ~/";
+        gcl = "git clone";
+        cat = "bat --paging=never";
+        ls = "eza --icons --group-directories-first";
+        ll = "eza --icons --group-directories-first -lah";
+        grep = "rg";
+        top = "btm";
+        myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
+      };
+    };
   });
  
 in
