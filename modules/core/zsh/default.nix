@@ -22,7 +22,6 @@ let
         theme = "robbyrussell";
         plugins = [
           "autojump"
-          "comma"
           "git"
           "golang"
           "kubectl"
