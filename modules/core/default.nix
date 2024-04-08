@@ -53,7 +53,7 @@
         fzf
         git
         vim
-        z 
+        z-lua
         bat
         eza
       ];

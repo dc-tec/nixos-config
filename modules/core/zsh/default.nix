@@ -8,14 +8,11 @@ let
     ];
     programs.zsh = {
       enable = true;
-      enableCompletion = true;
-      autosuggestions = {
-        enable = true;
-      };
+      enableAutosuggestions = true;
       autocd = true;
       history = {
         expireDuplicatesFirst = true;
-        path = "${config.dc-tec.core.zfs.homeCacheLinks}/zsh_history";
+        path = "${config.dc-tec.cachePrefix}${home}/.local/share/zsh/zsh_history";
       };
 
       oh-my-zsh = {
