@@ -24,6 +24,7 @@
 
           extraConfig = {
             github.user = "dc-tec";
+            safe.directory = "/home/roelc/repos/nixos-config";
           };
         };
       };
