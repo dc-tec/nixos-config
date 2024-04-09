@@ -7,6 +7,7 @@
     ./ssh 
     ./sshd 
     ./network
+    ./nix
   ];
 
   options.dc-tec = {

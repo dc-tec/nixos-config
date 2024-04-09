@@ -1,7 +1,7 @@
  { config, lib, ... }: {
  
   dc-tec.core.zfs = {
-   ensureSystemExists = [ "$config.dc-tec.dataPrefix}/etc/ssh" ];
+   ensureSystemExists = [ "${config.dc-tec.dataPrefix}/etc/ssh" ];
   };
   
   services.openssh = {
