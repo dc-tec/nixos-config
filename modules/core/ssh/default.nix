@@ -14,7 +14,7 @@
     programs.ssh = {
       enable = true;
       hashKnownHosts = true;
-      userKnownHostsFile = "${config.dc-tec.cachePrefix}/home/roelc/.ssh/known_hosts";
+      userKnownHostsFile = "${config.dc-tec.dataPrefix}/home/roelc/.ssh/known_hosts";
       extraOptionOverrides = {
         IdentityFile = "${config.dc-tec.dataPrefix}/home/roelc/.ssh/id_ed25519"; 
       };

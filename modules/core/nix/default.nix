@@ -27,6 +27,18 @@ in
       };
     };
 
+    home-manager.users.roelc = { ... }: {
+      services.git-sync = {
+        enable = true;
+        repositories = {
+          "nixos-config" = {
+            uri = "git@github.com:dc-tec/nixos-config.git";
+            path = "/home/roelc/repos/nixos-config";
+          };
+        };
+      };
+    };
+
     nix = {
       gc = {
         automatic = true;
