@@ -4,10 +4,23 @@
  
   config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
-      enable = true;
+      iwd = {
+	enable = true;
+        settings = {
+          Settings = {
+            AutoConnect = true;
+          };
+        };
+      };
       environmentFile = config.age.secrets."secrets/network/wireless.age".path;
       networks = {
         "Unifi (AC)" = { psk = "@PSK_unifi@"; };
+      };
+    };
+    
+    networking.networkmanager = {
+      wifi = {
+        backend = "iwd";
       };
     };
 

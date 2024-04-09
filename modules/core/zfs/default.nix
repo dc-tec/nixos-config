@@ -87,6 +87,12 @@
           '';
           deps = [ "users" "groups" ];
         };
+        ensureHardwareIsUnblocked = {
+          text = ''
+            rfkill unblock all
+          '';
+          deps = [];
+        };
         agenixInstall.deps = [ "ensureSystemPathsExist" "ensureHomePathsExist" ];
       };
   };
