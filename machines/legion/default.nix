@@ -15,6 +15,9 @@
         encrypted = true;
         rootDataset = "rpool/local/root";
       }; 
+      wireless = {
+        enable = true;
+      };
     };
   };
 }

@@ -12,4 +12,6 @@ in
 
   "secrets/authorized_keys/roelc.age".publicKeys = hosts ++ users;
   "secrets/authorized_keys/root.age".publicKeys = hosts ++ users;
+
+  "secrets/network/wireless.age".publicKeys = hosts ++ users;
 }

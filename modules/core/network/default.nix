@@ -1,18 +1,18 @@
 { config, lib, ... }: {
 
-  options.dc-tec.core.network.enable = lib.mkEnableOption "wireless";
+  options.dc-tec.core.wireless.enable = lib.mkEnableOption "wireless";
  
-  config = lib.mkIf options.dc-tec.core.network.enable {
+  config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
       enable = true;
-      environmentFile = config.age.secrets."networks/wireless.age"l;
+      environmentFile = config.age.secrets."secrets/network/wireless.age".path;
       networks = {
         "Unifi (AC)" = { psk = "@PSK_unifi@"; };
+      };
     };
-  };
 
-    age.secrets."networks/wireless.age" = {
-      file = ../../../secrets/networks/wireless.age;
+    age.secrets."secrets/network/wireless.age" = {
+      file = ../../../secrets/network/wireless.age;
     };
   };
 }

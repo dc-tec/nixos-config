@@ -2,10 +2,11 @@
 
 {
   imports = [
-    ./zfs # ZFS configuration
-    ./zsh # ZSH configuration
-    ./ssh # SSH configuration
-    ./sshd # SSHD configuration
+    ./zfs 
+    ./zsh 
+    ./ssh 
+    ./sshd 
+    ./network
   ];
 
   options.dc-tec = {
