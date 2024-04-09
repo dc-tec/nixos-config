@@ -96,6 +96,18 @@
       timeZone = lib.mkDefault "Europe/Amsterdam";
     };
 
+    i18n = {
+      defaultLocale = "en_IE.UTF-8";
+      extraLocaleSettings = {
+        LC_TIME = "en_GB.UTF-8";
+      };
+      supportedLocales = [
+        "en_GB.UTF-8/UTF-8"
+        "en_IE.UTF-8/UTF-8"
+        "en_US.UTF-8/UTF-8"
+      ];
+    };
+
     users = {
       mutableUsers = false;
       defaultUserShell = pkgs.zsh;
