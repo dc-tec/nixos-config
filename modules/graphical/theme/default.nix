@@ -1,6 +1,12 @@
 { config, lib, pkgs, ... }: {
 
-  config = lib.mkIf config.dc-tec.grahpical.theme.enable {
+  options.dc-tec.graphical.theme = {
+    enable = lib.mkOption {
+      default = true;
+    };
+  };
+
+  config = lib.mkIf config.dc-tec.graphical.theme.enable {
     
     fonts = {
       fontDir = {
