@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }: {
 
-  config = {
+  config = lib.mkIf config.dc-tec.grahpical.theme.enable {
     
     fonts = {
       fontDir = {
