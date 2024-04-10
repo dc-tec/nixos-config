@@ -20,10 +20,8 @@ in
   config = {
     dc-tec.core = {
       zfs = {
-        homeCacheLinks = (lib.optional config.dc-tec.core.nix.enableDirenv
-          ".local/share/direnv")
-          ++ (lib.optional config.dc-tec.core.nix.enableDirenv
-          "/root/.local/share/direnv");
+        homeCacheLinks = (lib.optional config.dc-tec.core.nix.enableDirenv ".local/share/direnv");
+        systemCacheLinks = (lib.optional config.dc-tec.core.nix.enableDirenv "/root/.local/share/direnv");
       };
     };
 

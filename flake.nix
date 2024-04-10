@@ -22,9 +22,16 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
+   
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, agenix, impermanence, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, ... }@inputs:
   
   let
     inherit (self) outputs;

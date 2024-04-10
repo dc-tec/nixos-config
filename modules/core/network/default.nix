@@ -12,12 +12,19 @@
           };
         };
       };
+      interfaces = [ "wlan0" ];
       environmentFile = config.age.secrets."secrets/network/wireless.age".path;
       networks = {
         "Unifi (AC)" = { psk = "@PSK_unifi@"; };
       };
     };
-    
+   
+    networking.interfaces = {
+      wlan0 = {
+        useDHCP = true;
+      };
+    };
+ 
     networking.networkmanager = {
       wifi = {
         backend = "iwd";

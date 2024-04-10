@@ -1,5 +1,9 @@
 { ... }:
 
 {
-  imports = [ ./core ./development ]; # Import the core module
+  imports = [ 
+    ./core 
+    ./development 
+    ./graphical 
+  ]; 
 }

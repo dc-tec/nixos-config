@@ -66,9 +66,15 @@
       package = config.boot.kernelPackages.nvidiaPackages.latest;
       powerManagement.enable = true;
       open = true;
+      modesetting = {
+        enable = true;
+      };
     };
     bluetooth.enable = true;
   };
   services.fstrim.enable = true;
+
+  dc-tec.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
+  
 }
 

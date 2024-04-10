@@ -19,5 +19,15 @@
         enable = true;
       };
     };
+    graphical = {
+      enable = true;
+      laptop = true;
+      hyprland = {
+        enable = true;
+      };
+      xdg = {
+        enable = true;
+      };
+    };
   };
 }
