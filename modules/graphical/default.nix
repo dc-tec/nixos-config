@@ -3,6 +3,7 @@
   imports = [
     ./hyprland
     ./xdg
+    ./terminal
   ];
 
   options.dc-tec.graphical = {
@@ -14,6 +15,8 @@
     dc-tec = {
       graphical = {
         hyprland.enable = lib.mkDefault true;
+        terminal.enable = lib.mkDefault true;
+        xdg.enable = lib.mkDefault true;
       };
     };
   };
