@@ -31,7 +31,7 @@
       wayland.windowManager.hyprland = {
         enable = true;
         extraConfig = ''
-            monitor=HDMI-A-1,preferred,auto,1
+            monitor=,highres,auto,1
 
             input {
                 kb_layout = us,us

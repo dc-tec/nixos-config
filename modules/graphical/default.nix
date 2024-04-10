@@ -4,6 +4,7 @@
     ./hyprland
     ./xdg
     ./terminal
+    ./theme
   ];
 
   options.dc-tec.graphical = {
