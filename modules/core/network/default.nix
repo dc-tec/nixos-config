@@ -19,12 +19,6 @@
       };
     };
    
-    networking.interfaces = {
-      wlan0 = {
-        useDHCP = true;
-      };
-    };
- 
     networking.networkmanager = {
       wifi = {
         backend = "iwd";

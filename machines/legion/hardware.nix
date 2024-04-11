@@ -10,11 +10,12 @@
     };
     initrd = {
       availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" ];
-     kernelModules = [ ];
+      kernelModules = [ ];
     };
     kernelParams = [ "mitigations=off" ];
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
+    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   };
 
   fileSystems."/" =
