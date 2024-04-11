@@ -29,9 +29,16 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+   
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, ... }@inputs:
   
   let
     inherit (self) outputs;
@@ -44,8 +51,9 @@
     sharedModules = [ 
       ({...}: { nix.extraOptions = "experimental-features = nix-command flakes"; })
       agenix.nixosModules.age 
-      impermanence.nixosModule 
+      impermanence.nixosModule
       home-manager.nixosModule
+      nixvim.nixosModules.nixvim
 
       ./modules
     ];
@@ -54,7 +62,7 @@
     {
       devShells = forAllSystems
        (system:
-        let pkgs =nixpkgs.legacyPackages.${system};
+        let pkgs = nixpkgs.legacyPackages.${system};
         in 
         {
           default = pkgs.mkShell {

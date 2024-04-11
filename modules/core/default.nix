@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs,  ... }:
 
 {
   imports = [
@@ -8,6 +8,7 @@
     ./sshd 
     ./network
     ./nix
+    ./neovim
   ];
 
   options.dc-tec = {
