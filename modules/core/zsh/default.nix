@@ -51,9 +51,9 @@ let
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
         
         ## Neovim aliases
-        vim = "nix run ${home}/repos/nixos-config/templates/neovim";
-        nvim = "nix run ${home}/repos/nixos-config/templates/neovim";
-        vi = "nix run ${home}/repos/nixos-config/templates/neovim";
+        vim = "nix run ${home}/repos/nixos-config/pkgs/neovim";
+        nvim = "nix run ${home}/repos/nixos-config/pkgs/neovim";
+        vi = "nix run ${home}/repos/nixos-config/pkgs/neovim";
       };
     };
   });
