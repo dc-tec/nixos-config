@@ -23,7 +23,10 @@
 
     sharedModules = [ 
       ({...}: { 
-        nix.extraOptions = "experimental-features = nix-command flakes";
+        nix.extraOptions = ''
+	  experimental-features = nix-command flakes
+	  warn-diry = false
+      '';
       })
       
       agenix.nixosModules.age 
