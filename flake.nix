@@ -25,7 +25,7 @@
       ({...}: { 
         nix.extraOptions = ''
 	  experimental-features = nix-command flakes
-	  warn-diry = false
+	  warn-dirty = false
       '';
       })
       
