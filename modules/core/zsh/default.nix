@@ -9,7 +9,7 @@ let
     programs.zsh = {
       enable = true;
       autosuggestion = {
-	enable = true;
+	      enable = true;
       };
       autocd = true;
       history = {
@@ -49,7 +49,11 @@ let
         grep = "rg";
         top = "btm";
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
+        
+        ## Neovim aliases
+        vim = "nix run ${home}/repos/nixos-config/templates/neovim";
         nvim = "nix run ${home}/repos/nixos-config/templates/neovim";
+        vi = "nix run ${home}/repos/nixos-config/templates/neovim";
       };
     };
   });
