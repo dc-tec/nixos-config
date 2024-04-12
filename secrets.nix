@@ -1,17 +1,68 @@
-let 
-  legion = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL+Jr/yT9Jzazr0mRg1ep2alG6fuqqtZ94PowZC8yHjp";
-  hosts = [ legion ];
-
-  roelc = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQ7HSO8O+R1NoKTzdcqWrANt0przSD6ucWqY9G/tJN9" ];
-  users = roelc;
-
-in 
 {
-  "secrets/passwords/users/roelc.age".publicKeys = hosts ++ users;
-  "secrets/passwords/users/root.age".publicKeys = hosts ++ users;
+  description = "deCort.tech  NixOS Configuration";
 
-  "secrets/authorized_keys/roelc.age".publicKeys = hosts ++ users;
-  "secrets/authorized_keys/root.age".publicKeys = hosts ++ users;
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+   
+    home-manager.url = "github:nix-community/home-manager";
+    agenix.url = "github:ryantm/agenix";
+    impermanence.url = "github:nix-community/impermanence";
+    hyprland.url = "github:hyprwm/Hyprland";
+    nixvim.url = "github:nix-community/nixvim";
+  };
 
-  "secrets/network/wireless.age".publicKeys = hosts ++ users;
+  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, ... }@inputs:
+  
+  let
+    inherit (self) outputs;
+    forAllSystems = nixpkgs.lib.genAttrs [
+      "i686-linux" 
+    ];
+
+
+    sharedModules = [ 
+      ({...}: { 
+        nix.extraOptions = "experimental-features = nix-command flakes";
+      })
+      
+      agenix.nixosModules.age 
+      impermanence.nixosModule
+      home-manager.nixosModule
+      ./modules
+    ];
+    
+    nvim = nixvim.legacyPackages.x86_64-linux.makeNixvimWithModule {
+      module = import ./modules/core/neovim;
+    };
+ 
+  in 
+    {
+      devShells = forAllSystems
+       (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in 
+        {
+          default = pkgs.mkShell {
+            NIX_CONFIG = "experimental-features = nix-command flakes";
+            nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default ];
+          };
+        });
+
+      formatter = forAllSystems (system: 
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in pkgs.nixpkgs-fmt
+      );
+
+      overlays = import ./overlays { inherit inputs; };
+        
+      nixosConfigurations = {
+        legion = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs nvim; };
+          modules = sharedModules ++ [./machines/legion/default.nix];
+          x86_64-linux.neovim = nvim;
+        };
+      };
+    };
 }
+

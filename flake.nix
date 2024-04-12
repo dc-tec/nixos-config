@@ -9,10 +9,10 @@
     agenix.url = "github:ryantm/agenix";
     impermanence.url = "github:nix-community/impermanence";
     hyprland.url = "github:hyprwm/Hyprland";
-    nixvim.url = "github:nix-community/nixvim";
+    
   };
 
-  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, ... }@inputs:
   
   let
     inherit (self) outputs;
@@ -31,12 +31,12 @@
       home-manager.nixosModule
       ./modules
     ];
-    nvim = nixvim.legacyPackages.x86_64-linux.makeNixvimWithModule {
-      module = import ./modules/core/neovim;
-    };
- 
+    
   in 
     {
+      packages = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in import ./pkgs { inherit pkgs; });
+
       devShells = forAllSystems
        (system:
         let pkgs = nixpkgs.legacyPackages.${system};
@@ -54,7 +54,9 @@
       );
 
       overlays = import ./overlays { inherit inputs; };
-     
+
+      templates = import ./templates;
+        
       nixosConfigurations = {
         legion = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };

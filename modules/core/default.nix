@@ -61,10 +61,6 @@
       ];
     };
 
-    packages = {
-      x86_64-linux.neovim = nvim;
-    };
-
     fonts = {
       packages = with pkgs; [
 	(nerdfonts.override { fonts = [ "0xProto" ]; })
