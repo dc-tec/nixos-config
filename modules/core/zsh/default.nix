@@ -51,6 +51,9 @@ let
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
         
         ## Neovim aliases
+        vim = "nvim";
+        vi = "nvim";
+        nano = "nvim";
       };
     };
   });
