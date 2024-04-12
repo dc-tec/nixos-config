@@ -1,41 +1,15 @@
 {
   description = "deCort.tech  NixOS Configuration";
-  
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
    
-    home-manager = { 
-      url = "github:nix-community/home-manager";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-    
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-    
-    impermanence = {
-      url = "github:nix-community/impermanence";
-    };
-   
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
-   
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
+    home-manager.url = "github:nix-community/home-manager";
+    agenix.url = "github:ryantm/agenix";
+    impermanence.url = "github:nix-community/impermanence";
+    hyprland.url = "github:hyprwm/Hyprland";
+    nixvim.url = "github:nix-community/nixvim";
   };
 
   outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, ... }@inputs:
@@ -83,11 +57,14 @@
       overlays = import ./overlays { inherit inputs; };
      
       nvim_config = forAllSystems (system:
-        let  nvim = nixvim.legacyPackages.${system}.makeNixvimWithModule {
+        let  localNvim = nixvim.legacyPackages.${system}.makeNixvimWithModule {
                       module = import ./modules/core/neovim;
     		    };
-        in packages.${system}.neovim = nvim;
-      );
+        in {
+          packages = {
+            ${system}.neovim = localNvim;
+          };
+        });
 
       nixosConfigurations = {
         legion = nixpkgs.lib.nixosSystem {
@@ -97,3 +74,4 @@
       };
     };
 }
+
