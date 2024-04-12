@@ -23,7 +23,7 @@
 
     sharedModules = [ 
       ({...}: { 
-        nix.extraOptions = "experimental-features = nix-command flakes"; 
+        nix.extraOptions = "experimental-features = nix-command flakes";
       })
       
       agenix.nixosModules.age 
@@ -31,11 +31,10 @@
       home-manager.nixosModule
       ./modules
     ];
-
     nvim = nixvim.legacyPackages.x86_64-linux.makeNixvimWithModule {
       module = import ./modules/core/neovim;
     };
-    
+ 
   in 
     {
       devShells = forAllSystems
@@ -56,16 +55,6 @@
 
       overlays = import ./overlays { inherit inputs; };
      
-      nvim_config = forAllSystems (system:
-        let  localNvim = nixvim.legacyPackages.${system}.makeNixvimWithModule {
-                      module = import ./modules/core/neovim;
-    		    };
-        in {
-          packages = {
-            ${system}.neovim = localNvim;
-          };
-        });
-
       nixosConfigurations = {
         legion = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };

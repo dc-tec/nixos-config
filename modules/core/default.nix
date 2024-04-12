@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs,  ... }:
+{ config, lib, pkgs, inputs, nvim,  ... }:
 {
   imports = [
     ./zfs 
@@ -59,6 +59,10 @@
         eza
 	bottom
       ];
+    };
+
+    packages = {
+      x86_64-linux.neovim = nvim;
     };
 
     fonts = {
