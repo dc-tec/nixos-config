@@ -49,6 +49,7 @@ let
         grep = "rg";
         top = "btm";
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
+        nvim = "nix run ${home}/repos/nixos-config/templates/neovim";
       };
     };
   });
