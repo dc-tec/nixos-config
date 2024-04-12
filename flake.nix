@@ -34,9 +34,6 @@
     
   in 
     {
-      packages = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system}; in import ./pkgs { inherit pkgs; });
-
       devShells = forAllSystems
        (system:
         let pkgs = nixpkgs.legacyPackages.${system};
@@ -54,8 +51,6 @@
       );
 
       overlays = import ./overlays { inherit inputs; };
-
-      templates = import ./templates;
         
       nixosConfigurations = {
         legion = nixpkgs.lib.nixosSystem {
@@ -63,6 +58,6 @@
           modules = sharedModules ++ [./machines/legion/default.nix];
         };
       };
-    };
+      templates = import ./templates;
+   };
 }
-
