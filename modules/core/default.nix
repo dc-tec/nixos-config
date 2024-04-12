@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, nvim,  ... }:
+{ config, lib, pkgs, inputs, system,  ... }:
 {
   imports = [
     ./zfs 
@@ -41,6 +41,7 @@
     home-manager.users = { 
       roelc = { ... }: {
         home.stateVersion = config.dc-tec.stateVersion;
+        home.packages = [ inputs.nixvim.packages.x86_64-linux.default ];
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
       };
       root = { ... }: { home.stateVersion = config.dc-tec.stateVersion; };

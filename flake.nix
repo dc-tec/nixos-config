@@ -9,10 +9,11 @@
     agenix.url = "github:ryantm/agenix";
     impermanence.url = "github:nix-community/impermanence";
     hyprland.url = "github:hyprwm/Hyprland";
+    nixvim.url = "github:dc-tec/nixvim";
     
   };
 
-  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, ... }@inputs:
   
   let
     inherit (self) outputs;
@@ -24,9 +25,9 @@
     sharedModules = [ 
       ({...}: { 
         nix.extraOptions = ''
-	  experimental-features = nix-command flakes
-	  warn-dirty = false
-      '';
+	        experimental-features = nix-command flakes
+	        warn-dirty = false
+        '';
       })
       
       agenix.nixosModules.age 
@@ -61,6 +62,5 @@
           modules = sharedModules ++ [./machines/legion/default.nix];
         };
       };
-      templates = import ./templates;
    };
 }
