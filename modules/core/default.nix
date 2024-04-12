@@ -1,5 +1,4 @@
-{ config, lib, pkgs,  ... }:
-
+{ config, lib, pkgs, inputs,  ... }:
 {
   imports = [
     ./zfs 
@@ -8,7 +7,6 @@
     ./sshd 
     ./network
     ./nix
-    ./neovim
   ];
 
   options.dc-tec = {
@@ -125,5 +123,6 @@
     age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;
     age.secrets."secrets/passwords/users/root".file = ../../secrets/passwords/users/root.age;
   };
-}
 
+
+}

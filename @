@@ -43,7 +43,9 @@
   let
     inherit (self) outputs;
     forAllSystems = nixpkgs.lib.genAttrs [
+      "x86_64-linux" 
       "i686-linux" 
+      "aarch64-linux"
     ];
 
 
@@ -58,7 +60,7 @@
       ./modules
     ];
 
-    nvim = nixvim.legacyPackages.x86_64-linux.makeNixvimWithModule {
+    nvim = nixvim.legacyPackages.${system}.makeNixvimWithModule {
       module = import ./modules/core/neovim;
     };
     
@@ -74,7 +76,6 @@
             nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default ];
           };
         });
-
       formatter = forAllSystems (system: 
         let pkgs = nixpkgs.legacyPackages.${system};
         in pkgs.nixpkgs-fmt
@@ -82,13 +83,10 @@
 
       overlays = import ./overlays { inherit inputs; };
      
-      nvim_config = forAllSystems (system:
-        let  nvim = nixvim.legacyPackages.${system}.makeNixvimWithModule {
-                      module = import ./modules/core/neovim;
-    		    };
-        in packages.${system}.neovim = nvim;
-      );
-
+      packages = {
+        x86_64-linux.neovim = nvim; 
+      };
+  
       nixosConfigurations = {
         legion = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };

@@ -1,16 +1,5 @@
-{ config, lib, pkgs, nixvim, ... }: 
 {
   imports = [
-    ./settings.nix
+    ./settings.nix # basic configuration
   ];
-
-  home-manager.users.roelc = { pkgs,  ... }:
-  {
-    programs.nixvim = {
-      enable = true;
-    };
-  };
-
-  programs.nixvim.enable = true;
 }
-
