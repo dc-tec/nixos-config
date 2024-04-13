@@ -15,7 +15,7 @@
       interfaces = [ "wlan0" ];
       environmentFile = config.age.secrets."secrets/network/wireless.age".path;
       networks = {
-        "Unifi" = { psk = "@PSK_unifi@"; };
+        "UniFi" = { psk = "@PSK_unifi@"; };
       };
     };
    
