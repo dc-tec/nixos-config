@@ -5,18 +5,17 @@
   config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
       enable = true;
-      interfaces = [ "wlan0" ];
       environmentFile = config.age.secrets."secrets/network/wireless.age".path;
       networks = {
         "UniFi" = { psk = "@PSK_unifi@"; };
       };
     };
-   
-    networking.networkmanager = {
-      enable = true;
-      insertNameservers = [ "1.1.1.1" "1.0.0.1" ];
-      wifi = {
-        backend = "wpa_supplicant";
+    systemd.services."enable-wifi-on-boot" = {
+      description = "Enable Wifi during boot";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "/run/current-system/sw/bin/rfkill unblock all";
+        Type = "oneshot";
       };
     };
 

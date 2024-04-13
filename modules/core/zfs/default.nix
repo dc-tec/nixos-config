@@ -87,12 +87,6 @@
           '';
           deps = [ "users" "groups" ];
         };
-        rfkillUnblockWlan = {
-          text = ''
-          rfkill unblock wlan
-          '';
-          deps = [];
-        };
         agenixInstall.deps = [ "ensureSystemPathsExist" "ensureHomePathsExist" ];
       };
   };
