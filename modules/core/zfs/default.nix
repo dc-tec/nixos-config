@@ -87,9 +87,9 @@
           '';
           deps = [ "users" "groups" ];
         };
-        ensureHardwareIsUnblocked = {
+        rfkillUnblockWlan = {
           text = ''
-            rfkill unblock all
+          rfkill unblock wlan
           '';
           deps = [];
         };
