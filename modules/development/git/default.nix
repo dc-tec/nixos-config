@@ -15,7 +15,7 @@
   config =
     let
       base = {
-        home.packages = with pkgs; [ gitAndTools.gitflow ];
+        home.packages = with pkgs; [ lazygit ];
         programs.git = {
           enable = true;
 
