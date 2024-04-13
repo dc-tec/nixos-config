@@ -22,7 +22,24 @@
           userEmail = config.dc-tec.development.git.email;
           userName = "Roel de Cort";
 
+          includes = [
+            {
+              path = "/home/roelc/work/.gitconfig";
+              condition = "gitdir:/home/roelc/work/";
+            }
+          ];
+
           extraConfig = {
+            init.defaultBranch = "main";
+            push.autoSetupRemote = true;
+            pull.rebase = true;
+
+            url = {
+              "ssh://git@github.com/dc-tec" = {
+                insteadOf = "https://github.com/dc-tec";
+              };
+            };
+
             github.user = "dc-tec";
             safe.directory = "/home/roelc/repos/nixos-config";
           };

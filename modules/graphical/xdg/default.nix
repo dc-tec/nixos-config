@@ -5,7 +5,7 @@
 
   config = lib.mkIf config.dc-tec.graphical.xdg.enable {
     dc-tec.core.zfs.homeDataLinks = [ "documents" "music" "pictures" "videos" ];
-    dc-tec.core.zfs.homeCacheLinks = [ "downloads" "repos" ];
+    dc-tec.core.zfs.homeCacheLinks = [ "downloads" "repos" "work" ];
 
     home-manager.users.roelc = { pkgs, ... }: {
       home.packages = with pkgs; [ xdg-user-dirs xdg-utils ];
