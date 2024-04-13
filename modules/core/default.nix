@@ -51,6 +51,16 @@
       systemPackages = with pkgs; [
         wget
         curl
+        coreutils
+        direnv
+        dnsutils
+        lshw
+        moreutils
+        usbutils
+        nmap
+        util-linux
+        whois
+        unzip
         ripgrep
         fzf
         git
@@ -58,7 +68,7 @@
         z-lua
         bat
         eza
-	bottom
+	      bottom
       ];
     };
 
