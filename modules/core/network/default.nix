@@ -5,7 +5,7 @@
   config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
       iwd = {
-	enable = true;
+	      enable = true;
         settings = {
           Settings = {
             AutoConnect = true;
