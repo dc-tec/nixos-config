@@ -4,14 +4,7 @@
  
   config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
-      iwd = {
-	      enable = true;
-        settings = {
-          Settings = {
-            AutoConnect = true;
-          };
-        };
-      };
+      enable = true;
       interfaces = [ "wlan0" ];
       environmentFile = config.age.secrets."secrets/network/wireless.age".path;
       networks = {
@@ -23,7 +16,7 @@
       enable = true;
       insertNameservers = [ "1.1.1.1" "1.0.0.1" ];
       wifi = {
-        backend = "iwd";
+        backend = "wpa_supplicant";
       };
     };
 
