@@ -7,10 +7,6 @@
     home-manager.users.roelc = { pkgs, ... }: {
       programs.kitty = {
         enable = true;
-        font = {
-          name = "0xProto";
-          size = 10;
-        };
         settings = {
           enable_audio_bell = false;
           visual_bell_duration = "0.25";

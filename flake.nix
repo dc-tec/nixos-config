@@ -5,15 +5,19 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
    
+    # Flakes 
     home-manager.url = "github:nix-community/home-manager";
     agenix.url = "github:ryantm/agenix";
     impermanence.url = "github:nix-community/impermanence";
     hyprland.url = "github:hyprwm/Hyprland";
+    nix-colors.url = "github:misterio77/nix-colors";
+
+    # Custom NixVim Flake
     nixvim.url = "github:dc-tec/nixvim";
     
   };
 
-  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, agenix, impermanence, hyprland, nixvim, nix-colors, ... }@inputs:
   
   let
     inherit (self) outputs;
@@ -33,6 +37,7 @@
       agenix.nixosModules.age 
       impermanence.nixosModule
       home-manager.nixosModule
+
       ./modules
     ];
     

@@ -7,6 +7,8 @@
     ./sshd 
     ./network
     ./nix
+
+    inputs.nix-colors.homeManagerModules.default
   ];
 
   options.dc-tec = {
@@ -37,6 +39,8 @@
         randomizedDelaySec = "15min";
       };
     };
+
+    colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
 
     home-manager.users = { 
       roelc = { ... }: {
@@ -72,19 +76,6 @@
       ];
     };
 
-    fonts = {
-      enableDefaultPackages = true;
-      packages = with pkgs; [
-	     (nerdfonts.override { fonts = [ "0xProto" ]; })
-      ];
-      fontconfig = {
-        defaultFonts = {
-          serif = [ "0xProto" ];
-          sansSerif = [ "0xProto" ];
-          monospace = [ "0xProto" ];
-        };
-      };
-    };
     
     security = { 
       sudo = {
@@ -134,9 +125,9 @@
           isNormalUser = true;
           home = "/home/roelc";
           extraGroups = [ "systemd-journal" ];
-	  hashedPasswordFile = config.age.secrets."secrets/passwords/users/roelc".path;
+	        hashedPasswordFile = config.age.secrets."secrets/passwords/users/roelc".path;
         };
-	root.hashedPasswordFile = config.age.secrets."secrets/passwords/users/root".path;
+	    root.hashedPasswordFile = config.age.secrets."secrets/passwords/users/root".path;
       };
     };
     age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;

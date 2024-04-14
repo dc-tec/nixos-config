@@ -1,10 +1,11 @@
-{ config, lib, pkgs, ... }: {
+{ inputs, config, lib, pkgs, ... }: {
 
   imports = [
     ./hyprland
     ./xdg
     ./terminal
     ./theme
+
   ];
 
   options.dc-tec.graphical = {
