@@ -73,9 +73,17 @@
     };
 
     fonts = {
+      enableDefaultPackages = true;
       packages = with pkgs; [
-	(nerdfonts.override { fonts = [ "0xProto" ]; })
+	     (nerdfonts.override { fonts = [ "0xProto" ]; })
       ];
+      fontconfig = {
+        defaultFonts = {
+          serif = [ "0xProto" ];
+          sansSerif = [ "0xProto" ];
+          monospace = [ "0xProto" ];
+        };
+      };
     };
     
     security = { 
