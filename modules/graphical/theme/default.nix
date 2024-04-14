@@ -67,6 +67,10 @@
         settings = {
           disable_ligatures = "cursor";
      
+          # Font config
+          font_family = "0xProto";
+          bold_font = "0xProto";
+
           # The basic colors
           foreground = "#${config.colorScheme.palette.base05}";
           background = "#${config.colorScheme.palette.base00}";
