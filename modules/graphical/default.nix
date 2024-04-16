@@ -5,7 +5,7 @@
     ./xdg
     ./terminal
     ./theme
-
+    ./starship
   ];
 
   options.dc-tec.graphical = {

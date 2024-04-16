@@ -6,11 +6,13 @@ let
       pkgs.autojump # jump to recent directory. ex "j nix"
       pkgs.comma    # nix run shortcut. ex ", cowsay neato"
     ];
+
     programs.zsh = {
       enable = true;
       autosuggestion = {
 	      enable = true;
       };
+
       autocd = true;
       history = {
         expireDuplicatesFirst = true;
@@ -39,7 +41,9 @@ let
           "fzf"
         ];
       };
-      sessionVariables = { DEFAULT_USER = "roelc"; };
+      sessionVariables = { 
+        DEFAULT_USER = "roelc"; 
+      };
       shellAliases = {
         home = "cd ~/";
         gcl = "git clone";

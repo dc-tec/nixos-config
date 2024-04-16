@@ -7,6 +7,7 @@
     ./sshd 
     ./network
     ./nix
+    ./fzf
 
     inputs.nix-colors.homeManagerModules.default
   ];
@@ -66,7 +67,6 @@
         whois
         unzip
         ripgrep
-        fzf
         git
         vim
         z-lua
