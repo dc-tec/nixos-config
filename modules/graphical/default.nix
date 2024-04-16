@@ -2,6 +2,7 @@
 
   imports = [
     ./hyprland
+    ./waybar
     ./xdg
     ./terminal
     ./theme
@@ -17,6 +18,7 @@
     dc-tec = {
       graphical = {
         hyprland.enable = lib.mkDefault true;
+        waybar.enable = lib.mkDefault true;
         terminal.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;

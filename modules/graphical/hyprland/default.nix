@@ -14,13 +14,24 @@
     xdg = {
       portal = {
         enable = true;
+        wlr.enable = true;
         extraPortals = with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-hyprland ];
+      };
+    };
+
+    services.greetd = {
+      enable = true;
+      settings = rec {
+        initial_session = {
+          command = "${pkgs.hyprland}/bin/Hyprland";
+          user = "roelc";
+        };
+        default_session = initial_session;
       };
     };
 
     home-manager.users.roelc = { pkgs, ... }: {
       home.packages = with pkgs; [ 
-        waybar
         swaybg
         swayidle
         swaylock
@@ -180,6 +191,9 @@
         };
         systemd = {
           enable = true;
+          extraCommands = [
+            "systemctl --user start ${pkgs.waybar}/bin/waybar"
+          ];
         };
       };
     };
