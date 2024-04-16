@@ -8,6 +8,7 @@
     ./network
     ./nix
     ./fzf
+    ./starship
 
     inputs.nix-colors.homeManagerModules.default
   ];
