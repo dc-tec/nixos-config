@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to my NixOS Configuration Repository</h1>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Version-69-420-0-orange" alt="Version Deez-Nutzzzz">
+    <img src="https://img.shields.io/badge/Version-69.420.0-orange" alt="Version Deez-Nutzzzz">
     <img src="https://img.shields.io/badge/NixOS-5277C3?style=for-the-badge&logo=nixos&logoColor=white" alt="Version Yo Mama">
 </p>
 
