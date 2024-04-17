@@ -1,8 +1,7 @@
 { inputs, config, lib, pkgs, ... }: {
 
   imports = [
-    ./hyprland
-    ./waybar
+    ./desktop
     ./xdg
     ./terminal
     ./theme
