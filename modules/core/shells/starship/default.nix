@@ -7,6 +7,7 @@ let
       enableZshIntegration = true;
       settings = {
         add_newline = false;
+        command_timeout = 1000;
         format = lib.concatStrings [
           "$directory$character"
         ];
@@ -18,7 +19,7 @@ let
         line_break = {
           disabled = true;
         };
-        # TODO: use nix-os colors
+        # TODO: use nix-colors
         palettes = {
           catppuccin_mocha = {
             rosewater = "#f5e0dc";
