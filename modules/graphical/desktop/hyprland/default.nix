@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ config, lib, pkgs, inputs, ... }: {
 
   options.dc-tec.graphical.hyprland = {
     enable = lib.mkEnableOption "hyprlandwm";
@@ -23,8 +23,8 @@
       enable = true;
       settings = rec {
         initial_session = {
-          command = "${pkgs.hyprland}/bin/Hyprland";
-          user = "roelc";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session --sessions ${inputs.hyprland.packages.${pkgs.system}.hyprland}/share/wayland-sessions";
+          user = "greeter";
         };
         default_session = initial_session;
       };
@@ -53,6 +53,8 @@
         xwayland = {
           enable = true;
         };
+        package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+
         settings = {
           "$terminal" = "kitty";
           "$mod" = "SUPER";
@@ -95,10 +97,10 @@
 
           animations = {
             enabled = true;
-            bezier = "myBezier, 0.05, 0.9, 0.1, 1.0";
+            bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
             animation = [
               "windows, 1, 7, myBezier"
-              "windowsOut, 1, 7, default, popin 80%"
+              "windowsOut, 1, 7, default, popin 90%"
               "border, 1, 10, default"
               "borderangle, 1, 8, default"
               "fade, 1, 7, default"
