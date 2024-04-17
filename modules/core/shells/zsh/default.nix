@@ -28,7 +28,6 @@ let
           "golang"
           "kubectl"
           "colored-man-pages"
-          "ssh-agent"
           "zsh-interactive-cd"
           "history"
           "history-substring-search"
@@ -38,7 +37,6 @@ let
           "docker"
           "aws"
           "terraform"
-          "fzf"
         ];
       };
       sessionVariables = { 

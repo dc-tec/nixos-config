@@ -9,6 +9,8 @@
     settings = {
       PasswordAuthentication = false;
       PermitRootLogin = "prohibit-password";
+      # Remove stale sockets
+      StreamLocalBindUnlink = "yes";
     };
 
     hostKeys = [
