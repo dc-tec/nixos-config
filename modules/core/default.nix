@@ -1,8 +1,13 @@
-{ config, lib, pkgs, inputs, system,  ... }:
 {
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ./nix
-    ./network
+    ./connectivity
     ./shells
     ./storage
     ./utils
@@ -22,16 +27,16 @@
     cachePrefix = lib.mkOption {
       example = "/cache";
     };
-  }; 
+  };
 
-  config = { 
+  config = {
     home-manager = {
       useGlobalPkgs = true;
     };
 
     system = {
       stateVersion = config.dc-tec.stateVersion;
-      autoUpgrade = { 
+      autoUpgrade = {
         enable = lib.mkDefault true;
         flake = "github:dc-tec/nixos-config";
         dates = "01/04:00";
@@ -41,13 +46,13 @@
 
     colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
 
-    home-manager.users = { 
-      roelc = { ... }: {
+    home-manager.users = {
+      roelc = {...}: {
         home.stateVersion = config.dc-tec.stateVersion;
-        home.packages = [ inputs.nixvim.packages.x86_64-linux.default ];
+        home.packages = [inputs.nixvim.packages.x86_64-linux.default];
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
       };
-      root = { ... }: { home.stateVersion = config.dc-tec.stateVersion; };
+      root = {...}: {home.stateVersion = config.dc-tec.stateVersion;};
     };
 
     environment = {
@@ -70,22 +75,23 @@
         z-lua
         bat
         eza
-	      bottom
+        bottom
       ];
     };
 
-    
-    security = { 
+    security = {
       sudo = {
         enable = false;
       };
 
       doas = {
         enable = true;
-        extraRules = [{
-          users = [ "roelc" ];
-          noPass = true;
-        }]; 
+        extraRules = [
+          {
+            users = ["roelc"];
+            noPass = true;
+          }
+        ];
       };
 
       polkit = {
@@ -122,15 +128,13 @@
         roelc = {
           isNormalUser = true;
           home = "/home/roelc";
-          extraGroups = [ "systemd-journal" ];
-	        hashedPasswordFile = config.age.secrets."secrets/passwords/users/roelc".path;
+          extraGroups = ["systemd-journal"];
+          hashedPasswordFile = config.age.secrets."secrets/passwords/users/roelc".path;
         };
-	    root.hashedPasswordFile = config.age.secrets."secrets/passwords/users/root".path;
+        root.hashedPasswordFile = config.age.secrets."secrets/passwords/users/root".path;
       };
     };
     age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;
     age.secrets."secrets/passwords/users/root".file = ../../secrets/passwords/users/root.age;
   };
-
-
 }
