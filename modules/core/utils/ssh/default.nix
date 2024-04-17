@@ -10,6 +10,7 @@
     mode = "0700";
   }];
 
+  # TODO: Configure SSH Agent
   home-manager.users.roelc = { ... }: {
     programs.ssh = {
       enable = true;

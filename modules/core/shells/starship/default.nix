@@ -18,7 +18,7 @@ let
         line_break = {
           disabled = true;
         };
-
+        # TODO: use nix-os colors
         palettes = {
           catppuccin_mocha = {
             rosewater = "#f5e0dc";

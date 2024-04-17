@@ -1,14 +1,11 @@
 { config, lib, pkgs, inputs, system,  ... }:
 {
   imports = [
-    ./zfs 
-    ./zsh 
-    ./ssh 
-    ./sshd 
-    ./network
     ./nix
-    ./fzf
-    ./starship
+    ./network
+    ./shells
+    ./storage
+    ./utils
 
     inputs.nix-colors.homeManagerModules.default
   ];
