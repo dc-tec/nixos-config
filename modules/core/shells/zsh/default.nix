@@ -1,16 +1,18 @@
-{ config, lib, pkgs, ... }:
-
-let
-  base = (home: {
+{
+  config,
+  pkgs,
+  ...
+}: let
+  base = home: {
     home.packages = [
       pkgs.autojump # jump to recent directory. ex "j nix"
-      pkgs.comma    # nix run shortcut. ex ", cowsay neato"
+      pkgs.comma # nix run shortcut. ex ", cowsay neato"
     ];
 
     programs.zsh = {
       enable = true;
       autosuggestion = {
-	      enable = true;
+        enable = true;
       };
 
       autocd = true;
@@ -39,8 +41,8 @@ let
           "terraform"
         ];
       };
-      sessionVariables = { 
-        DEFAULT_USER = "roelc"; 
+      sessionVariables = {
+        DEFAULT_USER = "roelc";
       };
       shellAliases = {
         home = "cd ~/";
@@ -51,20 +53,18 @@ let
         grep = "rg";
         top = "btm";
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
-        
+
         ## Neovim aliases
         vim = "nvim";
         vi = "nvim";
         nano = "nvim";
       };
     };
-  });
- 
-in
-{
+  };
+in {
   programs.zsh.enable = true;
-  dc-tec.core.zfs.systemCacheLinks = [ "/root/.local/share/autojump" ];
-  dc-tec.core.zfs.homeCacheLinks = [ ".local/share/autojump" ];
-  home-manager.users.roelc = { ... }: (base "/home/roelc");
-  home-manager.users.root = { ... }: (base "/root");
+  dc-tec.core.zfs.systemCacheLinks = ["/root/.local/share/autojump"];
+  dc-tec.core.zfs.homeCacheLinks = [".local/share/autojump"];
+  home-manager.users.roelc = {...}: (base "/home/roelc");
+  home-manager.users.root = {...}: (base "/root");
 }

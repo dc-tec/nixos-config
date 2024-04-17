@@ -1,7 +1,5 @@
-{ config, lib, ... }:
-
-let
-  base = (home: {
+{lib, ...}: let
+  base = home: {
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
@@ -11,7 +9,7 @@ let
         format = lib.concatStrings [
           "$directory$character"
         ];
-        
+
         right_format = lib.concatStrings [
           "$all"
         ];
@@ -52,9 +50,7 @@ let
         };
       };
     };
-  });
- 
-in
-{
-  home-manager.users.roelc = { ... }: (base "/home/roelc");
+  };
+in {
+  home-manager.users.roelc = {...}: (base "/home/roelc");
 }

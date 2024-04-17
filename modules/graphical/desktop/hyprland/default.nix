@@ -1,21 +1,26 @@
-{ config, lib, pkgs, inputs, ... }: {
-
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: {
   options.dc-tec.graphical.hyprland = {
     enable = lib.mkEnableOption "hyprlandwm";
     top-bar = lib.mkOption {
-      default = { };
+      default = {};
       type = lib.types.attrs;
     };
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
-    services.dbus.packages = with pkgs; [ dconf ];
+    services.dbus.packages = with pkgs; [dconf];
 
     xdg = {
       portal = {
         enable = true;
         wlr.enable = true;
-        extraPortals = with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-hyprland ];
+        extraPortals = with pkgs; [xdg-desktop-portal-gtk xdg-desktop-portal-hyprland];
       };
     };
 
@@ -30,8 +35,8 @@
       };
     };
 
-    home-manager.users.roelc = { pkgs, ... }: {
-      home.packages = with pkgs; [ 
+    home-manager.users.roelc = {pkgs, ...}: {
+      home.packages = with pkgs; [
         swaybg
         swayidle
         swaylock
@@ -43,7 +48,7 @@
         slurp
         mako
       ];
-    
+
       services = {
         cliphist.enable = true;
       };
@@ -58,12 +63,12 @@
         settings = {
           "$terminal" = "kitty";
           "$mod" = "SUPER";
-          
+
           monitor = [
-          "eDP-1, 1920x1080, 0x0, 1" 
+            "eDP-1, 1920x1080, 0x0, 1"
           ];
 
-          general = with config.colorScheme.colors; {
+          general = {
             gaps_in = 4;
             gaps_out = 6;
             border_size = 2;
@@ -107,17 +112,17 @@
               "workspaces, 1, 6, default"
             ];
           };
-      
+
           dwindle = {
             pseudotile = true;
             preserve_split = true;
             no_gaps_when_only = 1;
           };
-          
+
           master = {
             new_is_master = true;
           };
-          
+
           misc = {
             disable_hyprland_logo = true;
             disable_splash_rendering = true;
@@ -164,7 +169,7 @@
             "$mod SHIFT, 8, movetoworkspace,8"
             "$mod SHIFT, 9, movetoworkspace,9"
             "$mod SHIFT, 0, movetoworkspace,10"
-            
+
             # Navigation
             "$mod, h, movefocus, l"
             "$mod, l, movefocus, r"
@@ -178,17 +183,17 @@
           ];
 
           env = [
-            "NIXOS_OZONE_WL,1" 
+            "NIXOS_OZONE_WL,1"
             "_JAVA_AWT_WM_NONREPARENTING,1"
             "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
             "QT_QPA_PLATFORM,wayland"
             "SDL_VIDEODRIVER,wayland"
-            "GDK_BACKEND,wayland"            
+            "GDK_BACKEND,wayland"
             "LIBVA_DRIVER_NAME,nvidia"
             "XDG_SESSION_TYPE,wayland"
             "GBM_BACKEND,nvidia-drm"
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-            "WLR_NO_HARDWARE_CURSORS,1"            
+            "WLR_NO_HARDWARE_CURSORS,1"
           ];
         };
         systemd = {
