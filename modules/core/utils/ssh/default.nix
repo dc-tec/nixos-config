@@ -14,11 +14,16 @@
   home-manager.users.roelc = { ... }: {
     programs.ssh = {
       enable = true;
-      startAgent = true;
       hashKnownHosts = true;
       userKnownHostsFile = "${config.dc-tec.dataPrefix}/home/roelc/.ssh/known_hosts";
       extraOptionOverrides = {
         IdentityFile = "${config.dc-tec.dataPrefix}/home/roelc/.ssh/id_ed25519"; 
+      };
+    };
+
+    services = {
+      ssh-agent = {
+        enable = true;
       };
     };
   };
