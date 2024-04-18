@@ -1,5 +1,5 @@
-{ config, lib, ... }: {
-  imports = [ ./git ];
+{lib, ...}: {
+  imports = [./git];
 
   config = {
     dc-tec.development = {

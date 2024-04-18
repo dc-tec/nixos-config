@@ -1,5 +1,8 @@
-{ inputs, config, lib, pkgs, ... }: {
-
+{
+  config,
+  lib,
+  ...
+}: {
   imports = [
     ./desktop
     ./xdg

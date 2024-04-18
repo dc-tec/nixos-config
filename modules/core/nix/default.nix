@@ -1,5 +1,8 @@
-{ config, lib, pkgs, inputs, ... }:
-let
+{
+  config,
+  lib,
+  ...
+}: let
   baseDirenv = {
     programs.direnv = {
       enable = true;
@@ -7,21 +10,20 @@ let
       nix-direnv.enable = true;
     };
   };
-in
-{
+in {
   options.dc-tec.core.nix = {
-    enableDirenv = lib.mkOption { default = true; };
+    enableDirenv = lib.mkOption {default = true;};
     unfreePackages = lib.mkOption {
-      default = [ ];
-      example = [ "teams" ];
+      default = [];
+      example = ["teams"];
     };
   };
 
   config = {
     dc-tec.core = {
       zfs = {
-        homeCacheLinks = (lib.optional config.dc-tec.core.nix.enableDirenv ".local/share/direnv");
-        systemCacheLinks = (lib.optional config.dc-tec.core.nix.enableDirenv "/root/.local/share/direnv");
+        homeCacheLinks = lib.optional config.dc-tec.core.nix.enableDirenv ".local/share/direnv";
+        systemCacheLinks = lib.optional config.dc-tec.core.nix.enableDirenv "/root/.local/share/direnv";
       };
     };
 

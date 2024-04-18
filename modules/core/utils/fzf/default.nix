@@ -1,7 +1,5 @@
-{ config, lib, pkgs, ... }:
-
-let
-  base = (home: {
+{config, ...}: let
+  base = home: {
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;
@@ -24,9 +22,7 @@ let
         header = "#${config.colorScheme.palette.base00}";
       };
     };
-  });
-
-in
-{
-  home-manager.users.roelc = { ... }: (base "/home/roelc");
+  };
+in {
+  home-manager.users.roelc = {...}: (base "/home/roelc");
 }
