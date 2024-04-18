@@ -24,14 +24,19 @@
       };
     };
 
-    services.greetd = {
-      enable = true;
-      settings = rec {
-        initial_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session --sessions ${inputs.hyprland.packages.${pkgs.system}.hyprland}/share/wayland-sessions";
-          user = "greeter";
+    services = {
+      displayManager = {
+        sddm = {
+          enable = true;
+          wayland = {
+            enable = true;
+          };
+          settings = {
+            Wayland = {
+              SessionDir = "${inputs.hyprland.packages.${pkgs.system}.hyprland}/share/wayland-sessions";
+            };
+          };
         };
-        default_session = initial_session;
       };
     };
 
@@ -121,7 +126,7 @@
           dwindle = {
             pseudotile = true;
             preserve_split = true;
-            no_gaps_when_only = 1;
+            no_gaps_when_only = 0;
           };
 
           master = {
