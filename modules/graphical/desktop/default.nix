@@ -1,8 +1,6 @@
-{ ... }: {
-
+{...}: {
   imports = [
     ./hyprland
     ./waybar
   ];
-
 }
