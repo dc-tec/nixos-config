@@ -148,14 +148,8 @@
             color: @yellow;
           }
 
-          #backlight, #battery {
-              border-radius: 0;
-          }
-
-          #pulseaudio {
-            color: @maroon;
-            border-radius: 1rem 0px 0px 1rem;
-            margin-left: 1rem;
+          #backlight {
+              border-radius: 1rem 0px 0px 1rem;
           }
 
           #custom-music {
