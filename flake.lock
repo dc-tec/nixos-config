@@ -640,11 +640,11 @@
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
-        "lastModified": 1713460115,
-        "narHash": "sha256-7nnGmJ4sZNxosEHpj+u0ai5VIjaorUybUN3UNVGcjGc=",
+        "lastModified": 1713538310,
+        "narHash": "sha256-kP4JiOiY+tY1NW1tkF6h05pmq0JauFRQD0Yj+8xznVA=",
         "owner": "dc-tec",
         "repo": "nixvim",
-        "rev": "ddab79b4dcb683cfedac608f6913b6cadb0d2d0a",
+        "rev": "85c876549ff696fe0747462129552f26b23faea9",
         "type": "github"
       },
       "original": {
