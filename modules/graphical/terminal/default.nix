@@ -11,7 +11,7 @@
         enable = true;
         settings = {
           enable_audio_bell = false;
-          visual_bell_duration = "0.25";
+          enable_visual_bell = false;
           remember_window_size = false;
           confirm_os_window_close = 0;
 
