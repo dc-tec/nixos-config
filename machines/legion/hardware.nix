@@ -1,7 +1,11 @@
-{ config, lib, pkgs, modulesPath, ... }:
-
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}: {
+  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
 
   boot = {
     loader = {
@@ -9,51 +13,51 @@
       efi.canTouchEfiVariables = true;
     };
     initrd = {
-      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" ];
-      kernelModules = [ ];
+      availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod"];
+      kernelModules = [];
     };
-    kernelParams = [ "mitigations=off" ];
-    kernelModules = [ "kvm-intel" ];
-    extraModulePackages = [ ];
+    kernelParams = ["mitigations=off"];
+    kernelModules = ["kvm-intel"];
+    extraModulePackages = [];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   };
 
-  fileSystems."/" =
-    { device = "rpool/local/root";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
+  fileSystems."/" = {
+    device = "rpool/local/root";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-label/EFI";
-      fsType = "vfat";
-    };
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/EFI";
+    fsType = "vfat";
+  };
 
-  fileSystems."/nix" =
-    { device = "rpool/local/nix";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
+  fileSystems."/nix" = {
+    device = "rpool/local/nix";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
-  fileSystems."/nix/store" =
-    { device = "rpool/local/nix-store";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
+  fileSystems."/nix/store" = {
+    device = "rpool/local/nix-store";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
-  fileSystems."/cache" =
-    { device = "rpool/local/cache";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
+  fileSystems."/cache" = {
+    device = "rpool/local/cache";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
-  fileSystems."/data" =
-    { device = "rpool/safe/data";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
+  fileSystems."/data" = {
+    device = "rpool/safe/data";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
-  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
+  swapDevices = [{device = "/dev/disk/by-label/swap";}];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -75,7 +79,5 @@
   };
   services.fstrim.enable = true;
 
-  dc-tec.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
-  
+  dc-tec.core.nix.unfreePackages = ["nvidia-x11" "nvidia-settings"];
 }
-
