@@ -7,10 +7,6 @@
 }: {
   options.dc-tec.graphical.hyprland = {
     enable = lib.mkEnableOption "hyprlandwm";
-    top-bar = lib.mkOption {
-      default = {};
-      type = lib.types.attrs;
-    };
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
@@ -205,12 +201,12 @@
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
             "WLR_NO_HARDWARE_CURSORS,1"
           ];
+          exec-once = [
+            "${pkgs.hyprpaper}/bin/hyprpaper"
+          ];
         };
         systemd = {
           enable = true;
-          extraCommands = [
-            "systemctl --user start ${pkgs.waybar}/bin/waybar"
-          ];
         };
       };
     };
