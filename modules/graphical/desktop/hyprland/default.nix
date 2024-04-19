@@ -56,6 +56,7 @@
 
       wayland.windowManager.hyprland = {
         enable = true;
+        catppuccin.enable = true;
         xwayland = {
           enable = true;
         };
@@ -78,8 +79,6 @@
             gaps_in = 4;
             gaps_out = 6;
             border_size = 2;
-            "col.active_border" = "rgba(${config.colorScheme.palette.base05}aa) rgba(${config.colorScheme.palette.base07}ee) 45deg";
-            "col.inactive_border" = "rgba(${config.colorScheme.palette.base04}aa)";
             layout = "dwindle";
             allow_tearing = false;
           };

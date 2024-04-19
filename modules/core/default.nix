@@ -44,13 +44,19 @@
       };
     };
 
+    # System wide default color scheme
     colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
+    catppuccin.flavour = "macchiato";
 
     home-manager.users = {
       roelc = {...}: {
+        imports = [
+          inputs.catppuccin.homeManagerModules.catppuccin
+        ];
         home.stateVersion = config.dc-tec.stateVersion;
         home.packages = [inputs.nixvim.packages.x86_64-linux.default];
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
+        catppuccin.flavour = "macchiato";
       };
       root = {...}: {home.stateVersion = config.dc-tec.stateVersion;};
     };

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: {
   options.dc-tec.development.git = {
@@ -17,7 +16,6 @@
 
   config = let
     base = {
-      home.packages = with pkgs; [lazygit];
       programs.git = {
         enable = true;
 
