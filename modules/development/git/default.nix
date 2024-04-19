@@ -3,6 +3,10 @@
   lib,
   ...
 }: {
+  imports = [
+    ./lazy_git.nix
+  ];
+
   options.dc-tec.development.git = {
     enable = lib.mkOption {
       default = true;
