@@ -16,7 +16,7 @@
       portal = {
         enable = true;
         wlr.enable = true;
-        extraPortals = with pkgs; [xdg-desktop-portal-gtk xdg-desktop-portal-hyprland];
+        extraPortals = with pkgs; [xdg-desktop-portal-hyprland];
       };
     };
 
@@ -37,19 +37,6 @@
     };
 
     home-manager.users.roelc = {pkgs, ...}: {
-      home.packages = with pkgs; [
-        swaybg
-        swayidle
-        swaylock
-        wlogout
-        wl-clipboard
-        hyprpicker
-        hyprshot
-        grim
-        slurp
-        mako
-      ];
-
       services = {
         cliphist.enable = true;
       };
@@ -95,7 +82,7 @@
           decoration = {
             rounding = 2;
             active_opacity = 0.9;
-            inactive_opacity = 0.5;
+            inactive_opacity = 0.8;
             fullscreen_opacity = 0.9;
             blur = {
               enabled = true;

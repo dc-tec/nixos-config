@@ -46,7 +46,9 @@
 
     # System wide default color scheme
     colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
-    catppuccin.flavour = "macchiato";
+    catppuccin = {
+      flavour = "macchiato";
+    };
 
     home-manager.users = {
       roelc = {...}: {
@@ -56,7 +58,10 @@
         home.stateVersion = config.dc-tec.stateVersion;
         home.packages = [inputs.nixvim.packages.x86_64-linux.default];
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
-        catppuccin.flavour = "macchiato";
+        catppuccin = {
+          flavour = "macchiato";
+          accent = "peach";
+        };
       };
       root = {...}: {home.stateVersion = config.dc-tec.stateVersion;};
     };

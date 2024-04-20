@@ -34,6 +34,15 @@
     home-manager.users.roelc = {pkgs, ...}: {
       gtk = {
         enable = true;
+        catppuccin = {
+          enable = true;
+          accent = "maroon";
+          cursor = {
+            enable = true;
+            accent = "peach";
+          };
+        };
+
         font = {
           name = "Iosevka Nerd Font";
           size = 10;
@@ -52,7 +61,7 @@
           size = 10;
         };
         settings = {
-          disable_ligatures = "cursor";
+          disable_ligatures = "always";
 
           # Font config
           font_family = "Iosevka Nerd Font";

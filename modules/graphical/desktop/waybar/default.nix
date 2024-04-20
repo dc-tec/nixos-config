@@ -118,7 +118,6 @@
           #backlight,
           #clock,
           #battery,
-          #pulseaudio,
           #custom-lock,
           #custom-power {
             background-color: @surface0;
