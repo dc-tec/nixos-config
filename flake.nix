@@ -13,6 +13,7 @@
     hyprpaper.url = "github:hyprwm/hyprpaper";
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
+
     # Custom NixVim Flake
     nixvim.url = "github:dc-tec/nixvim";
   };
