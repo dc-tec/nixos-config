@@ -1,9 +1,8 @@
 {...}: let
   base = home: {
-    programs.fzf = {
+    programs.lazygit = {
       enable = true;
       catppuccin.enable = true;
-      enableZshIntegration = true;
     };
   };
 in {

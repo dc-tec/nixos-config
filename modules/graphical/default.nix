@@ -8,7 +8,7 @@
     ./xdg
     ./terminal
     ./theme
-    #./applications
+    ./applications
   ];
 
   options.dc-tec.graphical = {
@@ -25,6 +25,9 @@
         terminal.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
+        applications = {
+          firefox.enable = lib.mkDefault true;
+        };
       };
     };
   };

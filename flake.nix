@@ -12,6 +12,7 @@
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpaper.url = "github:hyprwm/hyprpaper";
     nix-colors.url = "github:misterio77/nix-colors";
+    catppuccin.url = "github:catppuccin/nix";
 
     # Custom NixVim Flake
     nixvim.url = "github:dc-tec/nixvim";
@@ -27,6 +28,7 @@
     hyprpaper,
     nixvim,
     nix-colors,
+    catppuccin,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -45,6 +47,7 @@
       agenix.nixosModules.age
       impermanence.nixosModule
       home-manager.nixosModule
+      catppuccin.nixosModules.catppuccin
 
       ./modules
     ];

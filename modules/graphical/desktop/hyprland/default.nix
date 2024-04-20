@@ -16,7 +16,7 @@
       portal = {
         enable = true;
         wlr.enable = true;
-        extraPortals = with pkgs; [xdg-desktop-portal-gtk xdg-desktop-portal-hyprland];
+        extraPortals = with pkgs; [xdg-desktop-portal-hyprland];
       };
     };
 
@@ -37,25 +37,13 @@
     };
 
     home-manager.users.roelc = {pkgs, ...}: {
-      home.packages = with pkgs; [
-        swaybg
-        swayidle
-        swaylock
-        wlogout
-        wl-clipboard
-        hyprpicker
-        hyprshot
-        grim
-        slurp
-        mako
-      ];
-
       services = {
         cliphist.enable = true;
       };
 
       wayland.windowManager.hyprland = {
         enable = true;
+        catppuccin.enable = true;
         xwayland = {
           enable = true;
         };
@@ -78,8 +66,6 @@
             gaps_in = 4;
             gaps_out = 6;
             border_size = 2;
-            "col.active_border" = "rgba(${config.colorScheme.palette.base05}aa) rgba(${config.colorScheme.palette.base07}ee) 45deg";
-            "col.inactive_border" = "rgba(${config.colorScheme.palette.base04}aa)";
             layout = "dwindle";
             allow_tearing = false;
           };
@@ -96,7 +82,7 @@
           decoration = {
             rounding = 2;
             active_opacity = 0.9;
-            inactive_opacity = 0.5;
+            inactive_opacity = 0.8;
             fullscreen_opacity = 0.9;
             blur = {
               enabled = true;

@@ -1,9 +1,12 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: {
+  imports = [
+    ./lazy_git.nix
+  ];
+
   options.dc-tec.development.git = {
     enable = lib.mkOption {
       default = true;
@@ -17,7 +20,6 @@
 
   config = let
     base = {
-      home.packages = with pkgs; [lazygit];
       programs.git = {
         enable = true;
 
