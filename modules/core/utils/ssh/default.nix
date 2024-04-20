@@ -31,14 +31,4 @@
       };
     };
   };
-
-  systemd.services."Ensure SSH Agent" = {
-    description = "Ensure SSH Agent is running";
-    wantedBy = ["default.target"];
-    serviceConfig = {
-      Environment = ["SSH_AUTH_SOCK=%t/ssh-agent.socket" "DISPLAY=:0"];
-      ExecStart = "/run/current-system/sw/bin/ssh-agent -D -a $SSH_AUTH_SOCK";
-      Type = "simple";
-    };
-  };
 }
