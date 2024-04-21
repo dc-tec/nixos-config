@@ -168,6 +168,9 @@
             "$mod, l, movefocus, r"
             "$mod, k, movefocus, u"
             "$mod, j, movefocus, d"
+
+            # Applications
+            "$mod ALT, f, exec, ${pkgs.firefox}/bin/firefox"
           ];
 
           bindm = [

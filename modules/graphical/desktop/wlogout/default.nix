@@ -39,7 +39,7 @@
             keybind = "u";
           }
         ];
-
+        # TODO: Fix the icons
         style = ''
           window {
               font-family: monospace;
@@ -68,42 +68,42 @@
             }
 
           #lock {
-              background-image: image(url("${/. + ../_assets/wlogout/lock.png}"));
+              background-image: url("${/. + ../_assets/wlogout/lock.png}");
           }
           #lock:focus {
-              background-image: image(url("${/. + ../_assets/wlogout/lock-hover.png}"));
+              background-image: url("${/. + ../_assets/wlogout/lock-hover.png}");
           }
 
           #logout {
-              background-image: image(url("${/. + ../_assets/wlogout/logout.png}"));
+              background-image: url("${/. + ../_assets/wlogout/logout.png}");
           }
 
           #logout:focus {
-              background-image: image(url("${/. + ../_assets/wlogout/logout-hover.png}"));
+              background-image: url("${/. + ../_assets/wlogout/logout-hover.png}");
           }
 
           #suspend {
-              background-image: image(url("${/. + ../_assets/wlogout/sleep.png}"));
+              background-image: url("${/. + ../_assets/wlogout/sleep.png}");
           }
 
           #suspend:focus {
-              background-image: image(url("${/. + ../_assets/wlogout/sleep-hover.png}"));
+              background-image: url("${/. + ../_assets/wlogout/sleep-hover.png}");
           }
 
           #shutdown {
-              background-image: image(url("${/. + ../_assets/wlogout/power.png}"));
+              background-image:url("${/. + ../_assets/wlogout/power.png}");
           }
 
           #shutdown:focus {
-              background-image: image(url("${/. + ../_assets/wlogout/power-hover.png}"));
+              background-image: url("${/. + ../_assets/wlogout/power-hover.png}");
           }
 
           #reboot {
-              background-image: image(url("${/. + ../_assets/wlogout/restart.png}"));
+              background-image: url("${/. + ../_assets/wlogout/restart.png}");
           }
 
           #reboot:focus {
-              background-image: image(url("${/. + ../_assets/wlogout/restart-hover.png}"));
+              background-image: url("${/. + ../_assets/wlogout/restart-hover.png}");
           }
         '';
       };

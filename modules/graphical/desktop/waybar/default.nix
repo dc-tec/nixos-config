@@ -28,8 +28,17 @@
               disable-scroll = true;
               sort-by-name = true;
               all-outputs = true;
-              format-icons = {
-                default = "";
+              persistent-workspaces = {
+                "Home" = [];
+                "2" = [];
+                "3" = [];
+                "4" = [];
+                "5" = [];
+                "6" = [];
+                "7" = [];
+                "8" = [];
+                "9" = [];
+                "0" = [];
               };
             };
 
