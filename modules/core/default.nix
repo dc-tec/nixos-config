@@ -82,11 +82,7 @@
         unzip
         ripgrep
         git
-        vim
         z-lua
-        bat
-        eza
-        bottom
       ];
     };
 
