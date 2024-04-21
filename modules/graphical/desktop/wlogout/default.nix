@@ -39,7 +39,7 @@
             keybind = "u";
           }
         ];
-        # TODO: Fix the icons
+
         style = ''
           window {
               font-family: monospace;
