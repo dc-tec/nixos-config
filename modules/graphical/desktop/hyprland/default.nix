@@ -171,6 +171,7 @@
 
             # Applications
             "$mod ALT, f, exec, ${pkgs.firefox}/bin/firefox"
+            "$mod ALT, e, exec, $terminal --hold -e ${pkgs.yazi}/bin/yazi"
           ];
 
           bindm = [

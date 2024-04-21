@@ -3,6 +3,7 @@
     ./fzf
     ./eza
     ./bat
+    ./yazi
     ./bottom
     ./z-lua
     ./ripgrep
