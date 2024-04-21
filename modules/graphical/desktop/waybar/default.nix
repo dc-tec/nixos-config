@@ -65,14 +65,14 @@
 
             "custom/lock" = {
               tooltip = false;
-              on-click = "sh -c '(sleep 0.5s; swaylock --grace 0)' & disown";
-              format = "";
+              on-click = "${pkgs.swaylock}/bin/swaylock";
+              format = " ";
             };
 
             "custom/power" = {
               tooltip = false;
-              on-click = "wlogout &";
-              format = "";
+              on-click = "${pkgs.wlogout}/bin/wlogout &";
+              format = " ";
             };
           }
         ];

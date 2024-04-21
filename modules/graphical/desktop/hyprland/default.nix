@@ -125,6 +125,7 @@
             "$mod, return, exec, $terminal"
             "$mod SHIFT, q, killactive"
             "$mod SHIFT, e, exit"
+            "$mod SHIFT, l, exec, ${pkgs.swaylock}/bin/swaylock"
 
             # Screen focus
             "$mod, v, togglefloating"
@@ -186,7 +187,6 @@
             "GBM_BACKEND,nvidia-drm"
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
             "WLR_NO_HARDWARE_CURSORS,1"
-            "SSH_AUTH_SOCK,$XDG_RUNTIME_DIR/ssh-agent.socket"
           ];
           exec-once = [
             "${pkgs.hyprpaper}/bin/hyprpaper"
