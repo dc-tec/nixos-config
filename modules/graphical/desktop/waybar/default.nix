@@ -113,12 +113,12 @@
           }
 
           #workspaces button.active {
-            color: @sky;
+            color: @peach;
             border-radius: 1rem;
           }
 
           #workspaces button:hover {
-            color: @sapphire;
+            color: @peach;
             border-radius: 1rem;
           }
 

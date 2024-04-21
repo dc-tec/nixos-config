@@ -63,7 +63,7 @@
           }
 
           button:focus {
-              background-color: #cba6f7;
+              background-color: #f5a97f;
               color: #1e1e2e;
             }
 
