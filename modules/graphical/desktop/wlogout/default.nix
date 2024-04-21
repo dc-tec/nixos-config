@@ -10,7 +10,7 @@
         layout = [
           {
             label = "lock";
-            action = "${pkgs.swaylock}/bin/swaylock";
+            action = "${pkgs.hyprlock}/bin/hyprlock";
             text = "Lock";
             keybind = "l";
           }

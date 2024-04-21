@@ -74,7 +74,7 @@
 
             "custom/lock" = {
               tooltip = false;
-              on-click = "${pkgs.swaylock}/bin/swaylock";
+              on-click = "${pkgs.hyprlock}/bin/hyprlock";
               format = " ";
             };
 

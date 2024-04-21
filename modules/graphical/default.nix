@@ -16,6 +16,7 @@
     laptop = lib.mkEnableOption "laptop configuration";
   };
 
+  # TODO: Create a nicer options structure
   config = lib.mkIf config.dc-tec.graphical.enable {
     dc-tec = {
       graphical = {

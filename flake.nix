@@ -9,8 +9,13 @@
     home-manager.url = "github:nix-community/home-manager";
     agenix.url = "github:ryantm/agenix";
     impermanence.url = "github:nix-community/impermanence";
+
+    # Hyperland related flakes
     hyprland.url = "github:hyprwm/Hyprland";
     hyprpaper.url = "github:hyprwm/hyprpaper";
+    hyprlock.url = "github:hyprwm/hyprlock";
+
+    # Catppuccin theming
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
@@ -26,6 +31,7 @@
     impermanence,
     hyprland,
     hyprpaper,
+    hyprlock,
     nixvim,
     nix-colors,
     catppuccin,

@@ -125,7 +125,7 @@
             "$mod, return, exec, $terminal"
             "$mod SHIFT, q, killactive"
             "$mod SHIFT, e, exit"
-            "$mod SHIFT, l, exec, ${pkgs.swaylock}/bin/swaylock"
+            "$mod SHIFT, l, exec, ${pkgs.hyprlock}/bin/hyprlock"
 
             # Screen focus
             "$mod, v, togglefloating"

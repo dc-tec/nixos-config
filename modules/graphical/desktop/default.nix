@@ -3,7 +3,7 @@
     ./hyprland
     ./waybar
     ./hyprpaper
-    ./swaylock
+    ./hyprlock
     ./wlogout
   ];
 }
