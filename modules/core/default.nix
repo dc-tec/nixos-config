@@ -80,9 +80,7 @@
         util-linux
         whois
         unzip
-        ripgrep
         git
-        z-lua
       ];
     };
 
