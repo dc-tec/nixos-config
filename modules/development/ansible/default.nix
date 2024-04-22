@@ -13,7 +13,7 @@
   config = lib.mkIf config.dc-tec.development.ansible.enable {
     environment.systemPackages = with pkgs; [
       ansible
-      anslbie-later
+      ansible-later
       ansible-navigator
       ansible-builder
     ];
