@@ -12,14 +12,6 @@
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
     services.dbus.packages = with pkgs; [dconf];
 
-    xdg = {
-      portal = {
-        enable = true;
-        wlr.enable = true;
-        extraPortals = with pkgs; [xdg-desktop-portal-hyprland];
-      };
-    };
-
     services = {
       displayManager = {
         sddm = {
@@ -188,6 +180,8 @@
             "GDK_BACKEND,wayland"
             "LIBVA_DRIVER_NAME,nvidia"
             "XDG_SESSION_TYPE,wayland"
+            "XDG_SESSION_DESKTOP,Hyprland"
+            "XDG_CURRENT_DESKTOP,Hyprland"
             "GBM_BACKEND,nvidia-drm"
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
             "WLR_NO_HARDWARE_CURSORS,1"
