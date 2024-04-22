@@ -33,7 +33,6 @@
     home-manager = {
       useGlobalPkgs = true;
     };
-
     system = {
       stateVersion = config.dc-tec.stateVersion;
       autoUpgrade = {
