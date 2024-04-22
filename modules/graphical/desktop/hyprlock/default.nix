@@ -48,7 +48,7 @@
             hide_input = false;
             position = {
               x = 0;
-              y = 120;
+              y = 0;
             };
             halign = "center";
             valign = "center";
@@ -56,18 +56,6 @@
         ];
 
         labels = [
-          # Time
-          {
-            font_family = "Iosevka Nerd Font";
-            text = "cmd[update:1000] /run/current-system/sw/bin/date +'%-I:%M%p')";
-            font_size = 120;
-            position = {
-              x = 0;
-              y = -300;
-            };
-            halign = "center";
-            valign = "top";
-          }
           # User
           {
             font_family = "Iosevka Nerd Font";
@@ -75,7 +63,7 @@
             font_size = 25;
             position = {
               x = 0;
-              y = -40;
+              y = -300;
             };
             halign = "center";
             valign = "center";
