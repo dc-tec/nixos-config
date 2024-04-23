@@ -42,12 +42,13 @@
         randomizedDelaySec = "15min";
       };
     };
-
     # System wide default color scheme
     colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
     catppuccin = {
       flavour = "macchiato";
     };
+
+    dc-tec.core.zfs.homeCacheLinks = [".config"];
 
     home-manager.users = {
       roelc = {...}: {
