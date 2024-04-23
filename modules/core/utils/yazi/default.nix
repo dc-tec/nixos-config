@@ -1,4 +1,4 @@
-{...}: let
+_: let
   base = home: {
     programs.yazi = {
       enable = true;
@@ -12,5 +12,5 @@
     };
   };
 in {
-  home-manager.users.roelc = {...}: (base "/home/roelc");
+  home-manager.users.roelc = _: (base "/home/roelc");
 }

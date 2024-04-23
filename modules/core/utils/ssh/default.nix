@@ -14,7 +14,7 @@
   ];
 
   # TODO: Configure SSH Agent
-  home-manager.users.roelc = {...}: {
+  home-manager.users.roelc = _: {
     programs.ssh = {
       enable = true;
       hashKnownHosts = true;

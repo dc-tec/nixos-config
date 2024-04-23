@@ -62,7 +62,7 @@
           accent = "peach";
         };
       };
-      root = {...}: {home.stateVersion = config.dc-tec.stateVersion;};
+      root = _: {home.stateVersion = config.dc-tec.stateVersion;};
     };
 
     environment = {

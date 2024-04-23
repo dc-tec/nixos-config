@@ -1,4 +1,4 @@
-{...}: let
+_: let
   base = home: {
     programs.fzf = {
       enable = true;
@@ -7,5 +7,5 @@
     };
   };
 in {
-  home-manager.users.roelc = {...}: (base "/home/roelc");
+  home-manager.users.roelc = _: (base "/home/roelc");
 }

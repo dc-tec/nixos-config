@@ -21,39 +21,36 @@
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   };
 
-  fileSystems."/" = {
-    device = "rpool/local/root";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/EFI";
-    fsType = "vfat";
-  };
-
-  fileSystems."/nix" = {
-    device = "rpool/local/nix";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/nix/store" = {
-    device = "rpool/local/nix-store";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/cache" = {
-    device = "rpool/local/cache";
-    fsType = "zfs";
-    neededForBoot = true;
-  };
-
-  fileSystems."/data" = {
-    device = "rpool/safe/data";
-    fsType = "zfs";
-    neededForBoot = true;
+  fileSystems = {
+    "/" = {
+      device = "rpool/local/root";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+    "/boot" = {
+      device = "/dev/disk/by-label/EFI";
+      fsType = "vfat";
+    };
+    "/nix" = {
+      device = "rpool/local/nix";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+    "/nix/store" = {
+      device = "rpool/local/nix-store";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+    "/cache" = {
+      device = "rpool/local/cache";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+    "/data" = {
+      device = "rpool/safe/data";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
   };
 
   swapDevices = [{device = "/dev/disk/by-label/swap";}];

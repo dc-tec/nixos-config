@@ -1,4 +1,4 @@
-{...}: {
+_: {
   systemd.services."enable-wifi-on-boot" = {
     description = "Enable Wifi during boot";
     wantedBy = ["multi-user.target"];
