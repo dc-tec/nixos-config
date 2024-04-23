@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   baseDirenv = {
@@ -25,6 +26,13 @@ in {
         homeCacheLinks = lib.optional config.dc-tec.core.nix.enableDirenv ".local/share/direnv";
         systemCacheLinks = lib.optional config.dc-tec.core.nix.enableDirenv "/root/.local/share/direnv";
       };
+    };
+
+    programs.nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 2d --keep 2";
+      flake = "/cache/home/roelc/repos/nixos-config";
     };
 
     nix = {
