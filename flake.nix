@@ -19,8 +19,9 @@
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
-    # Custom NixVim Flake
+    # Custom NixVim Flakes
     nixvim.url = "github:dc-tec/nixvim";
+    niks-cli.url = "github:dc-tec/niks-cli";
   };
 
   outputs = {
@@ -35,6 +36,7 @@
     nixvim,
     nix-colors,
     catppuccin,
+    niks-cli,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -77,7 +79,6 @@
     );
 
     overlays = import ./overlays {inherit inputs;};
-
     nixosConfigurations = {
       legion = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};

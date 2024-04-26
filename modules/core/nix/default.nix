@@ -28,10 +28,14 @@ in {
       };
     };
 
+    programs.niks-cli = {
+      enable = true;
+      package = pkgs.packages.x86_64-linux.niks-cli;
+    };
+
     programs.nh = {
       enable = true;
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 2d --keep 2";
+      clean.enable = false;
       flake = "/cache/home/roelc/repos/nixos-config";
     };
 
