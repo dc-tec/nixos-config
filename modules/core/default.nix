@@ -81,6 +81,7 @@
         whois
         unzip
         git
+        (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
 

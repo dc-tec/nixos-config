@@ -19,8 +19,9 @@
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
-    # Custom NixVim Flake
+    # Custom NixVim Flakes
     nixvim.url = "github:dc-tec/nixvim";
+    niks-cli.url = "github:dc-tec/niks-cli";
   };
 
   outputs = {
@@ -33,6 +34,7 @@
     hyprpaper,
     hyprlock,
     nixvim,
+    niks-cli,
     nix-colors,
     catppuccin,
     ...
@@ -58,6 +60,11 @@
       ./modules
     ];
   in {
+    packages = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+      import ./pkgs {inherit pkgs;});
+
     devShells =
       forAllSystems
       (system: let
@@ -77,7 +84,6 @@
     );
 
     overlays = import ./overlays {inherit inputs;};
-
     nixosConfigurations = {
       legion = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
