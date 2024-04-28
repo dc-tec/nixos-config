@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   baseDirenv = {
@@ -12,11 +11,13 @@
     };
   };
 in {
-  options.dc-tec.core.nix = {
-    enableDirenv = lib.mkOption {default = true;};
-    unfreePackages = lib.mkOption {
-      default = [];
-      example = ["teams"];
+  options = {
+    dc-tec.core.nix = {
+      enableDirenv = lib.mkOption {default = true;};
+      unfreePackages = lib.mkOption {
+        default = [];
+        example = ["teams"];
+      };
     };
   };
 
@@ -28,10 +29,10 @@ in {
       };
     };
 
-    programs.niks-cli = {
-      enable = true;
-      package = pkgs.packages.x86_64-linux.niks-cli;
-    };
+    #    programs.niks-cli = {
+    #      enable = true;
+    #      package = pkgs.packages.x86_64-linux.niks-cli;
+    #    };
 
     programs.nh = {
       enable = true;

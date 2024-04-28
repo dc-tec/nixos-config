@@ -34,9 +34,9 @@
     hyprpaper,
     hyprlock,
     nixvim,
+    niks-cli,
     nix-colors,
     catppuccin,
-    niks-cli,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -60,6 +60,11 @@
       ./modules
     ];
   in {
+    packages = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+      import ./pkgs {inherit pkgs;});
+
     devShells =
       forAllSystems
       (system: let
