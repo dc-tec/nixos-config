@@ -197,6 +197,8 @@
             "${pkgs.hyprpaper}/bin/hyprpaper"
             "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store"
             "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store"
+            "gnome-keyring-daemon --start --components=secrets"
+            "${pkgs.plasma5Packages.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
           ];
         };
         systemd = {

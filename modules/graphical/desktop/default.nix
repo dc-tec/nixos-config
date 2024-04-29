@@ -6,5 +6,6 @@
     ./hyprlock
     ./wlogout
     ./rofi
+    ./key_management
   ];
 }
