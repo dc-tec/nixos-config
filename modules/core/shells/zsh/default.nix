@@ -46,6 +46,8 @@
       };
       shellAliases = {
         home = "cd ~/";
+        repos = "cd ~/repos";
+        config = "cd ~/repos/nixos-config";
         gcl = "git clone";
         cat = "bat --paging=never";
         ls = "eza --icons --group-directories-first";
@@ -65,6 +67,6 @@ in {
   programs.zsh.enable = true;
   dc-tec.core.zfs.systemCacheLinks = ["/root/.local/share/autojump"];
   dc-tec.core.zfs.homeCacheLinks = [".local/share/autojump"];
-  home-manager.users.roelc = {...}: (base "/home/roelc");
-  home-manager.users.root = {...}: (base "/root");
+  home-manager.users.roelc = _: (base "/home/roelc");
+  home-manager.users.root = _: (base "/root");
 }

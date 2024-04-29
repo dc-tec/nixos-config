@@ -26,7 +26,7 @@
 
             "hyprland/workspaces" = {
               disable-scroll = true;
-              sort-by-name = true;
+              sort-by-name = false;
               all-outputs = true;
               persistent-workspaces = {
                 "Home" = [];

@@ -10,6 +10,10 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
+    environment.systemPackages = [
+      pkgs.wl-clipboard
+    ];
+
     services.dbus.packages = with pkgs; [dconf];
 
     services = {
@@ -30,7 +34,9 @@
 
     home-manager.users.roelc = {pkgs, ...}: {
       services = {
-        cliphist.enable = true;
+        cliphist = {
+          enable = true;
+        };
       };
 
       wayland.windowManager.hyprland = {
@@ -164,6 +170,7 @@
             # Applications
             "$mod ALT, f, exec, ${pkgs.firefox}/bin/firefox"
             "$mod ALT, e, exec, $terminal --hold -e ${pkgs.yazi}/bin/yazi"
+            "$mod, r, exec, ${pkgs.rofi}/bin/rofi -modes drun -show drun"
           ];
 
           bindm = [
@@ -188,6 +195,8 @@
           ];
           exec-once = [
             "${pkgs.hyprpaper}/bin/hyprpaper"
+            "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store"
+            "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store"
           ];
         };
         systemd = {

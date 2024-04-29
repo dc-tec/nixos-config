@@ -5,5 +5,6 @@
     ./hyprpaper
     ./hyprlock
     ./wlogout
+    ./rofi
   ];
 }
