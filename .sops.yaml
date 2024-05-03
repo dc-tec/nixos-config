@@ -1,0 +1,7 @@
+keys:
+  - &roelc age1k2kr92m8nad59shnvv07t4v54zpu9lrxmnj8a4vm36vgvhn36c6sqp50kc
+creation_rules:
+  - path_regex: secrets/secrets.yaml$
+    key_groups:
+      - age:
+          - *roelc

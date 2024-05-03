@@ -9,6 +9,7 @@
     home-manager.url = "github:nix-community/home-manager";
     agenix.url = "github:ryantm/agenix";
     impermanence.url = "github:nix-community/impermanence";
+    sops-nix.url = "github:Mic92/sops-nix";
 
     # Hyperland related flakes
     hyprland.url = "github:hyprwm/Hyprland";
@@ -37,6 +38,7 @@
     niks-cli,
     nix-colors,
     catppuccin,
+    sops-nix,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -53,6 +55,7 @@
       })
 
       agenix.nixosModules.age
+      sops-nix.nixosModules.sops
       impermanence.nixosModule
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
@@ -88,6 +91,10 @@
       legion = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = sharedModules ++ [./machines/legion/default.nix];
+      };
+      chad = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = sharedModules ++ [./machines/chad/default.nix];
       };
     };
   };

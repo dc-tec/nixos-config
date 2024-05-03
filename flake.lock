@@ -727,6 +727,38 @@
         "type": "github"
       }
     },
+    "nixpkgs-stable_3": {
+      "locked": {
+        "lastModified": 1713638189,
+        "narHash": "sha256-q7APLfB6FmmSMI1Su5ihW9IwntBsk2hWNXh8XtSdSIk=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "74574c38577914733b4f7a775dd77d24245081dd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_10": {
+      "locked": {
+        "lastModified": 1713596654,
+        "narHash": "sha256-LJbHQQ5aX1LVth2ST+Kkse/DRzgxlVhTL1rxthvyhZc=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fd16bb6d3bcca96039b11aa52038fafeb6e4f4be",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1713248628,
@@ -971,7 +1003,27 @@
         "nix-colors": "nix-colors",
         "nixpkgs": "nixpkgs_8",
         "nixpkgs-stable": "nixpkgs-stable",
-        "nixvim": "nixvim"
+        "nixvim": "nixvim",
+        "sops-nix": "sops-nix"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_10",
+        "nixpkgs-stable": "nixpkgs-stable_3"
+      },
+      "locked": {
+        "lastModified": 1713892811,
+        "narHash": "sha256-uIGmA2xq41vVFETCF1WW4fFWFT2tqBln+aXnWrvjGRE=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "f1b0adc27265274e3b0c9b872a8f476a098679bd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "type": "github"
       }
     },
     "systems": {
