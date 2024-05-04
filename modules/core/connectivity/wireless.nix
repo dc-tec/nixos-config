@@ -13,9 +13,5 @@
         "@home_uuid@" = {psk = "@home_psk@";};
       };
     };
-
-    age.secrets."secrets/network/wireless.age" = {
-      file = ../../../secrets/network/wireless.age;
-    };
   };
 }

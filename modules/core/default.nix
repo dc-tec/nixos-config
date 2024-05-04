@@ -143,7 +143,5 @@
         root.hashedPasswordFile = config.sops.secrets."users/root".path;
       };
     };
-    #age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;
-    #age.secrets."secrets/passwords/users/root".file = ../../secrets/passwords/users/root.age;
   };
 }

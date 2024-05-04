@@ -7,7 +7,6 @@
 
     # Flakes
     home-manager.url = "github:nix-community/home-manager";
-    agenix.url = "github:ryantm/agenix";
     impermanence.url = "github:nix-community/impermanence";
     sops-nix.url = "github:Mic92/sops-nix";
 
@@ -29,7 +28,6 @@
     self,
     nixpkgs,
     home-manager,
-    agenix,
     impermanence,
     hyprland,
     hyprpaper,
@@ -54,7 +52,6 @@
         '';
       })
 
-      agenix.nixosModules.age
       sops-nix.nixosModules.sops
       impermanence.nixosModule
       home-manager.nixosModule
@@ -75,7 +72,7 @@
       in {
         default = pkgs.mkShell {
           NIX_CONFIG = "experimental-features = nix-command flakes";
-          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default];
+          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git];
         };
       });
 

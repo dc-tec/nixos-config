@@ -80,7 +80,7 @@
     in {
       ensureSystemPathsExist = {
         text = ensureSystemExistsScript;
-        deps = ["agenixNewGeneration"];
+        deps = [];
       };
       ensureHomePathsExist = {
         text = ''
@@ -89,7 +89,6 @@
         '';
         deps = ["users" "groups"];
       };
-      agenixInstall.deps = ["ensureSystemPathsExist" "ensureHomePathsExist"];
     };
   };
 }
