@@ -11,14 +11,25 @@ _: {
       generateKey = true;
     };
 
-    secrets.roelc = {
-      neededForUsers = true;
-    };
-    secrets.root = {
-      neededForUsers = true;
-    };
-    secrets.unifi = {
-      owner = "roelc";
+    secrets = {
+      "users/roelc" = {
+        neededForUsers = true;
+      };
+
+      "users/root" = {
+        neededForUsers = true;
+      };
+
+      wireless = {};
+
+      "authorized_keys/root" = {
+        path = "/root/.ssh/authorized_keys";
+      };
+
+      "authorized_keys/roelc" = {
+        path = "/home/roelc/.ssh/authorized_keys";
+        owner = "roelc";
+      };
     };
   };
 }

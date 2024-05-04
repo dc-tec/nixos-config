@@ -1,7 +1,11 @@
 keys:
   - &roelc age1k2kr92m8nad59shnvv07t4v54zpu9lrxmnj8a4vm36vgvhn36c6sqp50kc
+  - &host_legion age1j4a6glrt7yrg0yqepqr0yf5448tzqgdandkx44zrac8084u4t95qgslcx0
+  - &host_chad age1t0f9fte5lnyjqpy0x05mg4wzg5nk7gpudtnc5369k6fzuzk0dcyqkr8j80
 creation_rules:
   - path_regex: secrets/secrets.yaml$
     key_groups:
       - age:
           - *roelc
+          - *host_legion
+          - *host_chad

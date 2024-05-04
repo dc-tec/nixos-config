@@ -84,6 +84,7 @@
         git
         age
         sops
+        ssh-to-age
         (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
@@ -137,9 +138,9 @@
           isNormalUser = true;
           home = "/home/roelc";
           extraGroups = ["systemd-journal"];
-          hashedPasswordFile = config.sops.secrets.roelc.path;
+          hashedPasswordFile = config.sops.secrets."users/roelc".path;
         };
-        root.hashedPasswordFile = config.sops.secrets.root.path;
+        root.hashedPasswordFile = config.sops.secrets."users/root".path;
       };
     };
     #age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;
