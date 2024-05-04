@@ -8,14 +8,10 @@
   config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
       enable = true;
-      environmentFile = config.age.secrets."secrets/network/wireless.age".path;
+      environmentFile = config.sops.secrets.wireless.path;
       networks = {
-        "UniFi" = {psk = "@PSK_unifi@";};
+        "@home_uuid@" = {psk = "@home_psk@";};
       };
-    };
-
-    age.secrets."secrets/network/wireless.age" = {
-      file = ../../../secrets/network/wireless.age;
     };
   };
 }

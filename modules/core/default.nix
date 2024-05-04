@@ -11,6 +11,7 @@
     ./shells
     ./storage
     ./utils
+    ./sops
 
     inputs.nix-colors.homeManagerModules.default
   ];
@@ -81,6 +82,9 @@
         whois
         unzip
         git
+        age
+        sops
+        ssh-to-age
         (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
@@ -126,7 +130,6 @@
         "en_US.UTF-8/UTF-8"
       ];
     };
-
     users = {
       mutableUsers = false;
       defaultUserShell = pkgs.zsh;
@@ -135,12 +138,10 @@
           isNormalUser = true;
           home = "/home/roelc";
           extraGroups = ["systemd-journal"];
-          hashedPasswordFile = config.age.secrets."secrets/passwords/users/roelc".path;
+          hashedPasswordFile = config.sops.secrets."users/roelc".path;
         };
-        root.hashedPasswordFile = config.age.secrets."secrets/passwords/users/root".path;
+        root.hashedPasswordFile = config.sops.secrets."users/root".path;
       };
     };
-    age.secrets."secrets/passwords/users/roelc".file = ../../secrets/passwords/users/roelc.age;
-    age.secrets."secrets/passwords/users/root".file = ../../secrets/passwords/users/root.age;
   };
 }
