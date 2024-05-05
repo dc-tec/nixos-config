@@ -19,7 +19,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
-    # Custom NixVim Flakes
+    # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
     niks-cli.url = "github:dc-tec/niks-cli";
   };
