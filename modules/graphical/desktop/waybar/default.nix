@@ -19,6 +19,7 @@
             output = [
               "eDP-1"
               "HDMI-A-1"
+              "DP-2"
             ];
             modules-left = ["hyprland/workspaces"];
             modules-center = ["hyprland/window"];

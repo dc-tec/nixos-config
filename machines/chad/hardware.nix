@@ -66,7 +66,7 @@
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;
       powerManagement.enable = true;
-      open = true;
+      open = false;
       modesetting = {
         enable = true;
       };
@@ -75,5 +75,10 @@
   };
   services.fstrim.enable = true;
 
-  dc-tec.core.nix.unfreePackages = ["nvidia-x11" "nvidia-settings"];
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "nvidia-x11"
+      "nvidia"
+      "nvidia-settings"
+    ];
 }
