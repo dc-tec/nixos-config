@@ -85,6 +85,7 @@
         age
         sops
         ssh-to-age
+        nerdfetch
         (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
