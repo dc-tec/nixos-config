@@ -12,6 +12,7 @@
       home.file.".config/hypr/hyprpaper.conf".text = ''
         preload = ${/. + ../_assets/wallpaper.jpg}
         wallpaper = ,${/. + ../_assets/wallpaper.jpg}
+        splash = false
       '';
     };
   };

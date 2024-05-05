@@ -17,6 +17,9 @@
     services.dbus.packages = with pkgs; [dconf];
 
     services = {
+      xserver = {
+        videoDrivers = ["nvidia"];
+      };
       displayManager = {
         sddm = {
           enable = true;
@@ -53,7 +56,8 @@
           "$mod" = "SUPER";
 
           monitor = [
-            "eDP-1, 1920x1080, 0x0, 1"
+            # "eDP-1, 1920x1080, 0x0, 1"
+            ",prefered,auto,1"
           ];
 
           xwayland = {
@@ -191,7 +195,6 @@
             "XDG_CURRENT_DESKTOP,Hyprland"
             "GBM_BACKEND,nvidia-drm"
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-            "WLR_NO_HARDWARE_CURSORS,1"
           ];
           exec-once = [
             "${pkgs.hyprpaper}/bin/hyprpaper"
