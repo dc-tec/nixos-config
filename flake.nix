@@ -72,7 +72,7 @@
       in {
         default = pkgs.mkShell {
           NIX_CONFIG = "experimental-features = nix-command flakes";
-          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git];
+          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git pkgs.age pkgs.age-to-ssh pkgs.sops];
         };
       });
 
