@@ -11,7 +11,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
 
     # Hyperland related flakes
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprpaper.url = "github:hyprwm/hyprpaper";
     hyprlock.url = "github:hyprwm/hyprlock";
 
