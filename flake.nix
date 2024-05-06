@@ -11,7 +11,7 @@
     sops-nix.url = "github:Mic92/sops-nix";
 
     # Hyperland related flakes
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprpaper.url = "github:hyprwm/hyprpaper";
     hyprlock.url = "github:hyprwm/hyprlock";
 
@@ -19,7 +19,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
-    # Custom NixVim Flakes
+    # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
     niks-cli.url = "github:dc-tec/niks-cli";
   };
@@ -72,7 +72,7 @@
       in {
         default = pkgs.mkShell {
           NIX_CONFIG = "experimental-features = nix-command flakes";
-          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git];
+          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git pkgs.age pkgs.age-to-ssh pkgs.sops];
         };
       });
 
