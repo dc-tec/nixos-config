@@ -9,6 +9,7 @@
     ./terminal
     ./theme
     ./applications
+    ./sound
   ];
 
   options.dc-tec.graphical = {
@@ -27,6 +28,7 @@
         xdg.enable = lib.mkDefault true;
         key_management.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
+        sound.enable = lib.mkDefault true;
         applications = {
           firefox.enable = lib.mkDefault true;
         };
