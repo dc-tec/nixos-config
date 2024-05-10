@@ -41,6 +41,11 @@
     };
 
     home-manager.users.roelc = {pkgs, ...}: {
+      home.packages = with pkgs; [
+        qt5.qtwayland
+        qt6.qtwayland
+      ];
+
       services = {
         cliphist = {
           enable = true;
