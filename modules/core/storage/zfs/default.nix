@@ -25,14 +25,15 @@
       example = [".ssh"];
     };
     rootDataset = lib.mkOption {
+      default = "";
       example = "rpool/local/root";
     };
   };
 
   config = {
     dc-tec = {
-      zfs = {
-        enable = lib.mkDefault false;
+      core.zfs = {
+        enable = lib.mkDefault true;
       };
       dataPrefix = lib.mkDefault "/data";
       cachePrefix = lib.mkDefault "/cache";

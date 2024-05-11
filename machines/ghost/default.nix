@@ -1,14 +1,27 @@
-_: {
+{
+  inputs,
+  lib,
+  ...
+}: {
+  imports = [
+    inputs.nixos-wsl.nixosModules.default
+  ];
+
+  wsl = {
+    enable = true;
+
+    defaultUser = "roelc";
+  };
+
   networking = {
     hostName = "ghost";
     hostId = "3c4e8b4f";
   };
 
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
   dc-tec = {
     stateVersion = "24.05";
-    wsl = {
-      enable = true;
-    };
     core = {
       zfs = {
         enable = false;
@@ -19,6 +32,9 @@ _: {
     };
     graphical = {
       enable = false;
+      xdg = {
+        enable = true;
+      };
     };
   };
 }

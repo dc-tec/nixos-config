@@ -20,7 +20,7 @@
     catppuccin.url = "github:catppuccin/nix";
 
     #WSL2 flake
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
 
     # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
@@ -89,6 +89,7 @@
     );
 
     overlays = import ./overlays {inherit inputs;};
+
     nixosConfigurations = {
       legion = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
