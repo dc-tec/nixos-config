@@ -5,6 +5,8 @@
   ...
 }: {
   options.dc-tec.core.zfs = {
+    # Enable ZFS
+    enable = lib.mkEnableOption "zfs";
     # Ask for credentials
     encrypted = lib.mkEnableOption "zfs request credentials";
 
@@ -28,8 +30,13 @@
   };
 
   config = {
-    dc-tec.dataPrefix = lib.mkDefault "/data";
-    dc-tec.cachePrefix = lib.mkDefault "/cache";
+    dc-tec = {
+      zfs = {
+        enable = lib.mkDefault false;
+      };
+      dataPrefix = lib.mkDefault "/data";
+      cachePrefix = lib.mkDefault "/cache";
+    };
 
     environment.persistence."${config.dc-tec.cachePrefix}" = {
       hideMounts = true;

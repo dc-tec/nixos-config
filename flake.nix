@@ -19,6 +19,9 @@
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
+    #WSL2 flake
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
     # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
     niks-cli.url = "github:dc-tec/niks-cli";
@@ -37,6 +40,7 @@
     nix-colors,
     catppuccin,
     sops-nix,
+    nixos-wsl,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -56,6 +60,7 @@
       impermanence.nixosModule
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
+      nixos-wsl.nixosModules.default
 
       ./modules
     ];
@@ -92,6 +97,10 @@
       chad = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         modules = sharedModules ++ [./machines/chad/default.nix];
+      };
+      ghost = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = sharedModules ++ [./machines/ghost/default.nix];
       };
     };
   };

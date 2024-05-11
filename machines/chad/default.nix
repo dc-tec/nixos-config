@@ -11,6 +11,7 @@
     stateVersion = "24.05";
     core = {
       zfs = {
+        enable = true;
         encrypted = true;
         rootDataset = "rpool/local/root";
       };

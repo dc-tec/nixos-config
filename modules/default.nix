@@ -3,5 +3,6 @@
     ./core
     ./development
     ./graphical
+    ./wsl
   ];
 }
