@@ -3,7 +3,7 @@
     ./hyprland
     ./waybar
     ./hyprpaper
-    #./hyprlock
+    ./hyprlock
     ./wlogout
     ./rofi
     ./key_management

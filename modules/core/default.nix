@@ -33,6 +33,7 @@
   config = {
     home-manager = {
       useGlobalPkgs = true;
+      useUserPackages = true;
     };
     system = {
       stateVersion = config.dc-tec.stateVersion;

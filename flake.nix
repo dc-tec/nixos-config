@@ -60,7 +60,6 @@
       impermanence.nixosModule
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
-      nixos-wsl.nixosModules.default
 
       ./modules
     ];
