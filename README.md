@@ -33,7 +33,7 @@ The repository is setup in a modular fasion. The configuration can be split into
 - Overlays
   - If needed we can apply an overlay over certain packages. These overlays are defined here.
 - Pkgs - The pkgs directory contains custom packages.
-  = Secrets - Encrypted secrets using Nix SOPS.
+- Secrets - Encrypted secrets using Nix SOPS.
 
 ### ZFS
 
@@ -42,12 +42,6 @@ ZFS is used on the storage layer. I'm making use of impermanence where the files
 ### SOPS
 
 For secret management in a pure Nix way Nix SOPS is used. See [add new host](docs/add-new-host.md)
-
-## Design Principals
-
-- Keep it simple
-- Keep it Nix Pure
-- Most of all have fun
 
 ### References
 
