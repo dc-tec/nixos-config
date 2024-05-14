@@ -16,7 +16,7 @@
         catppuccin = {
           enable = true;
           flavour = "macchiato";
-          transparant = true;
+          #transparant = true;
         };
       };
     };

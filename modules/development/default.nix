@@ -8,6 +8,7 @@
     ./go
     ./terraform
     ./powershell
+    ./containerization
   ];
 
   config = {

@@ -11,13 +11,13 @@
   };
 
   config = lib.mkIf config.dc-tec.development.docker.enable {
-    virtualization.docker = {
+    virtualisation.docker = {
       enable = true;
-      extraOptions = "${config.dc-tec.dataPrefix}/var/lib/docker";
+      extraOptions = "--data-root ${config.dc-tec.dataPrefix}/var/lib/docker";
       storageDriver = "zfs";
     };
 
-    home-managers.users.roelc = {
+    home-manager.users.roelc = {
       home.packages = with pkgs; [
         docker-compose
       ];
