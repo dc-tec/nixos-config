@@ -32,6 +32,7 @@
         sound.enable = lib.mkDefault true;
         applications = {
           firefox.enable = lib.mkDefault true;
+          obsidian.enable = lib.mkDefault true;
         };
       };
     };

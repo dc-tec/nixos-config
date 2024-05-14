@@ -1,5 +1,6 @@
 {...}: {
   imports = [
     ./firefox
+    ./obsidian
   ];
 }

@@ -40,6 +40,10 @@ in {
       flake = "/cache/home/roelc/repos/nixos-config";
     };
 
+    nixpkgs.config = {
+      allowUnfree = true;
+    };
+
     nix = {
       gc = {
         automatic = true;

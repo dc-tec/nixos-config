@@ -124,6 +124,8 @@
     i18n = {
       defaultLocale = "en_IE.UTF-8";
       extraLocaleSettings = {
+        LC_ALL = "en_IE.UTF-8";
+        LANGUAGE = "en_US.UTF-8";
         LC_TIME = "en_GB.UTF-8";
       };
       supportedLocales = [
