@@ -16,9 +16,15 @@
       kernelModules = [];
     };
     kernelParams = ["mitigations=off"];
-    kernelModules = ["kvm-amd"];
+    kernelModules = [
+      "kvm-amd"
+      "xt_socket"
+    ];
     extraModulePackages = [];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    kernel = {
+      sysctl."net.ipv4.ip_forward" = 1;
+    };
   };
 
   fileSystems = {

@@ -18,6 +18,9 @@
       wireless = {
         enable = false;
       };
+      routing = {
+        enable = true;
+      };
     };
     development = {
       docker.enable = true;

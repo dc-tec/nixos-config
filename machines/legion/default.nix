@@ -18,6 +18,9 @@
       wireless = {
         enable = true;
       };
+      routing = {
+        enable = false;
+      };
     };
     graphical = {
       enable = true;

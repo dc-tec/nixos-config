@@ -17,6 +17,7 @@
         kubectl
         kubernetes-helm
         kustomize
+        cilium-cli
       ];
     };
   };
