@@ -75,5 +75,10 @@
   };
   services.fstrim.enable = true;
 
-  dc-tec.core.nix.unfreePackages = ["nvidia-x11" "nvidia-settings"];
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "nvidia-x11"
+      "nvidia"
+      "nvidia-settings"
+    ];
 }

@@ -8,14 +8,25 @@
   };
 
   dc-tec = {
-    stateVersion = "23.11";
+    stateVersion = "24.05";
     core = {
       zfs = {
+        enable = true;
         encrypted = true;
         rootDataset = "rpool/local/root";
       };
       wireless = {
         enable = false;
+      };
+      routing = {
+        enable = true;
+      };
+    };
+    development = {
+      virtualisation = {
+        docker.enable = true;
+        k8s.enable = true;
+        hypervisor.enable = true;
       };
     };
     graphical = {

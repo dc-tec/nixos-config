@@ -22,7 +22,7 @@
             ];
             modules-left = ["hyprland/workspaces"];
             modules-center = ["hyprland/window"];
-            modules-right = ["backlight" "battery" "clock" "tray" "custom/lock" "custom/power"];
+            modules-right = ["network" "backlight" "battery" "clock" "tray" "custom/lock" "custom/power"];
 
             "hyprland/workspaces" = {
               disable-scroll = true;
@@ -52,6 +52,14 @@
               tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
               format-alt = "  {:%d/%m/%Y}";
               format = "  {:%H:%M}";
+            };
+
+            "network" = {
+              format-wifi = "{icon} ({signalStrength}%)  ";
+              format-ethernet = "{ifname}: {ipaddr}/{cidr} 󰈀 ";
+              format-linked = "{ifname} (No IP) 󰌘 ";
+              format-disc = "Disconnected 󰟦 ";
+              format-alt = "{ifname}: {ipaddr}/{cidr}";
             };
 
             "backlight" = {
@@ -125,6 +133,7 @@
           #custom-music,
           #tray,
           #backlight,
+          #network,
           #clock,
           #battery,
           #custom-lock,
@@ -156,8 +165,9 @@
             color: @yellow;
           }
 
-          #backlight {
-              border-radius: 1rem 0px 0px 1rem;
+          #network {
+            border-radius: 1rem 0px 0px 1rem;
+            color: @sky;
           }
 
           #custom-music {

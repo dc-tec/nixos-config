@@ -22,6 +22,7 @@
     dc-tec = {
       graphical = {
         hyprland.enable = lib.mkDefault true;
+        hyprlock.enable = lib.mkDefault true;
         hyprpaper.enable = lib.mkDefault true;
         waybar.enable = lib.mkDefault true;
         terminal.enable = lib.mkDefault true;
@@ -31,6 +32,7 @@
         sound.enable = lib.mkDefault true;
         applications = {
           firefox.enable = lib.mkDefault true;
+          obsidian.enable = lib.mkDefault true;
         };
       };
     };

@@ -41,6 +41,11 @@
     };
 
     home-manager.users.roelc = {pkgs, ...}: {
+      home.packages = with pkgs; [
+        qt5.qtwayland
+        qt6.qtwayland
+      ];
+
       services = {
         cliphist = {
           enable = true;
@@ -180,6 +185,7 @@
             # Applications
             "$mod ALT, f, exec, ${pkgs.firefox}/bin/firefox"
             "$mod ALT, e, exec, $terminal --hold -e ${pkgs.yazi}/bin/yazi"
+            "$mod ALT, o, exec, ${pkgs.obsidian}/bin/obsidian"
             "$mod, r, exec, ${pkgs.rofi}/bin/rofi -modes drun -show drun"
           ];
 
@@ -206,7 +212,8 @@
             "${pkgs.hyprpaper}/bin/hyprpaper"
             "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store"
             "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store"
-            "gnome-keyring-daemon --start --components=secrets"
+            "eval $(gnome-keyring-daemon --start --components=secrets,ssh,gpg,pkcs11)"
+            "export SSH_AUTH_SOCK"
             "${pkgs.plasma5Packages.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
           ];
         };

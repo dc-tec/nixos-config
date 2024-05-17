@@ -5,6 +5,8 @@
   ...
 }: {
   options.dc-tec.core.zfs = {
+    # Enable ZFS
+    enable = lib.mkEnableOption "zfs";
     # Ask for credentials
     encrypted = lib.mkEnableOption "zfs request credentials";
 
@@ -23,13 +25,19 @@
       example = [".ssh"];
     };
     rootDataset = lib.mkOption {
+      default = "";
       example = "rpool/local/root";
     };
   };
 
   config = {
-    dc-tec.dataPrefix = lib.mkDefault "/data";
-    dc-tec.cachePrefix = lib.mkDefault "/cache";
+    dc-tec = {
+      core.zfs = {
+        enable = lib.mkDefault true;
+      };
+      dataPrefix = lib.mkDefault "/data";
+      cachePrefix = lib.mkDefault "/cache";
+    };
 
     environment.persistence."${config.dc-tec.cachePrefix}" = {
       hideMounts = true;

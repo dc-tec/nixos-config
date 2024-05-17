@@ -16,9 +16,15 @@
       kernelModules = [];
     };
     kernelParams = ["mitigations=off"];
-    kernelModules = ["kvm-amd"];
+    kernelModules = [
+      "kvm-amd"
+      "xt_socket"
+    ];
     extraModulePackages = [];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    kernel = {
+      sysctl."net.ipv4.ip_forward" = 1;
+    };
   };
 
   fileSystems = {
@@ -73,7 +79,10 @@
     };
     bluetooth.enable = true;
   };
-  services.fstrim.enable = true;
+  services = {
+    fstrim.enable = true;
+    blueman.enable = true;
+  };
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [

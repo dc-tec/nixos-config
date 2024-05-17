@@ -8,14 +8,18 @@
   };
 
   dc-tec = {
-    stateVersion = "23.11";
+    stateVersion = "24.05";
     core = {
       zfs = {
+        enable = true;
         encrypted = true;
         rootDataset = "rpool/local/root";
       };
       wireless = {
         enable = true;
+      };
+      routing = {
+        enable = false;
       };
     };
     graphical = {

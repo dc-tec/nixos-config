@@ -33,6 +33,7 @@
   config = {
     home-manager = {
       useGlobalPkgs = true;
+      useUserPackages = true;
     };
     system = {
       stateVersion = config.dc-tec.stateVersion;
@@ -85,7 +86,7 @@
         age
         sops
         ssh-to-age
-        nerdfetch
+        fastfetch
         (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
@@ -123,6 +124,8 @@
     i18n = {
       defaultLocale = "en_IE.UTF-8";
       extraLocaleSettings = {
+        LC_ALL = "en_IE.UTF-8";
+        LANGUAGE = "en_US.UTF-8";
         LC_TIME = "en_GB.UTF-8";
       };
       supportedLocales = [
