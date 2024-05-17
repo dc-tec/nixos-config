@@ -1,7 +1,7 @@
 _: {
   imports = [
-    ./k3d.nix
-    ./k9s.nix
+    ./k8s.nix
     ./docker.nix
+    ./hypervisor.nix
   ];
 }

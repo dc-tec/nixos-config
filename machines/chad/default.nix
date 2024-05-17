@@ -23,10 +23,10 @@
       };
     };
     development = {
-      docker.enable = true;
-      k8s = {
-        k3d.enable = true;
-        k9s.enable = true;
+      virtualisation = {
+        docker.enable = true;
+        k8s.enable = true;
+        hypervisor.enable = true;
       };
     };
     graphical = {

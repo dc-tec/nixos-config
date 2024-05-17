@@ -7,8 +7,9 @@
     ./azure-cli
     ./go
     ./terraform
+    ./packer
     ./powershell
-    ./containerization
+    ./virtualisation
   ];
 
   config = {
@@ -19,12 +20,13 @@
       azure-cli.enable = lib.mkDefault true;
       go.enable = lib.mkDefault true;
       terraform.enable = lib.mkDefault true;
+      packer.enable = lib.mkDefault true;
       powershell.enable = lib.mkDefault true;
       python312.enable = lib.mkDefault true;
-      docker.enable = lib.mkDefault false;
-      k8s = {
-        k3d.enable = lib.mkDefault false;
-        k9s.enable = lib.mkDefault true;
+      virtualisation = {
+        docker.enable = lib.mkDefault false;
+        k8s.enable = lib.mkDefault false;
+        hypervisor.enable = lib.mkDefault false;
       };
     };
   };

@@ -5,12 +5,12 @@
   ...
 }: {
   options = {
-    dc-tec.development = {
+    dc-tec.development.virtualisation = {
       docker.enable = lib.mkEnableOption "docker";
     };
   };
 
-  config = lib.mkIf config.dc-tec.development.docker.enable {
+  config = lib.mkIf config.dc-tec.development.virtualisation.docker.enable {
     virtualisation.docker = {
       enable = true;
       extraOptions = "--data-root ${config.dc-tec.dataPrefix}/var/lib/docker";
