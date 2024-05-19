@@ -13,12 +13,13 @@
     };
     initrd = {
       availableKernelModules = ["xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
-      kernelModules = [];
+      kernelModules = ["virtio"];
     };
     kernelParams = ["mitigations=off"];
     kernelModules = [
       "kvm-amd"
       "xt_socket"
+      "vhost-net"
     ];
     extraModulePackages = [];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
