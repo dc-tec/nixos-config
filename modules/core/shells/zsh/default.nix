@@ -59,7 +59,13 @@
         ## Neovim aliases
         vim = "nvim";
         vi = "nvim";
-        nano = "nvim";
+
+        # Development
+        k = "kubectl";
+        t = "terraform";
+        a = "ansible";
+        d = "docker";
+        h = "helm";
       };
     };
   };
