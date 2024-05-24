@@ -5,7 +5,7 @@
     ./bat
     ./yazi
     ./bottom
-    ./z-lua
+    ./zoxide
     ./ripgrep
     ./ssh
     ./sshd
