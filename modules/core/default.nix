@@ -87,6 +87,7 @@
         sops
         ssh-to-age
         fastfetch
+        tlrc
         (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
