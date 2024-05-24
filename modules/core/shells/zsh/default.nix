@@ -35,7 +35,6 @@
           "history-substring-search"
           "helm"
           "ansible"
-          "z"
           "docker"
           "aws"
           "terraform"
@@ -51,21 +50,60 @@
         gcl = "git clone";
         cat = "bat --paging=never";
         ls = "eza --icons --group-directories-first";
+        man = "tlrc";
         ll = "eza --icons --group-directories-first -lah";
         grep = "rg";
         top = "btm";
+        cls = "clear";
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
+
+        # Directory navigation
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        "...." = "cd ../../..";
+        "....." = "cd ../../../..";
+        "......" = "cd ../../../../..";
 
         ## Neovim aliases
         vim = "nvim";
         vi = "nvim";
 
-        # Development
+        # Kubernetes aliases
         k = "kubectl";
+        ka = "kubectl apply -f";
+        kg = "kubectl get";
+        kd = "kubectl describe";
+        kdel = "kubectl delete";
+        kl = "kubectl logs";
+        kgp = "kubectl get pods";
+        kgd = "kubectl get deployments";
+        ke = "kubectl exec -it";
+        kcsns = "kubectl config set-context --current --namespace";
+
+        # Terraform aliases
         t = "terraform";
+        ta = "terraform apply";
+        tp = "terraform plan";
+        td = "terraform destroy";
+        tinit = "terraform init";
+        tup = "terraform init -upgrade";
+
+        # Ansible aliases
         a = "ansible";
+        ap = "ansible-playbook";
+
+        # Docker aliases
         d = "docker";
+        dps = "docker ps";
+        dpsa = "docker ps -a";
+        di = "docker images";
+        ds = "docker stop";
+        drm = "docker rm";
+
+        # Helm aliases
         h = "helm";
+        hi = "helm install";
+        hu = "helm upgrade";
       };
     };
   };

@@ -1,11 +1,8 @@
 _: let
   base = home: {
-    programs.z-lua = {
+    programs.zoxide = {
       enable = true;
       enableZshIntegration = true;
-      options = [
-        "fzf"
-      ];
     };
   };
 in {

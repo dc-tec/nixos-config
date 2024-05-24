@@ -9,5 +9,6 @@
     ./ripgrep
     ./ssh
     ./sshd
+    ./direnv
   ];
 }
