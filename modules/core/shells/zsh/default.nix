@@ -71,6 +71,7 @@
         # Kubernetes aliases
         k = "kubectl";
         ka = "kubectl apply -f";
+        kak = "kubectl apply -k";
         kg = "kubectl get";
         kd = "kubectl describe";
         kdel = "kubectl delete";
