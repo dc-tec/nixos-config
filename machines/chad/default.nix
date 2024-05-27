@@ -5,6 +5,9 @@
     hostName = "chad";
     hostId = "a51b205b";
     nameservers = ["1.1.1.1" "1.0.0.1"];
+    extraHosts = ''
+      172.50.0.101  argocd.decort.tech
+    '';
   };
 
   dc-tec = {
@@ -17,9 +20,6 @@
       };
       wireless = {
         enable = false;
-      };
-      routing = {
-        enable = true;
       };
     };
     development = {
