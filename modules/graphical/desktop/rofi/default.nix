@@ -10,7 +10,7 @@
         enable = true;
         catppuccin = {
           enable = true;
-          flavour = "macchiato";
+          flavor = "macchiato";
         };
         terminal = "${pkgs.kitty}/bin/kitty";
         plugins = [
