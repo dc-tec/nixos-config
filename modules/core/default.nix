@@ -47,7 +47,7 @@
     # System wide default color scheme
     colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
     catppuccin = {
-      flavour = "macchiato";
+      flavor = "macchiato";
     };
 
     dc-tec.core.zfs.homeCacheLinks = [".config"];
@@ -61,7 +61,7 @@
         home.packages = [inputs.nixvim.packages.x86_64-linux.default];
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
         catppuccin = {
-          flavour = "macchiato";
+          flavor = "macchiato";
           accent = "peach";
         };
       };
@@ -88,6 +88,8 @@
         ssh-to-age
         fastfetch
         tlrc
+        jq
+        yq
         (pkgs.callPackage ../../pkgs/niks {})
       ];
     };
