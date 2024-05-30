@@ -19,6 +19,7 @@
         kustomize
         argocd
         cilium-cli
+        kubeseal
       ];
 
       programs.k9s = {
