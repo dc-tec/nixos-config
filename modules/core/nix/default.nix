@@ -45,6 +45,12 @@ in {
     };
 
     nix = {
+      settings = {
+        trusted-users = [
+          "roelc"
+        ];
+      };
+
       gc = {
         automatic = true;
         dates = "daily";
