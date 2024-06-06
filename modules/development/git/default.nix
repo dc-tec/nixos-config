@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./lazy_git.nix
+    ./github.nix
   ];
 
   options.dc-tec.development.git = {
