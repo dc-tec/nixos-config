@@ -44,7 +44,6 @@
         randomizedDelaySec = "15min";
       };
     };
-    # System wide default color scheme
     colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
     catppuccin = {
       flavor = "macchiato";
