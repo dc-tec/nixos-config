@@ -37,7 +37,7 @@ in {
     programs.nh = {
       enable = true;
       clean.enable = false;
-      flake = "/cache/home/roelc/repos/nixos-config";
+      flake = "/home/roelc/repos/nixos-config";
     };
 
     nixpkgs.config = {

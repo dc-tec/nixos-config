@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: let
   base = home: {
@@ -18,7 +19,10 @@
       autocd = true;
       history = {
         expireDuplicatesFirst = true;
-        path = "${config.dc-tec.cachePrefix}${home}/.local/share/zsh/zsh_history";
+        path =
+          if config.dc-tec.core.persistence.enable
+          then "/data${home}/.local/share/zsh/zsh_history"
+          else "${home}/.local/share/zsh/zsh_history";
       };
 
       oh-my-zsh = {
@@ -110,8 +114,8 @@
   };
 in {
   programs.zsh.enable = true;
-  dc-tec.core.zfs.systemCacheLinks = ["/root/.local/share/autojump"];
-  dc-tec.core.zfs.homeCacheLinks = [".local/share/autojump"];
+  dc-tec.core.zfs.systemCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable ["/root/.local/share/autojump"];
+  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".local/share/autojump"];
   home-manager.users.roelc = _: (base "/home/roelc");
   home-manager.users.root = _: (base "/root");
 }

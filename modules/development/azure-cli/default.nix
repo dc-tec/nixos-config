@@ -11,7 +11,7 @@
   };
 
   config = lib.mkIf config.dc-tec.development.azure-cli.enable {
-    dc-tec.core.zfs.homeCacheLinks = [".azure"];
+    dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".azure"];
 
     environment.systemPackages = with pkgs; [
       azure-cli

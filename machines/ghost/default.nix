@@ -23,17 +23,21 @@
   dc-tec = {
     stateVersion = "24.05";
     core = {
+      persistence = {
+        enable = false;
+      };
       zfs = {
         enable = false;
       };
-      wireless = {
-        enable = false;
-      };
     };
-    graphical = {
-      enable = false;
-      xdg = {
-        enable = true;
+    development = {
+      virtualisation = {
+        hypervisor = {
+          enable = false;
+        };
+        docker = {
+          enable = false;
+        };
       };
     };
   };

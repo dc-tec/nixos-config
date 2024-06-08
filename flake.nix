@@ -48,6 +48,29 @@
       "x86_64-linux"
     ];
 
+    wslModules = [
+      (_: {
+        nix.extraOptions = ''
+          experimental-features = nix-command flakes
+          warn-dirty = false
+        '';
+      })
+
+      home-manager.nixosModule
+      catppuccin.nixosModules.catppuccin
+      impermanence.nixosModule
+      nixos-wsl.nixosModules.default
+
+      ./modules/core/home-manager
+      ./modules/core/nix
+      ./modules/core/utils
+      ./modules/core/shells
+      ./modules/core/system
+      ./modules/core/storage
+
+      ./modules/development
+    ];
+
     sharedModules = [
       (_: {
         nix.extraOptions = ''
@@ -101,7 +124,7 @@
       };
       ghost = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = sharedModules ++ [./machines/ghost/default.nix];
+        modules = wslModules ++ [./machines/ghost/default.nix];
       };
     };
   };

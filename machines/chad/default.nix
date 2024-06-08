@@ -13,6 +13,9 @@
   dc-tec = {
     stateVersion = "24.05";
     core = {
+      persistence = {
+        enable = true;
+      };
       zfs = {
         enable = true;
         encrypted = true;
