@@ -5,8 +5,10 @@
   ...
 }: {
   options = {
-    dc-tec.development.virtualisation = {
-      docker.enable = lib.mkEnableOption "docker";
+    dc-tec = {
+      development.virtualisation = {
+        docker.enable = lib.mkEnableOption "docker";
+      };
     };
   };
 

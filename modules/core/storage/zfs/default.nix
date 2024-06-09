@@ -4,37 +4,49 @@
   pkgs,
   ...
 }: {
-  options.dc-tec.core.zfs = {
-    # Enable ZFS
-    enable = lib.mkEnableOption "zfs";
-    # Ask for credentials
-    encrypted = lib.mkEnableOption "zfs request credentials";
-
-    # Clear our symbolic links
-    systemCacheLinks = lib.mkOption {default = [];};
-    systemDataLinks = lib.mkOption {default = [];};
-    homeCacheLinks = lib.mkOption {default = [];};
-    homeDataLinks = lib.mkOption {default = [];};
-
-    ensureSystemExists = lib.mkOption {
-      default = [];
-      example = ["/data/etc/ssh"];
+  options.dc-tec.core = {
+    persistence = {
+      enable = lib.mkEnableOption "Enable persistence";
     };
-    ensureHomeExists = lib.mkOption {
-      default = [];
-      example = [".ssh"];
-    };
-    rootDataset = lib.mkOption {
-      default = "";
-      example = "rpool/local/root";
+
+    zfs = {
+      # Enable ZFS
+      enable = lib.mkEnableOption "zfs";
+      # Ask for credentials
+      encrypted = lib.mkEnableOption "zfs request credentials";
+
+      # Clear our symbolic links
+      systemCacheLinks = lib.mkOption {default = [];};
+      systemDataLinks = lib.mkOption {default = [];};
+      homeCacheLinks = lib.mkOption {default = [];};
+      homeDataLinks = lib.mkOption {default = [];};
+
+      ensureSystemExists = lib.mkOption {
+        default = [];
+        example = ["/data/etc/ssh"];
+      };
+      ensureHomeExists = lib.mkOption {
+        default = [];
+        example = [".ssh"];
+      };
+      rootDataset = lib.mkOption {
+        default = "";
+        example = "rpool/local/root";
+      };
     };
   };
 
   config = {
     dc-tec = {
-      core.zfs = {
-        enable = lib.mkDefault true;
+      core = {
+        persistence = {
+          enable = lib.mkDefault true;
+        };
+        zfs = {
+          enable = lib.mkDefault true;
+        };
       };
+
       dataPrefix = lib.mkDefault "/data";
       cachePrefix = lib.mkDefault "/cache";
     };

@@ -18,7 +18,10 @@
       autocd = true;
       history = {
         expireDuplicatesFirst = true;
-        path = "${config.dc-tec.cachePrefix}${home}/.local/share/zsh/zsh_history";
+        path =
+          if config.dc-tec.core.persistence.enable
+          then "/data${home}/.local/share/zsh/zsh_history"
+          else "${home}/.local/share/zsh/zsh_history";
       };
 
       oh-my-zsh = {
@@ -56,6 +59,7 @@
         top = "btm";
         cls = "clear";
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
+        lg = "lazygit";
 
         # Directory navigation
         ".." = "cd ..";
