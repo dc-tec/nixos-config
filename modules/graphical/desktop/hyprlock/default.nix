@@ -46,7 +46,7 @@
           }
 
         lablel {
-          font_family = Iosevka Nerd Font
+          font_family = 0xProto Nerd Font
           text = Yo..., Wassup!
           font_size = 25
           position = 0,300
