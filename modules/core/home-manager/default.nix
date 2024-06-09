@@ -8,13 +8,7 @@
     inputs.nix-colors.homeManagerModules.default
   ];
 
-  #  dc-tec = {
-  #    core.persistence = {
-  #      enable = lib.mkDefault true;
-  #    };
-  #  };
-
-  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".config"];
+  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".config" ".cache" ".local"];
 
   colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
   catppuccin = {

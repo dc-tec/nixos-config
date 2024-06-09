@@ -1,4 +1,8 @@
-{...}: let
+{
+  lib,
+  config,
+  ...
+}: let
   base = home: {
     programs.gh = {
       enable = true;
@@ -9,5 +13,6 @@
     };
   };
 in {
+  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".gh"];
   home-manager.users.roelc = {...}: (base "/home/roelc");
 }
