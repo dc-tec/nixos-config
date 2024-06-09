@@ -58,7 +58,7 @@
 
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
-      impermanence.nixosModule
+      impermanence.nixosModule # Needed to disable certain options
       nixos-wsl.nixosModules.default
 
       ./modules/core/home-manager
@@ -66,8 +66,7 @@
       ./modules/core/utils
       ./modules/core/shells
       ./modules/core/system
-      ./modules/core/storage
-
+      ./modules/core/storage # Needed to disable certain options
       ./modules/development
     ];
 

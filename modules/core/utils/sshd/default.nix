@@ -1,6 +1,5 @@
 {config, ...}: {
   dc-tec = {
-    dataPrefix = "/data";
     core = {
       zfs = {
         ensureSystemExists = ["${config.dc-tec.dataPrefix}/etc/ssh"];

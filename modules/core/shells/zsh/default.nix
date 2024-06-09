@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }: let
   base = home: {
@@ -60,6 +59,7 @@
         top = "btm";
         cls = "clear";
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
+        lg = "lazygit";
 
         # Directory navigation
         ".." = "cd ..";
@@ -114,8 +114,8 @@
   };
 in {
   programs.zsh.enable = true;
-  dc-tec.core.zfs.systemCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable ["/root/.local/share/autojump"];
-  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".local/share/autojump"];
+  dc-tec.core.zfs.systemCacheLinks = ["/root/.local/share/autojump"];
+  dc-tec.core.zfs.homeCacheLinks = [".local/share/autojump"];
   home-manager.users.roelc = _: (base "/home/roelc");
   home-manager.users.root = _: (base "/root");
 }

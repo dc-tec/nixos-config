@@ -4,11 +4,10 @@
   ...
 }: {
   dc-tec = {
-    dataPrefix = "/data";
     core = {
-      persistence = {
-        enable = lib.mkDefault true;
-      };
+      #   persistence = {
+      #     enable = lib.mkDefault true;
+      #   };
       zfs = {
         homeDataLinks = [
           {
