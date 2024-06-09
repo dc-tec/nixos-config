@@ -16,7 +16,7 @@
         plugins = [
           pkgs.rofi-systemd
         ];
-        font = "Iosevka Nerd Font";
+        font = "0xProto Nerd Font";
         extraConfig = {
           show-icons = false;
           modi = "window,run,ssh";

@@ -96,7 +96,7 @@
 
         style = ''
           * {
-            font-family: Iosevka Nerd Font;
+            font-family: '0xProto Nerd Font';
             font-size: 18px;
             min-height: 0;
           }

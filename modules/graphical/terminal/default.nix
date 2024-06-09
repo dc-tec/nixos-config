@@ -19,6 +19,9 @@
           window_margin_width = 5;
           single_window_margin_width = -1;
         };
+        extraConfig = ''
+          modify_font cell_height 102%
+        '';
       };
     };
   };

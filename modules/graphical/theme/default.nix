@@ -19,13 +19,13 @@
       fontconfig = {
         enable = true;
         defaultFonts = {
-          monospace = ["Iosevka Nerd Font"];
-          sansSerif = ["Iosevka Nerd Font"];
-          serif = ["Iosevka Nerd Font"];
+          monospace = ["0xProto Nerd Font"];
+          sansSerif = ["0xProto Nerd Font"];
+          serif = ["0xProto Nerd Font"];
         };
       };
       packages = with pkgs; [
-        (nerdfonts.override {fonts = ["Iosevka"];})
+        (nerdfonts.override {fonts = ["0xProto"];})
       ];
     };
 
@@ -40,13 +40,13 @@
           enable = true;
           accent = "maroon";
           cursor = {
-            enable = true;
+            enable = false;
             accent = "peach";
           };
         };
 
         font = {
-          name = "Iosevka Nerd Font";
+          name = "0xProto Nerd Font";
           size = 10;
         };
       };
@@ -59,14 +59,14 @@
       programs.kitty = {
         catppuccin.enable = true;
         font = {
-          name = "Iosevka Nerd Font";
+          name = "0xProto Nerd Font";
           size = 10;
         };
         settings = {
           disable_ligatures = "always";
 
           # Font config
-          font_family = "Iosevka Nerd Font";
+          font_family = "0xProto Nerd Font";
         };
       };
     };
