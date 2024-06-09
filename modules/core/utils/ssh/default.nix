@@ -1,13 +1,6 @@
-{
-  config,
-  lib,
-  ...
-}: {
+{config, ...}: {
   dc-tec = {
     core = {
-      #   persistence = {
-      #     enable = lib.mkDefault true;
-      #   };
       zfs = {
         homeDataLinks = [
           {
