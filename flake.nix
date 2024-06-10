@@ -61,6 +61,7 @@
       impermanence.nixosModule # Needed to disable certain options
       nixos-wsl.nixosModules.default
 
+      ./modules/wsl
       ./modules/core/home-manager
       ./modules/core/nix
       ./modules/core/utils
