@@ -51,6 +51,8 @@
         home = "cd ~/";
         repos = "cd ~/repos";
         config = "cd ~/repos/nixos-config";
+        work = "cd ~/projects/work";
+        personal = "cd ~/projects/personal";
         gcl = "git clone";
         cat = "bat --paging=never";
         ls = "eza --icons --group-directories-first";
