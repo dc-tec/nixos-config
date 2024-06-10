@@ -22,12 +22,13 @@ in {
   };
 
   config = {
-    dc-tec.core = {
-      zfs = {
-        homeCacheLinks = lib.optional config.dc-tec.core.nix.enableDirenv ".local/share/direnv";
-        systemCacheLinks = lib.optional config.dc-tec.core.nix.enableDirenv "/root/.local/share/direnv";
-      };
-    };
+    dc-tec.core.zfs = lib.mkMerge [
+      (lib.mkIf config.dc-tec.core.persistence.enable {
+        homeCacheLinks = ["local/share/direnv"];
+        systemCacheLinks = ["/root/.local/share/direnv"];
+      })
+      (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+    ];
 
     #    programs.niks-cli = {
     #      enable = true;

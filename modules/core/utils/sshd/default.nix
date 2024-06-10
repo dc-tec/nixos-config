@@ -1,11 +1,14 @@
-{config, ...}: {
-  dc-tec = {
-    core = {
-      zfs = {
-        ensureSystemExists = ["${config.dc-tec.dataPrefix}/etc/ssh"];
-      };
-    };
-  };
+{
+  config,
+  lib,
+  ...
+}: {
+  dc-tec.core.zfs = lib.mkMerge [
+    (lib.mkIf config.dc-tec.core.persistence.enable {
+      ensureSystemExists = ["${config.dc-tec.dataPrefix}/etc/ssh"];
+    })
+    (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+  ];
 
   services.openssh = {
     enable = true;
