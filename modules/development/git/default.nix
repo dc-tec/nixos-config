@@ -29,8 +29,8 @@
 
         includes = [
           {
-            path = "/home/roelc/work/.gitconfig";
-            condition = "gitdir:/home/roelc/work/";
+            path = "/home/roelc/projects/work/.gitconfig";
+            condition = "gitdir:/home/roelc/projects/work/";
           }
         ];
 
