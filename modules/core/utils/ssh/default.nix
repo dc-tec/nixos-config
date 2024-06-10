@@ -1,23 +1,25 @@
-{config, ...}: {
-  dc-tec = {
-    core = {
-      zfs = {
-        homeDataLinks = [
-          {
-            directory = ".ssh";
-            mode = "0700";
-          }
-        ];
-
-        systemDataLinks = [
-          {
-            directory = "/root/.ssh/";
-            mode = "0700";
-          }
-        ];
-      };
-    };
-  };
+{
+  config,
+  lib,
+  ...
+}: {
+  dc-tec.core.zfs = lib.mkMerge [
+    (lib.mkIf config.dc-tec.core.persistence.enable {
+      homeDataLinks = [
+        {
+          directory = ".ssh";
+          mode = "0700";
+        }
+      ];
+      systemDataLinks = [
+        {
+          directory = "/root/.ssh/";
+          mode = "0700";
+        }
+      ];
+    })
+    (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+  ];
 
   # TODO: Configure SSH Agent
   home-manager.users.roelc = _: {

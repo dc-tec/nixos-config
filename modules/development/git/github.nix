@@ -13,6 +13,12 @@
     };
   };
 in {
-  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".gh"];
+  dc-tec.core.zfs = lib.mkMerge [
+    (lib.mkIf config.dc-tec.core.persistence.enable {
+      homeCacheLinks = [".gh"];
+    })
+    (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+  ];
+
   home-manager.users.roelc = {...}: (base "/home/roelc");
 }

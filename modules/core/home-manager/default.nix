@@ -8,7 +8,12 @@
     inputs.nix-colors.homeManagerModules.default
   ];
 
-  dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".config" ".cache" ".local"];
+  dc-tec.core.zfs = lib.mkMerge [
+    (lib.mkIf config.dc-tec.core.persistence.enable {
+      homeCacheLinks = [".config" ".cache" ".local"];
+    })
+    (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+  ];
 
   colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
   catppuccin = {

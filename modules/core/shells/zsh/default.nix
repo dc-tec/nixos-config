@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: let
   base = home: {
@@ -114,8 +115,13 @@
   };
 in {
   programs.zsh.enable = true;
-  dc-tec.core.zfs.systemCacheLinks = ["/root/.local/share/autojump"];
-  dc-tec.core.zfs.homeCacheLinks = [".local/share/autojump"];
+  dc-tec.core.zfs = lib.mkMerge [
+    (lib.mkIf config.dc-tec.core.persistence.enable {
+      systemCacheLinks = ["/root/.local/share/autojump"];
+      homeCacheLinks = [".local/share/autojump"];
+    })
+    (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+  ];
   home-manager.users.roelc = _: (base "/home/roelc");
   home-manager.users.root = _: (base "/root");
 }

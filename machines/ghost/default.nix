@@ -7,6 +7,17 @@
     inputs.nixos-wsl.nixosModules.default
   ];
 
+  users = {
+    mutableUsers = true;
+    users = {
+      roelc = {
+        isNormalUser = true;
+        home = "/home/roelc";
+        extraGroups = ["systemd-journal"];
+      };
+    };
+  };
+
   wsl = {
     enable = true;
 
