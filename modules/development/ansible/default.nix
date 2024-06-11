@@ -16,6 +16,7 @@
       ansible-later
       ansible-navigator
       ansible-builder
+      ansible-lint
     ];
   };
 }
