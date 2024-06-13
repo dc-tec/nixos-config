@@ -55,20 +55,6 @@
         enable = true;
         platformTheme.name = "gtk";
       };
-
-      programs.kitty = {
-        catppuccin.enable = true;
-        font = {
-          name = "0xProto Nerd Font";
-          size = 10;
-        };
-        settings = {
-          disable_ligatures = "always";
-
-          # Font config
-          font_family = "0xProto Nerd Font";
-        };
-      };
     };
   };
 }
