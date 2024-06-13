@@ -49,8 +49,7 @@
       };
       shellAliases = {
         home = "cd ~/";
-        repos = "cd ~/repos";
-        config = "cd ~/repos/nixos-config";
+        config = "cd ~/projects/personal/nixos-config";
         work = "cd ~/projects/work";
         personal = "cd ~/projects/personal";
         gcl = "git clone";
@@ -64,7 +63,7 @@
         myip = "dig +short myip.opendns.com @208.67.222.222 2>&1";
         lg = "lazygit";
 
-        # Directory navigation
+        # Directory traversal
         ".." = "cd ..";
         "..." = "cd ../..";
         "...." = "cd ../../..";

@@ -11,11 +11,9 @@
   options.dc-tec.development.git = {
     enable = lib.mkOption {
       default = true;
-      example = false;
     };
     email = lib.mkOption {
       default = "roel@decort.tech";
-      example = "example@example.com";
     };
   };
 
@@ -46,7 +44,7 @@
           };
 
           github.user = "dc-tec";
-          safe.directory = "/home/roelc/repos/nixos-config/.git";
+          safe.directory = "/home/roelc/projects/personal/nixos-config/.git";
         };
       };
     };
