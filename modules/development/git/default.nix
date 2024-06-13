@@ -37,6 +37,9 @@
           push.autoSetupRemote = true;
           pull.rebase = true;
 
+          user.signingkey = "5C04F622E4FD914D5E2AF671DED0E794E70C0F7F";
+          commit.gpgsign = true;
+
           url = {
             "ssh://git@github.com/dc-tec" = {
               insteadOf = "https://github.com/dc-tec";
