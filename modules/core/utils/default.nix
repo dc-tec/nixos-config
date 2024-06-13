@@ -7,6 +7,7 @@
     ./bottom
     ./zoxide
     ./ripgrep
+    ./gpg
     ./ssh
     ./sshd
     ./direnv

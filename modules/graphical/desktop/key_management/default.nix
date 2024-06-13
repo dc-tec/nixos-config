@@ -9,8 +9,6 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.key_management.enable {
-    dc-tec.core.zfs.homeCacheLinks = [".gnupg"];
-
     environment.systemPackages = [
       pkgs.gnome.gnome-keyring
     ];
