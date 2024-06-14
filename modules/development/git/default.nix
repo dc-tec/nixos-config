@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: {
   imports = [
@@ -39,6 +40,7 @@
 
           user.signingkey = "5C04F622E4FD914D5E2AF671DED0E794E70C0F7F";
           commit.gpgsign = true;
+          gpg.program = "${pkgs.gnupg}/bin/gpg2";
 
           url = {
             "ssh://git@github.com/dc-tec" = {
