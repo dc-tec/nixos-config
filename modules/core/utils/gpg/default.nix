@@ -27,5 +27,9 @@
     enable = true;
     pinentryPackage = pkgs.pinentry-gtk2;
     enableSSHSupport = true;
+    settings = {
+      default-cache-ttl = 46000;
+      allow-preset-passphrase = true;
+    };
   };
 }
