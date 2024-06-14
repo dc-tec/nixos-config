@@ -43,6 +43,10 @@ ZFS is used on the storage layer. I'm making use of impermanence where the files
 
 For secret management in a pure Nix way Nix SOPS is used. See [add new host](docs/add-new-host.md)
 
+### WSL
+
+I want to be able to use my configuration when working on a Windows machine (i.e. my work laptop). I make use of [NixOS-WSL](https://github.com/nix-community/NixOS-WSL). Because the main configuration uses impermanence and ZFS and this is ofcourse not supported in WSL I created options throughout the config to enable / disable impermanence. Also the graphical module is not loaded. See the [flake](flake.nix).
+
 ### References
 
 - [Erase Your Darlings](https://grahamc.com/blog/erase-your-darlings/)
