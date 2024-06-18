@@ -23,13 +23,16 @@
     ];
   };
 
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-gtk2;
-    enableSSHSupport = true;
-    settings = {
-      default-cache-ttl = 46000;
-      allow-preset-passphrase = true;
+  home-manager.users.roelc = {
+    services.gpg-agent = {
+      enable = true;
+      enableZshIntegration = true;
+      enableSshSupport = true;
+      pinentryPackage = pkgs.pinentry-gtk2;
+      defaultCacheTtl = 46000;
+      extraConfig = ''
+        allow-preset-passphrase
+      '';
     };
   };
 }
