@@ -5,7 +5,7 @@
     ./hyprpaper
     ./hyprlock
     ./wlogout
-    ./rofi
+    ./fuzzel
     ./key_management
   ];
 }
