@@ -12,12 +12,38 @@
           error_symbol = "[󱄅 ❯](bold red)";
         };
         format = lib.concatStrings [
-          "$directory$character"
+          "$directory"
+          "$git_branch"
+          "$git_status"
+          "$direnv"
+          "$cmd_duration"
+          "\n󱞪(2) $character"
         ];
 
-        right_format = lib.concatStrings [
-          "$all"
-        ];
+        git_status = {
+          conflicted = " \${count}x ";
+          ahead = " \${count}x ";
+          behind = " \${count}x ";
+          diverged = "󱐎 \${count}x ";
+          untracked = "\${count}x ";
+          stashed = "󰆔 \${count}x ";
+          modified = "󰴓\${count}x ";
+          staged = "󰅕\${count}x ";
+          renamed = "󰑕\${count}x ";
+          deleted = " \${count}x ";
+        };
+
+        directory = {
+          home_symbol = " ";
+          read_only = " ";
+        };
+
+        direnv = {
+          disabled = false;
+          symbol = "󱃼 ";
+          format = "[$symbol]($style) ";
+          style = "12";
+        };
 
         line_break = {
           disabled = true;
