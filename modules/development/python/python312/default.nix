@@ -13,8 +13,6 @@
   config = lib.mkIf config.dc-tec.development.python312.enable {
     environment.systemPackages = with pkgs; [
       python312
-      python312Packages.yq
-      python312Packages.jq
     ];
   };
 }
