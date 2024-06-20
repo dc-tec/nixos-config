@@ -27,6 +27,8 @@
         waybar.enable = lib.mkDefault true;
         terminal.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
+        fuzzel.enable = lib.mkDefault true;
+        anyrun.enable = lib.mkDefault true;
         key_management.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
         sound.enable = lib.mkDefault true;

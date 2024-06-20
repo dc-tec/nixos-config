@@ -7,6 +7,7 @@
     nameservers = ["1.1.1.1" "1.0.0.1"];
     extraHosts = ''
       172.50.0.101  argocd.decort.tech
+      172.50.0.102  longhorn.decort.tech
     '';
   };
 

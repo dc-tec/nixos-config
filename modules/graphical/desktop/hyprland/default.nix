@@ -12,6 +12,8 @@
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
     environment.systemPackages = [
       pkgs.wl-clipboard
+      pkgs.slurp
+      pkgs.grim
     ];
 
     nix.settings = {
@@ -124,10 +126,6 @@
             no_gaps_when_only = 0;
           };
 
-          master = {
-            new_is_master = true;
-          };
-
           misc = {
             disable_hyprland_logo = true;
             disable_splash_rendering = true;
@@ -186,7 +184,8 @@
             "$mod ALT, f, exec, ${pkgs.firefox}/bin/firefox"
             "$mod ALT, e, exec, $terminal --hold -e ${pkgs.yazi}/bin/yazi"
             "$mod ALT, o, exec, ${pkgs.obsidian}/bin/obsidian"
-            "$mod, r, exec, ${pkgs.rofi}/bin/rofi -modes drun -show drun"
+            "$mod, r, exec, pkill fuzzel || ${pkgs.fuzzel}/bin/fuzzel"
+            "$mod ALT, Slash, exec, pkill anyrun || ${pkgs.anyrun}/bin/anyrun"
           ];
 
           bindm = [
