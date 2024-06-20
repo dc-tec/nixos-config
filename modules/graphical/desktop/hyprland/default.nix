@@ -185,6 +185,7 @@
             "$mod ALT, e, exec, $terminal --hold -e ${pkgs.yazi}/bin/yazi"
             "$mod ALT, o, exec, ${pkgs.obsidian}/bin/obsidian"
             "$mod, r, exec, pkill fuzzel || ${pkgs.fuzzel}/bin/fuzzel"
+            "$mod ALT, Slash, exec, pkill anyrun || ${pkgs.anyrun}/bin/anyrun"
           ];
 
           bindm = [

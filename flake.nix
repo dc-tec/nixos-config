@@ -10,10 +10,11 @@
     impermanence.url = "github:nix-community/impermanence";
     sops-nix.url = "github:Mic92/sops-nix";
 
-    # Hyperland related flakes
+    # Hyperland / Wayland related flakes
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprpaper.url = "github:hyprwm/hyprpaper";
     hyprlock.url = "github:hyprwm/hyprlock";
+    anyrun.url = "github:anyrun-org/anyrun";
 
     # Catppuccin theming
     nix-colors.url = "github:misterio77/nix-colors";
@@ -35,6 +36,7 @@
     hyprland,
     hyprpaper,
     hyprlock,
+    anyrun,
     nixvim,
     niks-cli,
     nix-colors,

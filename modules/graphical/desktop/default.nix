@@ -6,6 +6,7 @@
     ./hyprlock
     ./wlogout
     ./fuzzel
+    ./anyrun
     ./key_management
   ];
 }
