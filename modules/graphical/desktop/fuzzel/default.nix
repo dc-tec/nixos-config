@@ -10,13 +10,18 @@
 
   config = lib.mkIf config.dc-tec.graphical.fuzzel.enable {
     home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        papirus-icon-theme
+      ];
+
       programs.fuzzel = {
         enable = true;
         settings = {
           main = {
             terminal = "${pkgs.kitty}/bin/kitty";
             layer = "overlay";
-            prompt = ">> ";
+            icon-theme = "Papirus-Dark";
+            prompt = " ";
             font = "0xProto Nerd Font";
           };
           colors = {

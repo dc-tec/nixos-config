@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nur.url = "github:nix-community/NUR";
 
     # Flakes
     home-manager.url = "github:nix-community/home-manager";
@@ -38,6 +39,7 @@
     hyprlock,
     anyrun,
     nixvim,
+    nur,
     niks-cli,
     nix-colors,
     catppuccin,
@@ -80,12 +82,27 @@
           warn-dirty = false
         '';
       })
+      ({
+        inputs,
+        outputs,
+        lib,
+        config,
+        pkgs,
+        ...
+      }: {
+        nixpkgs = {
+          overlays = [
+            nur.overlay
+          ];
+        };
+      })
 
       sops-nix.nixosModules.sops
       impermanence.nixosModule
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
       nixos-wsl.nixosModules.default
+      nur.nixosModules.nur
 
       ./modules
     ];
