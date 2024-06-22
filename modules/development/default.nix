@@ -9,6 +9,7 @@
     ./terraform
     ./packer
     ./powershell
+    ./yaml
     ./virtualisation
   ];
 
@@ -23,6 +24,7 @@
       packer.enable = lib.mkDefault true;
       powershell.enable = lib.mkDefault true;
       python312.enable = lib.mkDefault true;
+      yamlls.enable = lib.mkDefault true;
       virtualisation = {
         docker.enable = lib.mkDefault false;
         k8s.enable = lib.mkDefault false;
