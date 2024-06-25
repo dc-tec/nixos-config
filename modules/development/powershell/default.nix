@@ -11,8 +11,10 @@
   };
 
   config = lib.mkIf config.dc-tec.development.powershell.enable {
-    environment.systemPackages = with pkgs; [
-      powershell
-    ];
+    home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        powershell
+      ];
+    };
   };
 }
