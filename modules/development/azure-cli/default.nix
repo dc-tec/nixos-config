@@ -18,9 +18,11 @@
       (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
     ];
 
-    environment.systemPackages = with pkgs; [
-      azure-cli
-      bicep
-    ];
+    home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        azure-cli
+        bicep
+      ];
+    };
   };
 }

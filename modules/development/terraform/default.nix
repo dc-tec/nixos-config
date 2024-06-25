@@ -13,9 +13,11 @@
   config = lib.mkIf config.dc-tec.development.terraform.enable {
     dc-tec.core.zfs.homeCacheLinks = lib.mkIf config.dc-tec.core.persistence.enable [".tenv"];
 
-    environment.systemPackages = with pkgs; [
-      tenv
-      terraform-docs
-    ];
+    home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        tenv
+        terraform-docs
+      ];
+    };
   };
 }

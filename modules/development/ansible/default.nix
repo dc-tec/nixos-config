@@ -11,12 +11,13 @@
   };
 
   config = lib.mkIf config.dc-tec.development.ansible.enable {
-    environment.systemPackages = with pkgs; [
-      ansible
-      ansible-later
-      ansible-navigator
-      ansible-builder
-      ansible-lint
-    ];
+    home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        ansible
+        ansible-later
+        ansible-builder
+        ansible-lint
+      ];
+    };
   };
 }

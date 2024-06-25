@@ -11,8 +11,10 @@
   };
 
   config = lib.mkIf config.dc-tec.development.go.enable {
-    environment.systemPackages = with pkgs; [
-      go
-    ];
+    home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        go
+      ];
+    };
   };
 }

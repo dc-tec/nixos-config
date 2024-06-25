@@ -11,8 +11,10 @@
   };
 
   config = lib.mkIf config.dc-tec.development.aws-cli.enable {
-    environment.systemPackages = with pkgs; [
-      awscli2
-    ];
+    home-manager.users.roelc = {
+      home.packages = with pkgs; [
+        awscli2
+      ];
+    };
   };
 }
