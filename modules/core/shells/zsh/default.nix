@@ -12,6 +12,7 @@
       })
       (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
     ];
+    programs.zsh.enable = true;
 
     home-manager.users.roelc = {
       home.packages = [
