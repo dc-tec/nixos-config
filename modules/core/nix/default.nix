@@ -2,21 +2,12 @@
   config,
   lib,
   ...
-}: let
-  baseDirenv = {
-    programs.direnv = {
-      enable = true;
-      enableZshIntegration = true;
-      nix-direnv.enable = true;
-    };
-  };
-in {
+}: {
   options = {
     dc-tec.core.nix = {
       enableDirenv = lib.mkOption {default = true;};
       unfreePackages = lib.mkOption {
         default = [];
-        example = ["teams"];
       };
     };
   };
@@ -29,11 +20,6 @@ in {
       })
       (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
     ];
-
-    #    programs.niks-cli = {
-    #      enable = true;
-    #      package = pkgs.packages.x86_64-linux.niks-cli;
-    #    };
 
     programs.nh = {
       enable = true;

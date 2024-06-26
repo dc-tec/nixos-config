@@ -1,12 +1,12 @@
-_: let
-  base = home: {
-    programs.bottom = {
-      enable = true;
-      catppuccin = {
+_: {
+  config = {
+    home-manager.users.roelc = {
+      programs.bottom = {
         enable = true;
+        catppuccin = {
+          enable = true;
+        };
       };
     };
   };
-in {
-  home-manager.users.roelc = _: (base "/home/roelc");
 }

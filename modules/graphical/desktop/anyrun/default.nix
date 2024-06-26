@@ -3,7 +3,6 @@
   pkgs,
   lib,
   config,
-  system,
   ...
 }: {
   options.dc-tec.graphical.anyrun = {
@@ -22,8 +21,6 @@
         "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
       ];
     };
-
-    #environment.systemPackages = [inputs.anyrun.packages.${system}.anyrun];
 
     home-manager.users.roelc = {
       imports = [

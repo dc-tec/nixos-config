@@ -1,9 +1,9 @@
-_: let
-  base = home: {
-    programs.ripgrep = {
-      enable = true;
+_: {
+  config = {
+    home-manager.users.roelc = {
+      programs.ripgrep = {
+        enable = true;
+      };
     };
   };
-in {
-  home-manager.users.roelc = _: (base "/home/roelc");
 }
