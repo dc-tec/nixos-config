@@ -25,6 +25,7 @@
         hyprlock.enable = lib.mkDefault true;
         hyprpaper.enable = lib.mkDefault true;
         waybar.enable = lib.mkDefault true;
+        swaync.enable = lib.mkDefault true;
         terminal.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
         fuzzel.enable = lib.mkDefault true;
