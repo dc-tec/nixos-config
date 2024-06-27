@@ -21,8 +21,6 @@
       trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
     };
 
-    services.dbus.packages = with pkgs; [dconf];
-
     services = {
       xserver = {
         videoDrivers = ["nvidia"];
@@ -224,6 +222,7 @@
             "$mod ALT, o, exec, ${pkgs.obsidian}/bin/obsidian"
             "$mod, r, exec, pkill fuzzel || ${pkgs.fuzzel}/bin/fuzzel"
             "$mod ALT, r, exec, pkill anyrun || ${pkgs.anyrun}/bin/anyrun"
+            "$mod ALT, n, exec, swaync-client -t -sw"
 
             # Clipboard
             "$mod ALT, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
@@ -257,6 +256,8 @@
             "${pkgs.wl-clipboard}/bin/wl-paste --type text --watch cliphist store"
             "${pkgs.wl-clipboard}/bin/wl-paste --type image --watch cliphist store"
             "eval $(gnome-keyring-daemon --start --components=secrets,ssh,gpg,pkcs11)"
+            "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
+            "hash dbus-update-activation-environment 2>/dev/null"
             "export SSH_AUTH_SOCK"
             "${pkgs.plasma5Packages.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
           ];
