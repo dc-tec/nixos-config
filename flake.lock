@@ -1052,11 +1052,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1720221639,
-        "narHash": "sha256-Nkkmo9HdRsW5+ay9bfjYt+xbY9IQTfH5KCLJmeJlwtU=",
+        "lastModified": 1720306795,
+        "narHash": "sha256-AtBgCKLh976iBb0jcLdqthnV8g11J5Le2iIqrpLUI00=",
         "owner": "dc-tec",
         "repo": "nixvim",
-        "rev": "97247ed10f0f64d82ff0966ab65701407e54ffe1",
+        "rev": "b124c0a47a20609db377e1218eaadf3733ff13d7",
         "type": "github"
       },
       "original": {
