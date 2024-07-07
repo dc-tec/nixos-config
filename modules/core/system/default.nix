@@ -50,6 +50,7 @@
         tlrc
         jq
         yq
+        fd
         (pkgs.callPackage ../../../pkgs/niks {})
       ];
     };
