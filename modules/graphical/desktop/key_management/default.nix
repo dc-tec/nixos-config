@@ -10,7 +10,7 @@
 
   config = lib.mkIf config.dc-tec.graphical.key_management.enable {
     environment.systemPackages = [
-      pkgs.gnome.gnome-keyring
+      pkgs.gnome-keyring
     ];
 
     services = {

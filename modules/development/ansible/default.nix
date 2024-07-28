@@ -14,7 +14,6 @@
     home-manager.users.roelc = {
       home.packages = with pkgs; [
         ansible
-        ansible-later
         ansible-builder
         ansible-lint
       ];

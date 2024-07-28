@@ -28,6 +28,7 @@
       displayManager = {
         sddm = {
           enable = true;
+          package = pkgs.kdePackages.sddm;
           wayland = {
             enable = true;
           };
@@ -35,6 +36,14 @@
             Wayland = {
               SessionDir = "${inputs.hyprland.packages.${pkgs.system}.hyprland}/share/wayland-sessions";
             };
+          };
+          catppuccin = {
+            enable = true;
+            assertQt6Sddm = true;
+            flavor = "macchiato";
+            font = "0xProto Nerd Font";
+            fontSize = "12";
+            loginBackground = true;
           };
         };
       };
@@ -152,6 +161,10 @@
               "workspaces, 1, 7, menu_decel, slide"
               "specialWorkspace, 1, 3, md3_decel, slidevert"
             ];
+          };
+
+          cursor = {
+            enable_hyprcursor = true;
           };
 
           dwindle = {
