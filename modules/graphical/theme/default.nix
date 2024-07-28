@@ -32,22 +32,33 @@
     programs.dconf.enable = true;
 
     home-manager.users.roelc = {pkgs, ...}: {
+      catppuccin = {
+        pointerCursor = {
+          enable = true;
+          accent = "dark";
+          flavor = "macchiato";
+        };
+      };
+
       gtk = {
         enable = true;
         gtk2.extraConfig = "gtk-application-prefer-dark-theme = true;";
         gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
-        catppuccin = {
-          enable = true;
-          accent = "maroon";
-          cursor = {
-            enable = false;
-            accent = "peach";
-          };
-        };
 
         font = {
           name = "0xProto Nerd Font";
           size = 10;
+        };
+
+        catppuccin = {
+          flavor = "macchiato";
+          accent = "peach";
+          size = "compact";
+          #icon = {
+          #  enable = true;
+          #  flavor = "macchiato";
+          #  accent = "peach";
+          #};
         };
       };
 
