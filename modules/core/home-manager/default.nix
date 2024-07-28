@@ -29,8 +29,10 @@
         imports = [
           inputs.catppuccin.homeManagerModules.catppuccin
         ];
-        home.stateVersion = config.dc-tec.stateVersion;
-        home.packages = [inputs.nixvim.packages.x86_64-linux.default];
+        home = {
+          stateVersion = config.dc-tec.stateVersion;
+          packages = [inputs.nixvim.packages.x86_64-linux.default];
+        };
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
         catppuccin = {
           flavor = "macchiato";
