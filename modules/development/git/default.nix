@@ -49,7 +49,7 @@
           };
 
           github.user = "dc-tec";
-          safe.directory = "/home/roelc/projects/personal/nixos-config/.git";
+          safe.directory = "/home/roelc/projects/personal/github/nixos-config/.git";
         };
       };
     };
