@@ -114,9 +114,11 @@
         };
         shellAliases = {
           home = "cd ~/";
-          config = "cd ~/projects/personal/nixos-config";
+          config = "cd ~/projects/personal/github/nixos-config";
           work = "cd ~/projects/work";
           personal = "cd ~/projects/personal";
+          github = "cd ~/projects/personal/github";
+          gitlab = "cd ~/projects/personal/gitlab";
           gcl = "git clone";
           cat = "bat --paging=never";
           ls = "eza --icons --group-directories-first";
