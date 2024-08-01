@@ -12,6 +12,7 @@
             success_symbol = "[󱄅 ❯](bold green)";
             error_symbol = "[󱄅 ❯](bold red)";
           };
+
           format = lib.concatStrings [
             "$directory"
             "$git_branch"
@@ -19,6 +20,10 @@
             "$direnv"
             "$cmd_duration"
             "\n󱞪(2) $character"
+          ];
+
+          right_format = lib.concatStrings [
+            "$hostname"
           ];
 
           git_status = {
@@ -44,6 +49,11 @@
             symbol = "󱃼 ";
             format = "[$symbol]($style) ";
             style = "12";
+          };
+
+          hostname = {
+            ssh_symbol = " ";
+            format = "connected to [$ssh_symbol$hostname]($style) ";
           };
 
           line_break = {
