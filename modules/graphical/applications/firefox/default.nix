@@ -29,7 +29,7 @@
             ublock-origin
             firefox-color
             canvasblocker
-            bypass-paywalls-clean
+            #bypass-paywalls-clean
           ];
 
           ## https://github.com/yokoffing/Betterfox/blob/main/user.js
