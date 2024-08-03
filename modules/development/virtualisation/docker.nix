@@ -13,6 +13,8 @@
   };
 
   config = lib.mkIf config.dc-tec.development.virtualisation.docker.enable {
+    dc-tec.core.zfs.systemCacheLinks = ["/opt/docker"];
+
     virtualisation.docker = {
       enable = true;
       extraOptions = "--data-root ${config.dc-tec.dataPrefix}/var/lib/docker";
