@@ -51,6 +51,7 @@
         jq
         yq
         fd
+        openssl
         (pkgs.callPackage ../../../pkgs/niks {})
       ];
     };
