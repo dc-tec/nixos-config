@@ -18,6 +18,7 @@
             position = "top";
             output = [
               "DP-2"
+              "HDMI-A-1"
             ];
             modules-left = ["hyprland/workspaces"];
             modules-center = ["hyprland/window"];

@@ -8,7 +8,10 @@
 <p align="center">
     This is my NixOS configuration, the goal is to create fully reproducable operating systems based on the Nix package manager, home-manager and flakes.
     My main use case is cloud automation and development, with this configuration I want to create a fully streamlined workflow fully catered to my needs in a declarative fasion.
+
 </p>
+
+![desktop](./docs/images/desktop.png)
 
 ## Highlights
 
@@ -50,7 +53,7 @@ I want to be able to use my configuration when working on a Windows machine (i.e
 ### References
 
 - [Erase Your Darlings](https://grahamc.com/blog/erase-your-darlings/)
-- [Anton Hakansson](https://github.com/AntonHakansson/nixos-config/)
+- [Anton Hakansson](https://github.com/AntonHpackage overlay nixpkgakansson/nixos-config/)
 
 #### Disclaimer
 
