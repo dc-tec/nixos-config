@@ -9,9 +9,9 @@
     This is my NixOS configuration, the goal is to create fully reproducable operating systems based on the Nix package manager, home-manager and flakes.
     My main use case is cloud automation and development, with this configuration I want to create a fully streamlined workflow fully catered to my needs in a declarative fasion.
 
-    <img src="./docs/images/desktop.png">
-
 </p>
+
+![desktop](./docs/images/desktop.png)
 
 ## Highlights
 
