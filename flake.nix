@@ -93,6 +93,7 @@
         nixpkgs = {
           overlays = [
             nur.overlay
+            (import ./overlays {inherit inputs;}).stable-packages
           ];
         };
       })

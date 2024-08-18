@@ -12,7 +12,7 @@
 
   config = lib.mkIf config.dc-tec.development.aws-cli.enable {
     home-manager.users.roelc = {
-      home.packages = with pkgs; [
+      home.packages = with pkgs.stable; [
         awscli2
       ];
     };
