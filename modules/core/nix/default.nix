@@ -17,6 +17,7 @@
       (lib.mkIf config.dc-tec.core.persistence.enable {
         homeCacheLinks = ["local/share/direnv"];
         systemCacheLinks = ["/root/.local/share/direnv"];
+        systemDataLinks = ["/var/lib/nixos"];
       })
       (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
     ];
