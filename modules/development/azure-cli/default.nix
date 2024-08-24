@@ -19,9 +19,9 @@
     ];
 
     home-manager.users.roelc = {
-      home.packages = with pkgs; [
+      home.packages = with pkgs.stable; [
         azure-cli
-        bicep
+        #bicep
       ];
     };
   };
