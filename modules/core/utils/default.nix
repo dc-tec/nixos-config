@@ -11,5 +11,6 @@
     ./ssh
     ./sshd
     ./direnv
+    ./tmux
   ];
 }

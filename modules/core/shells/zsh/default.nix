@@ -122,7 +122,7 @@
           gcl = "git clone";
           cat = "bat --paging=never";
           ls = "eza --icons --group-directories-first";
-          man = "tlrc";
+          man = "tldr";
           ll = "eza --icons --group-directories-first -lah";
           grep = "rg";
           top = "btm";
