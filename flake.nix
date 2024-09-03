@@ -71,8 +71,6 @@
       "aarch64-darwin"
     ];
 
-    darwinSystems = ["aarch64-darwin"];
-
     wslModules = [
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
@@ -91,7 +89,6 @@
 
     darwinModules = [
       home-manager.darwinModules.home-manager
-      #nix-homebrew.darwinModules.nix-homebrew
 
       ./modules/darwin
     ];
