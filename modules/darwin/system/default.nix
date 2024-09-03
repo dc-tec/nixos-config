@@ -8,7 +8,7 @@
   environment.shells = [
     pkgs.zsh
   ];
-
+  environment.variables.EDITOR = "nvim";
   security.pam.enableSudoTouchIdAuth = true;
   system = {
     defaults = {
@@ -71,4 +71,3 @@
     };
   };
 }
-
