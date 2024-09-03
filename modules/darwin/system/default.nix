@@ -1,5 +1,10 @@
 #https://github.com/ryan4yin/nix-darwin-kickstarter/blob/main/rich-demo/modules/system.nix
 {pkgs, ...}: {
+  imports = [
+    ./yabai.nix
+    ./skhd.nix
+  ];
+
   users.users.roelc = {
     home = "/Users/roelc";
   };
@@ -9,8 +14,39 @@
     pkgs.zsh
   ];
   environment.variables.EDITOR = "nvim";
+
   security.pam.enableSudoTouchIdAuth = true;
+
+  time.timeZone = "Europe/Amsterdam";
+
+  fonts = {
+    packages = with pkgs; [
+      # icon fonts
+      material-design-icons
+      font-awesome
+
+      # nerdfonts
+      # https://github.com/NixOS/nixpkgs/blob/nixos-24.05/pkgs/data/fonts/nerdfonts/shas.nix
+      (nerdfonts.override {
+        fonts = [
+          # symbols icon only
+          "NerdFontsSymbolsOnly"
+          # Characters
+          "0xProto"
+        ];
+      })
+    ];
+  };
+
   system = {
+    activationScripts.postUserActivation.text = ''
+      # Reload the settings from the database and apply them to the current
+      # session, so we do not need to logout/login again to make the changes
+      # take effect
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/\
+      Resources/activatesettings -u
+    '';
+
     defaults = {
       # customize dock
       dock = {
@@ -18,10 +54,10 @@
         show-recents = false; # disable recent apps
 
         # customize Hot Core
-        wvous-tl-corner = 2;
-        wvous-tr-corner = 13;
-        wvous-bl-corner = 3;
-        wvous-br-corner = 4;
+        #wvous-tl-corner = 2;
+        #wvous-tr-corner = 13;
+        #wvous-bl-corner = 3;
+        #wvous-br-corner = 4;
       };
 
       # customize finder
