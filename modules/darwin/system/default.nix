@@ -17,11 +17,11 @@
         autohide = true;
         show-recents = false; # disable recent apps
 
-        # customize Hot Corners(触发角, 鼠标移动到屏幕角落时触发的动作)
-        wvous-tl-corner = 2; # top-left - Mission Control
-        wvous-tr-corner = 13; # top-right - Lock Screen
-        wvous-bl-corner = 3; # bottom-left - Application Windows
-        wvous-br-corner = 4; # bottom-right - Desktop
+        # customize Hot Core
+        wvous-tl-corner = 2;
+        wvous-tr-corner = 13;
+        wvous-bl-corner = 3;
+        wvous-br-corner = 4;
       };
 
       # customize finder
@@ -36,8 +36,8 @@
 
       # customize trackpad
       trackpad = {
-        # tap - 轻触触摸板, click - 点击触摸板
-        Clicking = true; # enable tap to click(轻触触摸板相当于点击)
+        # tap -
+        Clicking = true; # enable tap to click
         TrackpadRightClick = true; # enable two finger right click
         TrackpadThreeFingerDrag = true; # enable three finger drag
       };
@@ -60,12 +60,12 @@
         # sets how fast it repeats once it starts.
         KeyRepeat = 3; # normal minimum is 2 (30 ms), maximum is 120 (1800 ms)
 
-        NSAutomaticCapitalizationEnabled = false; # disable auto capitalization(自动大写)
-        NSAutomaticDashSubstitutionEnabled = false; # disable auto dash substitution(智能破折号替换)
-        NSAutomaticPeriodSubstitutionEnabled = false; # disable auto period substitution(智能句号替换)
-        NSAutomaticQuoteSubstitutionEnabled = false; # disable auto quote substitution(智能引号替换)
-        NSAutomaticSpellingCorrectionEnabled = false; # disable auto spelling correction(自动拼写检查)
-        NSNavPanelExpandedStateForSaveMode = true; # expand save panel by default(保存文件时的路径选择/文件名输入页)
+        NSAutomaticCapitalizationEnabled = false; # disable auto capitalization
+        NSAutomaticDashSubstitutionEnabled = false; # disable auto dash substitution
+        NSAutomaticPeriodSubstitutionEnabled = false; # disable auto period substitution
+        NSAutomaticQuoteSubstitutionEnabled = false; # disable auto quote substitution
+        NSAutomaticSpellingCorrectionEnabled = false; # disable auto spelling correction
+        NSNavPanelExpandedStateForSaveMode = true; # expand save panel by default
         NSNavPanelExpandedStateForSaveMode2 = true;
       };
     };
