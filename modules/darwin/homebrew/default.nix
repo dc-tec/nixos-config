@@ -23,6 +23,7 @@ _: {
       "obsidian"
       "kitty"
       "visual-studio-code"
+      "raycast"
     ];
   };
 }
