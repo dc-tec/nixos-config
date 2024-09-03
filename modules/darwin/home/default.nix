@@ -1,5 +1,9 @@
-{  config, inputs, lib, ...  }:
 {
+  config,
+  inputs,
+  lib,
+  ...
+}: {
   imports = [
     ./shell.nix
     ./core.nix
@@ -17,11 +21,11 @@
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
+    useGlobalPkgs = true;
+    useUserPackages = true;
 
     users = {
-      roelc = { ... }: {
+      roelc = {...}: {
         imports = [
           inputs.catppuccin.homeManagerModules.catppuccin
         ];
@@ -45,3 +49,4 @@
     };
   };
 }
+
