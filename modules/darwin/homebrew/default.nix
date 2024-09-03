@@ -24,6 +24,7 @@ _: {
       "kitty"
       "visual-studio-code"
       "raycast"
+      "font-0xproto"
     ];
   };
 }
