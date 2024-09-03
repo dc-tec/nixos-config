@@ -1,9 +1,10 @@
 {...}: {
   imports = [
     ./home
-    #./homebrew
     ./nix
+    ./homebrew
     ./system
     ./development
   ];
 }
+
