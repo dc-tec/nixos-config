@@ -13,6 +13,7 @@
     ./bat.nix
     ./zoxide.nix
     ./ripgrep.nix
+    #./kitty.nix
     inputs.nix-colors.homeManagerModules.default
   ];
 
@@ -49,4 +50,3 @@
     };
   };
 }
-
