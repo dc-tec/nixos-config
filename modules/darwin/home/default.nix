@@ -1,9 +1,4 @@
-{
-  config,
-  inputs,
-  lib,
-  ...
-}: {
+{inputs, ...}: {
   imports = [
     ./shell.nix
     ./core.nix
@@ -11,6 +6,7 @@
     ./eza.nix
     ./fzf.nix
     ./bat.nix
+    ./ssh.nix
     ./zoxide.nix
     ./ripgrep.nix
     #./kitty.nix
