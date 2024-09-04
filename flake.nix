@@ -21,8 +21,25 @@
     nix-colors.url = "github:misterio77/nix-colors";
     catppuccin.url = "github:catppuccin/nix";
 
-    #WSL2 flake
+    # WSL2 flake
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
+
+    # MacOS flakes
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
 
     # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
@@ -45,21 +62,16 @@
     catppuccin,
     sops-nix,
     nixos-wsl,
+    darwin,
     ...
   } @ inputs: let
     inherit (self) outputs;
     forAllSystems = nixpkgs.lib.genAttrs [
       "x86_64-linux"
+      "aarch64-darwin"
     ];
 
     wslModules = [
-      (_: {
-        nix.extraOptions = ''
-          experimental-features = nix-command flakes
-          warn-dirty = false
-        '';
-      })
-
       home-manager.nixosModule
       catppuccin.nixosModules.catppuccin
       impermanence.nixosModule # Needed to disable certain options
@@ -75,13 +87,13 @@
       ./modules/development
     ];
 
+    darwinModules = [
+      home-manager.darwinModules.home-manager
+
+      ./modules/darwin
+    ];
+
     sharedModules = [
-      (_: {
-        nix.extraOptions = ''
-          experimental-features = nix-command flakes
-          warn-dirty = false
-        '';
-      })
       ({
         inputs,
         outputs,
@@ -132,6 +144,13 @@
     );
 
     overlays = import ./overlays {inherit inputs;};
+
+    darwinConfigurations = {
+      darwin = darwin.lib.darwinSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = darwinModules ++ [./machines/darwin/default.nix];
+      };
+    };
 
     nixosConfigurations = {
       legion = nixpkgs.lib.nixosSystem {

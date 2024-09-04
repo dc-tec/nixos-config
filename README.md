@@ -53,7 +53,7 @@ I want to be able to use my configuration when working on a Windows machine (i.e
 ### References
 
 - [Erase Your Darlings](https://grahamc.com/blog/erase-your-darlings/)
-- [Anton Hakansson](https://github.com/AntonHpackage overlay nixpkgakansson/nixos-config/)
+- [Anton Hakansson](https://github.com/AntonHakansson/nixos-config/)
 
 #### Disclaimer
 
