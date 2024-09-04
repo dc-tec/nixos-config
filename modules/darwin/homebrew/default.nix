@@ -3,17 +3,28 @@ _: {
     enable = true;
 
     onActivation = {
-      autoUpdate = false;
+      upgrade = true;
+      autoUpdate = true;
       cleanup = "zap";
+    };
+
+    global = {
+      autoUpdate = true;
+      brewfile = true;
+      lockfiles = true;
     };
 
     taps = [
       "homebrew/services"
+      "FelixKratz/formulae"
     ];
 
     brews = [
       "curl"
       "unzip"
+      "fontconfig"
+      "ical-buddy"
+      "sketchybar"
     ];
 
     casks = [

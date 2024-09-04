@@ -1,0 +1,37 @@
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+ITEM_DIR="$CONFIG_DIR/items"
+
+# Load defaults
+source "$CONFIG_DIR/defaults.sh"
+POPUP_CLICK_SCRIPT="sketchybar --set \$NAME popup.drawing=toggle"
+POPUP_OFF="sketchybar --set \$NAME popup.drawing=off"
+
+sketchybar --bar "${bar[@]}" --default "${item_defaults[@]}"
+
+# Left side
+source "$ITEM_DIR/apple.sh"
+source "$ITEM_DIR/yabai.sh"
+source "$ITEM_DIR/spaces.sh"
+source "$ITEM_DIR/apps.sh"
+
+# Right side
+source "$ITEM_DIR/control_center.sh"
+source "$ITEM_DIR/datetime.sh"
+source "$ITEM_DIR/dnd.sh"
+source "$ITEM_DIR/wifi.sh"
+source "$ITEM_DIR/battery.sh"
+source "$ITEM_DIR/volume.sh"
+source "$ITEM_DIR/diskmonitor.sh"
+source "$ITEM_DIR/messages.sh"
+source "$ITEM_DIR/weather.sh"
+
+# Brackets '/space\..*/'
+sketchybar \
+--add bracket left.side '/space\..*/' \
+--set left.side "''${bracket_defaults[@]}" \
+                                            \
+--add bracket status_icons weather messages diskmonitor volume_icon volume battery wifi dnd \
+--set status_icons "''${bracket_defaults[@]}"
+
+sketchybar --update
+

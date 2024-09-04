@@ -18,6 +18,9 @@
       window_gap = 6;
 
       extraConfig = ''
+        # external bar
+        yabai -m config external_bar all:37:0
+
         # spaces
         yabai -m space 2 --label work
         yabai -m space 3 --label chat
