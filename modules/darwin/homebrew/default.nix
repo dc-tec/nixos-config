@@ -13,6 +13,7 @@ _: {
 
     brews = [
       "curl"
+      "unzip"
     ];
 
     casks = [
@@ -25,6 +26,7 @@ _: {
       "visual-studio-code"
       "raycast"
       "font-0xproto"
+      "mac-mouse-fix"
     ];
   };
 }
