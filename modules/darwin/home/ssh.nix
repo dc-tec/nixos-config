@@ -3,7 +3,7 @@
     programs.ssh = {
       enable = true;
       hashKnownHosts = true;
-      userKnownHostsFile = "/home/roelc/.ssh/known_hosts";
+      userKnownHostsFile = "~/.ssh/known_hosts";
 
       extraConfig = ''
         AddKeysToAgent yes
