@@ -18,11 +18,22 @@
       window_gap = 6;
 
       extraConfig = ''
+        # spaces
+        yabai -m space 2 --label work
+        yabai -m space 3 --label chat
+        yabai -m space 4 --label notes
+
         # rules
         yabai -m rule --add app='About This Mac' manage=off
         yabai -m rule --add app='System Information' manage=off
         yabai -m rule --add app='System Preferences' manage=off
-        yabai -m rule --add app=kitty border=off
+        yabai -m rule --add app="^kitty$" border=off
+        yabai -m rule --add app="^Mail$" space=work
+        yabai -m rule --add app="^Calendar$" space=work
+        yabai -m rule --add app="^Mattermost" space=chat
+        yabai -m rule --add app="^WhatsApp$" space=chat
+        yabai -m rule --add app="^Notes$" space=notes
+        yabai -m rule --add app="^Obsidian$" space=notes
 
         # Load scripting addition
         yabai -m signal --add event=dock_did_restart \
