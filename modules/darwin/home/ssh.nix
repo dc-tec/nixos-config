@@ -4,9 +4,11 @@
       enable = true;
       hashKnownHosts = true;
       userKnownHostsFile = "~/.ssh/known_hosts";
-
+      addKeysToAgent = "yes";
       extraConfig = ''
-        AddKeysToAgent yes
+        UseKeychain yes
+        IdentityFile ~/.ssh/id_ed25519
+        IdentityFile ~/.ssh/roelc_gh
       '';
 
       matchBlocks = {
