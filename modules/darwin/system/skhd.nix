@@ -2,7 +2,6 @@
   services.skhd = {
     enable = true;
     skhdConfig = ''
-
       # open terminal
       cmd - return : open -na /Applications/kitty.app
 
@@ -10,10 +9,12 @@
       cmd + shift - return : open ~/
 
       # Open programs
-      alt - c : open -a "/Applications/Mattermost.app"
-      alt - e : open -a "/Applications/Microsoft Edge.app"
-      alt - f : open -a "/Applications/Firefox.app"
-      alt - w : open -a "/Applications/WhatsApp.app"
+      ctrl + alt - c : open -a "/Applications/Mattermost.app"
+      ctrl + alt - e : open -a "/Applications/Microsoft Edge.app"
+      ctrl + alt - f : open -a "/Applications/Firefox.app"
+      ctrl + alt - w : open -a "/Applications/WhatsApp.app"
+      ctrl + alt - o : open -a "/Applications/Obsidian.app"
+      ctrl + alt - m : open -a "Mail"
 
       # focus window
       alt - h : yabai -m window --focus west
@@ -44,17 +45,6 @@
 
       # make floating window fill right-half of screen
       shift + alt - right  : yabai -m window --grid 1:2:1:0:1:1
-
-      # create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
-      shift + cmd - n : yabai -m space --create && \
-                        index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
-                        yabai -m window --space "''${index}" && \
-                        yabai -m space --focus "''${index}"
-
-      # create desktop and follow focus - uses jq for parsing json (brew install jq)
-      cmd + alt - n : yabai -m space --create && \
-                      index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
-                      yabai -m space --focus "''${index}"
 
       # destroy desktop
       cmd + alt - w : yabai -m space --destroy
@@ -119,18 +109,6 @@
       ctrl + cmd - 1  : yabai -m window --display 1; yabai -m display --focus 1
       ctrl + cmd - 2  : yabai -m window --display 2; yabai -m display --focus 2
       ctrl + cmd - 3  : yabai -m window --display 3; yabai -m display --focus 3
-
-      # move window
-      shift + ctrl - a : yabai -m window --move rel:-20:0
-      shift + ctrl - s : yabai -m window --move rel:0:20
-      shift + ctrl - w : yabai -m window --move rel:0:-20
-      shift + ctrl - d : yabai -m window --move rel:20:0
-
-      # move window
-      shift + ctrl - a : yabai -m window --move rel:-20:0
-      shift + ctrl - s : yabai -m window --move rel:0:20
-      shift + ctrl - w : yabai -m window --move rel:0:-20
-      shift + ctrl - d : yabai -m window --move rel:20:0
 
       # increase window size
       shift + alt - a : yabai -m window --resize left:-20:0
@@ -197,7 +175,6 @@
       ctrl + alt - a : yabai -m space --layout bsp
       ctrl + alt - d : yabai -m space --layout float
 
-      # Restart
     '';
   };
 }
