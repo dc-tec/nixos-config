@@ -3,7 +3,7 @@
     enable = true;
     skhdConfig = ''
       # open terminal
-      cmd - return : open -na /Applications/kitty.app
+      cmd - return : open -na kitty
 
       # open finder
       cmd + shift - return : open ~/

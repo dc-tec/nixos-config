@@ -9,7 +9,7 @@
       window_shadow = "off";
       mouse_follows_focus = "on";
       focus_follows_mouse = "autoraise";
-      window_opacity = "off";
+      window_opacity = "true";
 
       top_padding = 6;
       bottom_padding = 6;
@@ -19,7 +19,7 @@
 
       extraConfig = ''
         # external bar
-        yabai -m config external_bar all:37:0
+        yabai -m config external_bar all:32:0
 
         # spaces
         yabai -m space 2 --label work
