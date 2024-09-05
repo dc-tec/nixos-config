@@ -24,7 +24,10 @@ _: {
       "unzip"
       "fontconfig"
       "ical-buddy"
-      "sketchybar"
+      {
+        name = "sketchybar";
+        start_service = true;
+      }
     ];
 
     casks = [
@@ -33,11 +36,11 @@ _: {
       "whatsapp"
       "mattermost"
       "obsidian"
-      "kitty"
       "visual-studio-code"
       "raycast"
       "font-0xproto"
       "mac-mouse-fix"
+      "docker"
     ];
   };
 }
