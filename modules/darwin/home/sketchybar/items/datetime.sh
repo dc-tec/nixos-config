@@ -5,10 +5,10 @@ source "$CONFIG_DIR/defaults.sh"
 date=(
   icon=$ICON_CALENDAR
   icon.drawing=off
-  icon.font.size=6
-  icon.padding_right=1
+  icon.font.size=8
+  icon.padding_right=2
   label.color=$LABEL_COLOR
-  icon.color=$(getcolor yellow)
+  icon.color=$YELLOW
   icon.y_offset=1.5
   label.font="$FONT:Bold:8"
   label.padding_left=0
@@ -29,7 +29,7 @@ clock=(
   y_offset=-3
   update_freq=10
   popup.align=right
-  script="../nextevent.sh"
+  script="$PLUGIN_DIR/nextevent.sh"
   click_script="sketchybar --set clock popup.drawing=toggle; open -a Calendar.app"
 )
 

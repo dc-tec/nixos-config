@@ -8,7 +8,7 @@ messages=(
   label.color=$HIGHLIGHT
   icon.color=$HIGHLIGHT
   updates=on
-  script="../messages.sh"
+  script="$PLUGIN_DIR/messages.sh"
   click_script="open -a /System/Applications/Messages.app"
 )
 

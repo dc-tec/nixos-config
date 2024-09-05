@@ -5,7 +5,7 @@ yabai=(
   label.drawing=off
   width=28
   script="$PLUGIN_DIR/yabai.sh"
-  icon.font="$FONT:Bold:12.0"
+  icon.font="$FONT:Regular:12.0"
   label.padding_right=$PADDINGS
 )
 

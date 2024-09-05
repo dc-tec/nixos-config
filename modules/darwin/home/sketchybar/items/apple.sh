@@ -7,7 +7,8 @@ POPUP_OFF='sketchybar --set logo popup.drawing=off'
 
 logo=(
   "${menu_defaults[@]}"
-  icon=$APPLE
+  icon=" "
+  icon.font=$FONT:Regular:14
   icon.font.size=14
   label.drawing=off
   popup.align=left

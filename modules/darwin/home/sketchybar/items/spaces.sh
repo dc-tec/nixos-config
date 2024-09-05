@@ -9,7 +9,7 @@ spaces=(
 )
 
 # Get all spaces
-SPACES=($(yabai -m query --spaces index | jq -r '.[].index'))
+SPACES=($(/run/current-system/sw/bin/yabai -m query --spaces index | /etc/profiles/per-user/roelc/bin/jq -r '.[].index'))
 
 for SID in "${SPACES[@]}"; do
   sketchybar --add space space.$SID left                  \

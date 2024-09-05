@@ -28,10 +28,10 @@ source "$ITEM_DIR/weather.sh"
 # Brackets '/space\..*/'
 sketchybar \
 --add bracket left.side '/space\..*/' \
---set left.side "''${bracket_defaults[@]}" \
+--set left.side "${bracket_defaults[@]}" \
                                             \
 --add bracket status_icons weather messages diskmonitor volume_icon volume battery wifi dnd \
---set status_icons "''${bracket_defaults[@]}"
+--set status_icons "${bracket_defaults[@]}"
 
 sketchybar --update
 

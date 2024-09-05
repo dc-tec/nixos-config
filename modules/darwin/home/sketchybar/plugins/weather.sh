@@ -133,15 +133,15 @@ render_popup() {
 update() {
   if [ "$CITY" != "" ]; then
     DATA=$(curl -s -m 5 "http://api.weatherapi.com/v1/current.json?key=$API_KEY&q=$CITY")
-    CONDITION=$(echo $DATA | jq -r '.current.condition.code')
-    CONDITION_TEXT=$(echo $DATA | jq -r '.current.condition.text')
-    TEMP=$(echo $DATA | jq -r '.current.temp_c | floor')
-    FEELSLIKE=$(echo $DATA | jq -r '.current.feelslike_f')
-    HUMIDITY=$(echo $DATA | jq -r '.current.humidity')
-    IS_DAY=$(echo $DATA | jq -r '.current.is_day')
-    LAT=$(echo $DATA | jq -r '.location.lat')
-    LON=$(echo $DATA | jq -r '.location.lon')
-    LOCATION=$(echo $DATA | jq -r '.location.name' && echo ', ' && echo $DATA | jq -r '.location.country')
+    CONDITION=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.current.condition.code')
+    CONDITION_TEXT=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.current.condition.text')
+    TEMP=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.current.temp_c | floor')
+    FEELSLIKE=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.current.feelslike_f')
+    HUMIDITY=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.current.humidity')
+    IS_DAY=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.current.is_day')
+    LAT=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.location.lat')
+    LON=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.location.lon')
+    LOCATION=$(echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.location.name' && echo ', ' && echo $DATA | /etc/profiles/per-user/roelc/bin/jq -r '.location.country')
 
     [ "$IS_DAY" = "1" ] && ICON=${WEATHER_ICONS_DAY[$CONDITION]} || ICON=${WEATHER_ICONS_NIGHT[$CONDITION]}
     args=()

@@ -3,7 +3,7 @@
 source "$CONFIG_DIR/defaults.sh"
 
 front_app=(
-            script="../front_app.sh"
+            script="$PLUGIN_DIR/front_app.sh"
             icon=$ICON_APP
             icon.color=$PEACH
             label.padding_right=0

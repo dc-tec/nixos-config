@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Load global styles, colors and icons
-source "$CONFIG_DIR/globalstyles.sh"
+source "$CONFIG_DIR/defaults.sh"
 
 check_state() {
-  # DND_ENABLED=$(cat ~/Library/DoNotDisturb/DB/Assertions.json | jq .data[0].storeAssertionRecords)
+   #DND_ENABLED=$(cat ~/Library/DoNotDisturb/DB/Assertions.json | jq .data[0].storeAssertionRecords)
 
   # Alternate SLOW method:
   DND_ENABLED=$(defaults read com.apple.controlcenter "NSStatusItem Visible FocusModes")

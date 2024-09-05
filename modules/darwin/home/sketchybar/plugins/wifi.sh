@@ -3,7 +3,6 @@
 # Loads defined colors
 source "$CONFIG_DIR/defaults.sh"
 
-IS_VPN=$(/usr/local/bin/piactl get connectionstate)
 # IS_VPN="Disconnected"
 # CURRENT_WIFI="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I)"
 CURRENT_WIFI="$(ipconfig getsummary en0)"

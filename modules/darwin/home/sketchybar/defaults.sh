@@ -19,7 +19,7 @@ bar=(
   padding_left=$PADDINGS
   padding_right=$PADDINGS
   corner_radius=0
-  blur_radius=0
+  blur_radius=20
   notch_width=160
 )
 
