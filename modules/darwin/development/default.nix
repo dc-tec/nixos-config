@@ -15,7 +15,6 @@
       consul
       tenv
       terraform-docs
-      vault
       consul
       packer
       powershell
@@ -30,4 +29,3 @@
     ];
   };
 }
-
