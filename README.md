@@ -11,7 +11,13 @@
 
 </p>
 
+#### NixOS
+
 ![desktop](./docs/images/desktop.png)
+
+#### MacOS
+
+![macbook](./docs/images/macbook.png)
 
 ## Highlights
 
@@ -20,6 +26,8 @@
 - Custom [NixVim](https://github.com/dc-tec/nixvim) flake
 - Hyprland as tiling window manager
 - Catppuccin themed
+- WSL Config
+- Darwin Config
 
 ## Configuration
 
@@ -29,14 +37,20 @@ The repository is setup in a modular fasion. The configuration can be split into
   - Contains the per device hardware configuration and host settings.
 - Core
   - The core module contains applications and configuration settings that will be applied on all systems.
+- Darwin
+  - The Nix Darwin module to configure MacOS.
 - Development
   - The development module contains the different development tools I need on a day to day basis. The submodules all contain options to either enable or disable certain tools. By default they are all enabled
 - Graphical
   - The graphical module contains different submodules related to my desktop enviroment based on Hyprland and other required applications and configurations that are needed for a smooth experience.
+- WSL
+  - Windows Subsystem for Linux module.
 - Overlays
   - If needed we can apply an overlay over certain packages. These overlays are defined here.
-- Pkgs - The pkgs directory contains custom packages.
-- Secrets - Encrypted secrets using Nix SOPS.
+- Pkgs
+  - The pkgs directory contains custom packages.
+- Secrets
+  - Encrypted secrets using Nix SOPS.
 
 ### ZFS
 
@@ -46,9 +60,13 @@ ZFS is used on the storage layer. I'm making use of impermanence where the files
 
 For secret management in a pure Nix way Nix SOPS is used. See [add new host](docs/add-new-host.md)
 
+### Darwin
+
+Currently using a Macbook Pro M3, that is configured using Home-Manager and Nix Darwin. This is a stand-alone module, in the future I should figure out how to make use of the shared modules in this repository. For now I'm using a configuration that is seperated from my NixOS config.
+
 ### WSL
 
-I want to be able to use my configuration when working on a Windows machine (i.e. my work laptop). I make use of [NixOS-WSL](https://github.com/nix-community/NixOS-WSL). Because the main configuration uses impermanence and ZFS and this is ofcourse not supported in WSL I created options throughout the config to enable / disable impermanence. Also the graphical module is not loaded. See the [flake](flake.nix).
+I want to be able to use my configuration when working on a Windows machine. I make use of [NixOS-WSL](https://github.com/nix-community/NixOS-WSL). Because the main configuration uses impermanence and ZFS and this is ofcourse not supported in WSL I created options throughout the config to enable / disable impermanence. Also the graphical module is not loaded. See the [flake](flake.nix).
 
 ### References
 
