@@ -17,6 +17,8 @@
         font_family = "0xProto";
         adjust_line_height = 3;
 
+        background_opacity = "0.8";
+
         # Window config
         window_margin_width = 5;
         single_window_margin_width = -1;
