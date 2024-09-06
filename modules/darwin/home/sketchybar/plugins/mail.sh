@@ -1,9 +1,24 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
+source "$CONFIG_DIR/colors.sh"
 
-TEXT=$(lsappinfo info -only StatusLabel "Mail" | grep -o '"label"="[0-9]*"' | awk -F'"' '{print $4}')
+STATUS_LABEL=$(lsappinfo info -only StatusLabel "Mail")
+if [[ $STATUS_LABEL =~ \"label\"=\"([^\"]*)\" ]]; then
+    LABEL="${BASH_REMATCH[1]}"
 
-if [[ $TEXT -gt 0 ]]; then
-  sketchybar -m --set $NAME drawing=on label="$TEXT"
+    if [[ $LABEL == "" ]]; then
+        ICON_COLOR=$WHITE
+    elif [[ $LABEL =~ ^[0-9]+$ ]]; then
+        if (( LABEL >= 1 && LABEL <= 5 )); then
+            ICON_COLOR=$GREEN
+        elif (( LABEL > 5 )); then
+            ICON_COLOR=$RED
+        fi
+    else
+        exit 0
+    fi
 else
-  sketchybar -m --set $NAME drawing=off
+  exit 0
 fi
+
+sketchybar --set $NAME icon=􀣫  label="${LABEL}" icon.color=${ICON_COLOR}
+

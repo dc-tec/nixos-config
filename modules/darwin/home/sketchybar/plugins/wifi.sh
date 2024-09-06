@@ -1,69 +1,30 @@
 #!/bin/bash
 
-# Loads defined colors
-source "$CONFIG_DIR/defaults.sh"
+update() {
+  source "$CONFIG_DIR/icons.sh"
+  SSID="$(/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I | awk -F ' SSID: '  '/ SSID: / {print $2}')"
+  IP="$(ipconfig getifaddr en0)"
 
-# IS_VPN="Disconnected"
-# CURRENT_WIFI="$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I)"
-CURRENT_WIFI="$(ipconfig getsummary en0)"
-# IP_ADDRESS="$(ipconfig getifaddr en0)"
-IP_ADDRESS="$(echo "$CURRENT_WIFI" | grep -o "yiaddr = .*" | sed 's/^yiaddr = //')"
-SSID="$(echo "$CURRENT_WIFI" | grep -o "SSID : .*" | sed 's/^SSID : //' | tail -n 1)"
-# CURR_TX="$(echo "$CURRENT_WIFI" | grep -o "lastTxRate: .*" | sed 's/^lastTxRate: //')"
+  ICON="$([ -n "$IP" ] && echo "$WIFI_CONNECTED" || echo "$WIFI_DISCONNECTED")"
+  LABEL="$([ -n "$IP" ] && echo "$SSID ($IP)" || echo "Disconnected")"
 
-if [[ $IS_VPN != "Disconnected" ]]; then
-  ICON_COLOR=$HIGHLIGHT
-  ICON=$ICON_WIFI_DISCONNECTED
-elif [[ $SSID = "UniFi" ]]; then
-  ICON_COLOR=$BASE
-  ICON=$ICON_WIFI_CONNECTED
-elif [[ $SSID != "" ]]; then
-  ICON_COLOR=$BASE
-  ICON=$ICON_WIFI_CONNECTED
-elif [[ $CURRENT_WIFI = "AirPort: Off" ]]; then
-  ICON=$ICON_WIFI_CONNECTED
-else
-  ICON_COLOR=$BASE
-  ICON=$ICON_WIFI_ALERT
-fi
-
-render_bar_item() {
-  sketchybar --set $NAME \
-    icon.color=$ICON_COLOR \
-    icon=$ICON
+  sketchybar --set $NAME icon="$ICON" label="$LABEL"
 }
 
-render_popup() {
-  if [ "$SSID" != "" ]; then
-    args=(
-      --set wifi.ssid label="$SSID"
-      --set wifi.ipaddress label="$IP_ADDRESS"
-      click_script="printf $IP_ADDRESS | pbcopy;sketchybar --set wifi popup.drawing=toggle"
-    )
-  else
-    args=(
-      --set wifi.ssid label="Not connected"
-      --set wifi.ipaddress label="No IP"
-      )
+click() {
+  CURRENT_WIDTH="$(sketchybar --query $NAME | jq -r .label.width)"
+
+  WIDTH=0
+  if [ "$CURRENT_WIDTH" -eq "0" ]; then
+    WIDTH=dynamic
   fi
 
-  sketchybar "${args[@]}" >/dev/null
-}
-
-update() {
-  render_bar_item
-  render_popup
-}
-
-popup() {
-  sketchybar --set "$NAME" popup.drawing="$1"
+  sketchybar --animate sin 20 --set $NAME label.width="$WIDTH"
 }
 
 case "$SENDER" in
-"routine" | "forced")
-  update
+  "wifi_change") update
   ;;
-"mouse.clicked")
-  popup toggle
+  "mouse.clicked") click
   ;;
 esac

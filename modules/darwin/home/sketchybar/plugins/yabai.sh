@@ -1,57 +1,77 @@
-#!/bin/bash
-source "$CONFIG_DIR/defaults.sh"
-source "$CONFIG_DIR/icons.sh"
-source "$CONFIG_DIR/colors.sh"
+#!/bin/sh
 
-set_icon() {
-  CURRENT_SID=$(/run/current-system/sw/bin/yabai -m query --spaces index --space | /etc/profiles/per-user/roelc/bin/jq -r '.index')
-  FRONT_APP_LABEL_COLOR="$(sketchybar --query space.$CURRENT_SID | /etc/profiles/per-user/roelc/bin/jq -r ".label.highlight_color")"
-  COLOR=$LABEL_COLOR
-  WIDTH=28
+window_state() {
+  source "$CONFIG_DIR/colors.sh"
+  source "$CONFIG_DIR/icons.sh"
 
-  WINDOW=$(/run/current-system/sw/bin/yabai -m query --windows is-floating,split-type,has-fullscreen-zoom,is-sticky,stack-index --window)
-  read -r FLOATING SPLIT FULLSCREEN STICKY STACK_INDEX <<<$(echo "$WINDOW" | /etc/profiles/per-user/roelc/bin/jq -rc '.["is-floating", "split-type", "has-fullscreen-zoom", "is-sticky", "stack-index"]')
+  WINDOW=$(/run/current-system/sw/bin/yabai -m query --windows --window)
+  CURRENT=$(echo "$WINDOW" | jq '.["stack-index"]')
 
-  if [[ $STACK_INDEX -gt 0 ]]; then
-    LAST_STACK_INDEX=$(/run/current-system/sw/bin/yabai -m query --windows stack-index --window stack.last | /etc/profiles/per-user/roelc/bin/jq '.["stack-index"]')
-    ICON=
-    LABEL="$(printf "%s/%s" "$STACK_INDEX" "$LAST_STACK_INDEX")"
-    COLOR=$FRONT_APP_LABEL_COLOR
-    WIDTH="dynamic"
-  elif [[ $FLOATING == "true" ]]; then
-    ICON=󰉧
-  elif [[ $FULLSCREEN == "true" ]]; then
-    ICON=
-  elif [[ $SPLIT == "vertical" ]]; then
-    ICON=
-  elif [[ $SPLIT == "horizontal" ]]; then
-    ICON=
+  args=()
+  if [[ $CURRENT -gt 0 ]]; then
+    LAST=$(/run/current-system/sw/bin/yabai -m query --windows --window stack.last | jq '.["stack-index"]')
+    args+=(--set $NAME icon=$YABAI_STACK icon.color=$RED label.drawing=on label=$(printf "[%s/%s]" "$CURRENT" "$LAST"))
+    /run/current-system/sw/bin/yabai -m config active_window_border_color $RED > /dev/null 2>&1 &
+
   else
-    ICON=󰋁
-
+    args+=(--set $NAME label.drawing=off)
+    case "$(echo "$WINDOW" | jq '.["is-floating"]')" in
+      "false")
+        if [ "$(echo "$WINDOW" | jq '.["has-fullscreen-zoom"]')" = "true" ]; then
+          args+=(--set $NAME icon=$YABAI_FULLSCREEN_ZOOM icon.color=$GREEN)
+          /run/current-system/sw/bin/yabai -m config active_window_border_color $GREEN > /dev/null 2>&1 &
+        elif [ "$(echo "$WINDOW" | jq '.["has-parent-zoom"]')" = "true" ]; then
+          args+=(--set $NAME icon=$YABAI_PARENT_ZOOM icon.color=$BLUE)
+          /run/current-system/sw/bin/yabai -m config active_window_border_color $BLUE > /dev/null 2>&1 &
+        else
+          args+=(--set $NAME icon=$YABAI_GRID icon.color=$ORANGE)
+          /run/current-system/sw/bin/yabai -m config active_window_border_color $WHITE > /dev/null 2>&1 &
+        fi
+        ;;
+      "true")
+        args+=(--set $NAME icon=$YABAI_FLOAT icon.color=$MAGENTA)
+        /run/current-system/sw/bin/yabai -m config active_window_border_color $MAGENTA > /dev/null 2>&1 &
+        ;;
+    esac
   fi
 
-  args=(--bar border_color=$COLOR --animate tanh 10 --set $NAME icon=$ICON icon.color=$COLOR width=$WIDTH)
+  sketchybar -m "${args[@]}"
+}
 
-  [ -z "$LABEL" ] && args+=(label.drawing=off) ||
-    args+=(label.drawing=on label="$LABEL" label.color=$COLOR)
+windows_on_spaces () {
+  CURRENT_SPACES="$(/run/current-system/sw/bin/yabai -m query --displays | jq -r '.[].spaces | @sh')"
 
-  [ -z "$ICON" ] && args+=(icon.width=0) ||
-    args+=(icon="$ICON")
+  args=()
+  while read -r line
+  do
+    for space in $line
+    do
+      icon_strip=" "
+      apps=$(/run/current-system/sw/bin/yabai -m query --windows --space $space | jq -r ".[].app")
+      if [ "$apps" != "" ]; then
+        while IFS= read -r app; do
+          icon_strip+=$($CONFIG_DIR/icon_map.sh "$app")
+        done <<< "$apps"
+      fi
+      args+=(--set space.$space label="$icon_strip" label.drawing=on)
+    done
+  done <<< "$CURRENT_SPACES"
 
   sketchybar -m "${args[@]}"
 }
 
 mouse_clicked() {
-  /run/current-system/sw/bin/yabai -m space --layout $(/run/current-system/sw/bin/yabai -m query --spaces --space | /etc/profiles/per-user/roelc/bin/jq -r 'if .type == "bsp" then "stack" else "bsp" end')
-  set_icon
+  /run/current-system/sw/bin/yabai -m window --toggle float
+  window_state
 }
 
 case "$SENDER" in
-  "mouse.clicked" | "alfred_trigger")
-    mouse_clicked
-    ;;
-  "window_focus" | "front_app_switched" | "update_yabai_icon" | "space_windows_change")
-    set_icon
-    ;;
+  "mouse.clicked") mouse_clicked
+  ;;
+  "forced") exit 0
+  ;;
+  "window_focus") window_state
+  ;;
+  "windows_on_spaces") windows_on_spaces
+  ;;
 esac

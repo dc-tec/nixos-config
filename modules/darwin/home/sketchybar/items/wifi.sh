@@ -1,29 +1,14 @@
-#!/bin/env/bash
+#!/usr/bin/env sh
 
-POPUP_OFF="sketchybar --set wifi popup.drawing=off"
+source "$CONFIG_DIR/icons.sh"
 
 wifi=(
-  "${menu_defaults[@]}"
-  label.drawing=off
-  popup.align=right
-  update_freq=5
+  padding_right=7
+  label.width=0
+  icon="$WIFI_DISCONNECTED"
   script="$PLUGIN_DIR/wifi.sh"
-  --subscribe wifi wifi_change
-                   mouse.clicked
-                   mouse.exited
-                   mouse.exited.global
 )
 
-sketchybar                                                                                            \
-  --add item wifi right                                                                               \
-  --set wifi "${wifi[@]}"                                                                             \
-  --add item wifi.ssid popup.wifi                                                                     \
-  --set wifi.ssid icon=􀅴                                                                              \
-        label="SSID"                                                                                  \
-        "${menu_item_defaults[@]}"                                                                    \
-        click_script="open 'x-apple.systempreferences:com.apple.preference.network?Wi-Fi';$POPUP_OFF" \
-  --add item wifi.ipaddress popup.wifi                                                                \
-  --set wifi.ipaddress icon=􀆪                                                                         \
-        label="IP Address"                                                                            \
-        "${menu_item_defaults[@]}"                                                                    \
-        click_script="echo \"$IP_ADDRESS\"|pbcopy;$POPUP_OFF"
+sketchybar --add item wifi right \
+           --set wifi "${wifi[@]}" \
+           --subscribe wifi wifi_change mouse.clicked

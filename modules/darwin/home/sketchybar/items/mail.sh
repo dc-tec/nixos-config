@@ -1,16 +1,13 @@
-#!/bin/env/bash
+#!/usr/bin/env sh
+source "$CONFIG_DIR/icons.sh"
 
-# Load global styles, colors and icons
-source "$CONFIG_DIR/defaults.sh"
+OPEN_MAIL="open -a Mail"
 
-mail=(
-  "${notification_defaults[@]}"
-  icon=$ICON_MAIL
-  icon.y_offset=1
-  background.color=$YELLOW
-  script="$PLUGIN_DIR/mail.sh"
-  click_script="open -a /System/Applications/Mail.app"
-)
-
-sketchybar --add item mail right       \
-           --set      mail "${mail[@]}"
+sketchybar  --add   item mail right \
+            --set   mail \
+                    update_freq=60 \
+                    script="$PLUGIN_DIR/mail.sh" \
+                    padding_left=15  \
+                    icon.font.size=16 \
+                    click_script="$OPEN_MAIL" \
+           --subscribe mail system_woke
