@@ -15,6 +15,7 @@
       ctrl + alt - w : open -a "/Applications/WhatsApp.app"
       ctrl + alt - o : open -a "/Applications/Obsidian.app"
       ctrl + alt - m : open -a "Mail"
+      ctrl + alt - d : open -a docker
 
       # focus window
       alt - h : yabai -m window --focus west
@@ -172,8 +173,8 @@
                 yabai -m window --toggle pip
 
       # change layout of desktop
-      ctrl + alt - a : yabai -m space --layout bsp
-      ctrl + alt - d : yabai -m space --layout float
+      ctrl + shift - b : yabai -m space --layout bsp
+      ctrl + shift - f : yabai -m space --layout float
 
     '';
   };
