@@ -17,6 +17,7 @@ _: {
     taps = [
       "homebrew/services"
       "FelixKratz/formulae"
+      "hashicorp/tap"
     ];
 
     brews = [
@@ -28,6 +29,10 @@ _: {
         name = "sketchybar";
         start_service = true;
       }
+      "ifstat"
+      "jq"
+      "yq"
+      "hashicorp/tap/vault"
     ];
 
     casks = [
@@ -41,6 +46,10 @@ _: {
       "font-0xproto"
       "mac-mouse-fix"
       "docker"
+      "font-sf-mono"
+      "sf-symbols"
+      "font-material-symbols"
+      "font-material-icons"
     ];
   };
 }
