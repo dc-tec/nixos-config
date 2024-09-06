@@ -9,7 +9,8 @@
     ./ssh.nix
     ./zoxide.nix
     ./ripgrep.nix
-    #./kitty.nix
+    ./kitty.nix
+    ./sketchybar
     inputs.nix-colors.homeManagerModules.default
   ];
 

@@ -4,19 +4,20 @@
       enable = true;
       catppuccin.enable = true;
       font = {
-        name = "0xProto Nerd Font";
+        name = "0xProto";
         size = 10;
       };
       settings = {
         enable_audio_bell = false;
-        enable_visual_bell = false;
-        remember_window_size = false;
+        remember_window_size = true;
         confirm_os_window_close = 0;
         disable_ligatures = "always";
 
         # Font config
-        font_family = "0xProto Nerd Font";
+        font_family = "0xProto";
         adjust_line_height = 3;
+
+        background_opacity = "0.8";
 
         # Window config
         window_margin_width = 5;
