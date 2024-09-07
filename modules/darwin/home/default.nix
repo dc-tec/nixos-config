@@ -2,6 +2,7 @@
   imports = [
     ./shell.nix
     ./core.nix
+    ./direnv.nix
     ./starship.nix
     ./eza.nix
     ./fzf.nix
