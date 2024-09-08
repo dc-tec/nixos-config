@@ -41,6 +41,7 @@ _: {
       "whatsapp"
       "mattermost"
       "obsidian"
+      "chatgpt"
       "visual-studio-code"
       "raycast"
       "font-0xproto"
