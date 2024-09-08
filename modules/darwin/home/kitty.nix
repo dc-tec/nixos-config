@@ -18,6 +18,7 @@
         adjust_line_height = 3;
 
         background_opacity = "0.8";
+        background_blur = 20;
 
         # Window config
         window_margin_width = 5;
