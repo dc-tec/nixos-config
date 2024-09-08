@@ -73,6 +73,10 @@ I want to be able to use my configuration when working on a Windows machine. I m
 - [Erase Your Darlings](https://grahamc.com/blog/erase-your-darlings/)
 - [Anton Hakansson](https://github.com/AntonHakansson/nixos-config/)
 
+#### Wallpapers
+
+- [Orxngc](https://github.com/orxngc/walls-catppuccin-mocha)
+
 #### Disclaimer
 
 Feel free to use this repository as a reference for your own configuration. However do not expect to be able to run this configuration on your own system as-is. If you have a question feel free to create an issue.
