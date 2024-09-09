@@ -5,7 +5,7 @@
       catppuccin.enable = true;
       font = {
         name = "0xProto";
-        size = 10;
+        size = 11;
       };
       settings = {
         enable_audio_bell = false;
