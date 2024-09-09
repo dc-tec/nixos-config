@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+borders active_color=0xfff5a97f inactive_color=0xffcad3f5 width=3.0

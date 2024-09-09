@@ -29,6 +29,10 @@ _: {
         name = "sketchybar";
         start_service = true;
       }
+      {
+        name = "borders";
+        start_service = true;
+      }
       "ifstat"
       "jq"
       "yq"

@@ -12,6 +12,7 @@
     ./ripgrep.nix
     ./kitty.nix
     ./sketchybar
+    ./jankyborders
     inputs.nix-colors.homeManagerModules.default
   ];
 
