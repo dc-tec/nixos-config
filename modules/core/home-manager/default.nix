@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }: {
   imports = [
@@ -10,7 +11,7 @@
 
   dc-tec.core.zfs = lib.mkMerge [
     (lib.mkIf config.dc-tec.core.persistence.enable {
-      homeCacheLinks = [".config" ".cache" ".local"];
+      homeCacheLinks = [".config" ".cache" ".local" ".cloudflared"];
     })
     (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
   ];
@@ -31,7 +32,10 @@
         ];
         home = {
           stateVersion = config.dc-tec.stateVersion;
-          packages = [inputs.nixvim.packages.x86_64-linux.default];
+          packages = [
+            inputs.nixvim.packages.x86_64-linux.default
+            pkgs.cloudflared
+          ];
         };
         systemd.user.sessionVariables = config.home-manager.users.roelc.home.sessionVariables;
         catppuccin = {

@@ -25,6 +25,9 @@
       wireless = {
         enable = false;
       };
+      cloudflared = {
+        enable = true;
+      };
     };
     development = {
       virtualisation = {
