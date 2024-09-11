@@ -37,6 +37,7 @@ _: {
       "jq"
       "yq"
       "hashicorp/tap/vault"
+      "cloudflared"
     ];
 
     casks = [
