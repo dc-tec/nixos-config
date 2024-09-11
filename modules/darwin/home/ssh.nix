@@ -39,6 +39,12 @@
           forwardAgent = true;
           identityFile = "~/.ssh/roelc_gh";
         };
+        "lab-ssh.decort.tech" = {
+          hostname = "lab-ssh.decort.tech";
+          user = "roelc";
+          identityFile = "~/.ssh/roelc_gh";
+          proxyCommand = "/opt/homebrew/bin/cloudflared access ssh --hostname %h";
+        };
       };
     };
   };
