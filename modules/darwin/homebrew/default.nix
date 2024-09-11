@@ -37,6 +37,10 @@ _: {
       "jq"
       "yq"
       "hashicorp/tap/vault"
+      "hashicorp/tap/boundary"
+      "hashicorp/tap/consul"
+      "hashicorp/tap/nomad"
+      "hashicorp/tap/packer"
       "cloudflared"
     ];
 

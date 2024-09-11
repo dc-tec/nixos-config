@@ -9,12 +9,8 @@
       awscli2
       azure-cli
       go
-      packer
-      consul
       tenv
       terraform-docs
-      consul
-      packer
       powershell
       yaml-language-server
       talosctl
