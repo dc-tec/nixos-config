@@ -5,8 +5,6 @@
 
   home-manager.users.roelc = {
     home.packages = with pkgs; [
-      ansible
-      ansible-builder
       ansible-lint
       awscli2
       azure-cli
