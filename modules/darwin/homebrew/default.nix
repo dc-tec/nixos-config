@@ -29,10 +29,15 @@ _: {
         name = "sketchybar";
         start_service = true;
       }
+      {
+        name = "borders";
+        start_service = true;
+      }
       "ifstat"
       "jq"
       "yq"
       "hashicorp/tap/vault"
+      "cloudflared"
     ];
 
     casks = [
@@ -41,6 +46,7 @@ _: {
       "whatsapp"
       "mattermost"
       "obsidian"
+      "chatgpt"
       "visual-studio-code"
       "raycast"
       "font-0xproto"

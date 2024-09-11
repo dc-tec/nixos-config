@@ -5,7 +5,7 @@
       catppuccin.enable = true;
       font = {
         name = "0xProto";
-        size = 10;
+        size = 11;
       };
       settings = {
         enable_audio_bell = false;
@@ -18,6 +18,7 @@
         adjust_line_height = 3;
 
         background_opacity = "0.8";
+        background_blur = 20;
 
         # Window config
         window_margin_width = 5;

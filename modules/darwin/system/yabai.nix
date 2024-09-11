@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{...}: {
   services.yabai = {
     enable = true;
     enableScriptingAddition = true;
@@ -8,7 +8,7 @@
       window_placement = "second_child";
       window_shadow = "off";
       mouse_follows_focus = "on";
-      focus_follows_mouse = "autoraise";
+      focus_follows_mouse = "autofocus";
       window_opacity = "off";
 
       top_padding = 7;

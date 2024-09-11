@@ -2,6 +2,7 @@
   imports = [
     ./shell.nix
     ./core.nix
+    ./direnv.nix
     ./starship.nix
     ./eza.nix
     ./fzf.nix
@@ -11,6 +12,7 @@
     ./ripgrep.nix
     ./kitty.nix
     ./sketchybar
+    ./jankyborders
     inputs.nix-colors.homeManagerModules.default
   ];
 

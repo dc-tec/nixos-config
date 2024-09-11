@@ -7,6 +7,7 @@ sketchybar  --add   item mattermost right \
             --set   mattermost \
                     update_freq=60 \
                     script="$PLUGIN_DIR/mattermost.sh" \
+                    icon=􀌥 \
                     icon.font.size=16 \
                     click_script="$OPEN_MATTERMOST" \
            --subscribe mattermost system_woke
