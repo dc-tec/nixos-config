@@ -8,6 +8,7 @@
     extraHosts = ''
       172.50.0.101  argocd.decort.tech
       172.50.0.102  longhorn.decort.tech
+      172.50.0.103  password.decort.tech
     '';
   };
 
@@ -24,6 +25,9 @@
       };
       wireless = {
         enable = false;
+      };
+      cloudflared = {
+        enable = true;
       };
     };
     development = {

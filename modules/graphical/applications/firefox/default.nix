@@ -29,6 +29,7 @@
             ublock-origin
             firefox-color
             canvasblocker
+            bitwarden
             #bypass-paywalls-clean
           ];
 
