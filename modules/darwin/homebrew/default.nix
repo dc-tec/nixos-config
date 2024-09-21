@@ -42,10 +42,15 @@ _: {
       "hashicorp/tap/nomad"
       "hashicorp/tap/packer"
       "cloudflared"
+      "gpg"
+      "pinentry-mac"
+      "pre-commit"
+      "just"
     ];
 
     casks = [
       "firefox"
+      "thunderbird"
       "microsoft-edge"
       "whatsapp"
       "mattermost"
@@ -60,6 +65,7 @@ _: {
       "sf-symbols"
       "font-material-symbols"
       "font-material-icons"
+      "betterdisplay"
     ];
   };
 }
