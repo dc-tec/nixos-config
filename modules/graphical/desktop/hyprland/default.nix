@@ -263,7 +263,6 @@
             "XDG_CURRENT_DESKTOP,Hyprland"
             "GBM_BACKEND,nvidia-drm"
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-            "MOZ_ENABLE_WAYLAND,0"
           ];
           exec-once = [
             "${pkgs.hyprpaper}/bin/hyprpaper"
