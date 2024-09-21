@@ -13,6 +13,7 @@
     ./kitty.nix
     ./sketchybar
     ./jankyborders
+    ./gpg
     inputs.nix-colors.homeManagerModules.default
   ];
 

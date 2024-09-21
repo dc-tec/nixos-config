@@ -36,6 +36,7 @@
   };
 
   system = {
+    stateVersion = 5;
     activationScripts.postUserActivation.text = ''
       /System/Library/PrivateFrameworks/SystemAdministration.framework/\
       Resources/activatesettings -u

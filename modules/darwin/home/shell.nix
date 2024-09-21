@@ -99,6 +99,7 @@
       sessionVariables = {
         DEFAULT_USER = "roelc";
         PATH = "/Users/roelc/Library/Python/3.9/bin:$PATH";
+        GPG_TTY = ''$(tty)'';
       };
       shellAliases = {
         home = "cd ~/";
