@@ -46,6 +46,11 @@ _: {
       "pinentry-mac"
       "pre-commit"
       "just"
+      "netcat"
+      "gh"
+      "tflint"
+      "terraform-ls"
+      "container-structure-test"
     ];
 
     casks = [
@@ -59,6 +64,7 @@ _: {
       "visual-studio-code"
       "raycast"
       "font-0xproto"
+      "font-0xproto-nerd-font"
       "mac-mouse-fix"
       "docker"
       "font-sf-mono"
@@ -66,6 +72,11 @@ _: {
       "font-material-symbols"
       "font-material-icons"
       "betterdisplay"
+      "spotify"
+      "cursor"
+      "notion"
+      "shottr"
+      "powershell"
     ];
   };
 }
