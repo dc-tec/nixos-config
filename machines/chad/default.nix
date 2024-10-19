@@ -31,6 +31,7 @@
       };
     };
     development = {
+      vscode-server.enable = true;
       virtualisation = {
         docker.enable = true;
         k8s.enable = true;
