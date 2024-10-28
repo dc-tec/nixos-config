@@ -5,6 +5,23 @@
     hostName = "chad";
     hostId = "a51b205b";
     nameservers = ["1.1.1.1" "1.0.0.1"];
+    useDHCP = false;
+    interfaces = {
+      br0 = {
+        ipv4.addresses = [
+          {
+            address = "10.0.1.125";
+            prefixLength = 24;
+          }
+        ];
+      };
+    };
+    defaultGateway = "10.0.1.1";
+    bridges = {
+      "br0" = {
+        interfaces = ["enp27s0"];
+      };
+    };
     extraHosts = ''
       172.50.0.101  argocd.decort.tech
       172.50.0.102  longhorn.decort.tech
