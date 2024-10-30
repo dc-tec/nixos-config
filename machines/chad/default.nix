@@ -8,15 +8,19 @@
     useDHCP = false;
     interfaces = {
       br0 = {
-        ipv4.addresses = [
-          {
-            address = "10.0.1.125";
-            prefixLength = 24;
-          }
-        ];
+        useDHCP = true;
+        #ipv4.addresses = [
+        #  {
+        #    address = "10.0.1.125";
+        #    prefixLength = 24;
+        #  }
+        #];
+      };
+      enp27s0 = {
+        useDHCP = true;
       };
     };
-    defaultGateway = "10.0.1.1";
+    defaultGateway = "10.0.10.1";
     bridges = {
       "br0" = {
         interfaces = ["enp27s0"];
@@ -44,7 +48,7 @@
         enable = false;
       };
       cloudflared = {
-        enable = true;
+        enable = false;
       };
     };
     development = {
