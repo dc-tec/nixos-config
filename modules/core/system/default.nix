@@ -52,6 +52,8 @@
         yq
         fd
         openssl
+        tcpdump
+        bridge-utils
         (pkgs.callPackage ../../../pkgs/niks {})
       ];
     };

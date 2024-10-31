@@ -20,6 +20,8 @@
       "kvm-amd"
       "xt_socket"
       "vhost-net"
+      "bridge"
+      "br_netfilter"
     ];
     extraModulePackages = [];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
