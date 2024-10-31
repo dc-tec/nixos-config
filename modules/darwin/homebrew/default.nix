@@ -18,6 +18,7 @@ _: {
       "homebrew/services"
       "FelixKratz/formulae"
       "hashicorp/tap"
+      "jeffreywildman/homebrew-virt-manager"
     ];
 
     brews = [
@@ -51,6 +52,9 @@ _: {
       "tflint"
       "terraform-ls"
       "container-structure-test"
+      "virt-manager"
+      "virt-viewer"
+      "azure-cli"
     ];
 
     casks = [
