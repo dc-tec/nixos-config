@@ -34,7 +34,7 @@
           identityFile = "~/.ssh/roelc_gh";
         };
         "chad" = {
-          hostname = "10.0.1.125";
+          hostname = "10.0.10.183";
           user = "roelc";
           forwardAgent = true;
           identityFile = "~/.ssh/roelc_gh";
