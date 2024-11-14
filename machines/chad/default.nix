@@ -27,9 +27,9 @@
       };
     };
     extraHosts = ''
-      172.50.0.101  argocd.decort.tech
-      172.50.0.102  longhorn.decort.tech
-      172.50.0.103  password.decort.tech
+      10.0.10.151  argocd.decort.tech
+      10.0.10.152  longhorn.decort.tech
+      10.0.10.153  vault.decort.tech
     '';
   };
 
