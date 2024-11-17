@@ -55,6 +55,9 @@ _: {
       "virt-manager"
       "virt-viewer"
       "azure-cli"
+      "opentofu"
+      "openbao"
+      "k3d"
     ];
 
     casks = [
