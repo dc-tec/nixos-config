@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   config = {
     home-manager.users.roelc = {
       programs.starship = {
@@ -18,6 +19,8 @@
             "$git_branch"
             "$git_status"
             "$direnv"
+            "$terraform"
+            "$kubernetes"
             "$cmd_duration"
             "\n󱞪(2) $character"
           ];
@@ -40,8 +43,29 @@
           };
 
           directory = {
-            home_symbol = " ";
-            read_only = " ";
+            home_symbol = "  ";
+            read_only = "  ";
+          };
+
+          terraform = {
+            disabled = false;
+            symbol = "󱁢 ";
+            detect_folders = [
+              ".terraform"
+              "src/.terraform"
+              "clusters/.terraform"
+
+            ];
+            detect_files = [
+              "environment"
+            ];
+            format = "on workspace [$symbol$workspace]($style) ";
+          };
+
+          kubernetes = {
+            disabled = false;
+            symbol = "󱃾 ";
+            format = "using context [$symbol$context]($style) ";
           };
 
           direnv = {

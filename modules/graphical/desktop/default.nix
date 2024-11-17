@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./hyprland
     ./waybar
@@ -7,7 +8,6 @@
     ./wlogout
     ./swaync
     ./fuzzel
-    ./anyrun
     ./key_management
   ];
 }

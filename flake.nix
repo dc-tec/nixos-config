@@ -15,7 +15,6 @@
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     hyprpaper.url = "github:hyprwm/hyprpaper";
     hyprlock.url = "github:hyprwm/hyprlock";
-    anyrun.url = "github:anyrun-org/anyrun";
 
     # Catppuccin theming
     nix-colors.url = "github:misterio77/nix-colors";
@@ -46,125 +45,151 @@
     niks-cli.url = "github:dc-tec/niks-cli";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    impermanence,
-    hyprland,
-    hyprpaper,
-    hyprlock,
-    anyrun,
-    nixvim,
-    nur,
-    niks-cli,
-    nix-colors,
-    catppuccin,
-    sops-nix,
-    nixos-wsl,
-    darwin,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-    forAllSystems = nixpkgs.lib.genAttrs [
-      "x86_64-linux"
-      "aarch64-darwin"
-    ];
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      impermanence,
+      hyprland,
+      hyprpaper,
+      hyprlock,
+      nixvim,
+      nur,
+      niks-cli,
+      nix-colors,
+      catppuccin,
+      sops-nix,
+      nixos-wsl,
+      darwin,
+      ...
+    }@inputs:
+    let
+      inherit (self) outputs;
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
 
-    wslModules = [
-      home-manager.nixosModule
-      catppuccin.nixosModules.catppuccin
-      impermanence.nixosModule # Needed to disable certain options
-      nixos-wsl.nixosModules.default
+      wslModules = [
+        home-manager.nixosModule
+        catppuccin.nixosModules.catppuccin
+        impermanence.nixosModule # Needed to disable certain options
+        nixos-wsl.nixosModules.default
 
-      ./modules/wsl
-      ./modules/core/home-manager
-      ./modules/core/nix
-      ./modules/core/utils
-      ./modules/core/shells
-      ./modules/core/system
-      ./modules/core/storage # Needed to disable certain options
-      ./modules/development
-    ];
+        ./modules/wsl
+        ./modules/core/home-manager
+        ./modules/core/nix
+        ./modules/core/utils
+        ./modules/core/shells
+        ./modules/core/system
+        ./modules/core/storage # Needed to disable certain options
+        ./modules/development
+      ];
 
-    darwinModules = [
-      home-manager.darwinModules.home-manager
+      darwinModules = [
+        home-manager.darwinModules.home-manager
 
-      ./modules/darwin
-    ];
+        ./modules/darwin
+      ];
 
-    sharedModules = [
-      ({
-        inputs,
-        outputs,
-        lib,
-        config,
-        pkgs,
-        ...
-      }: {
-        nixpkgs = {
-          overlays = [
-            nur.overlay
-            (import ./overlays {inherit inputs;}).stable-packages
-          ];
-        };
-      })
+      sharedModules = [
+        (
+          {
+            inputs,
+            outputs,
+            lib,
+            config,
+            pkgs,
+            ...
+          }:
+          {
+            nixpkgs = {
+              overlays = [
+                nur.overlay
+                (import ./overlays { inherit inputs; }).stable-packages
+              ];
+            };
+          }
+        )
 
-      sops-nix.nixosModules.sops
-      impermanence.nixosModule
-      home-manager.nixosModule
-      catppuccin.nixosModules.catppuccin
-      nixos-wsl.nixosModules.default
-      nur.nixosModules.nur
+        sops-nix.nixosModules.sops
+        impermanence.nixosModule
+        home-manager.nixosModule
+        catppuccin.nixosModules.catppuccin
+        nixos-wsl.nixosModules.default
+        nur.nixosModules.nur
 
-      ./modules
-    ];
-  in {
-    packages = forAllSystems (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
+        ./modules
+      ];
     in
-      import ./pkgs {inherit pkgs;});
+    {
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        import ./pkgs { inherit pkgs; }
+      );
 
-    devShells =
-      forAllSystems
-      (system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        default = pkgs.mkShell {
-          NIX_CONFIG = "experimental-features = nix-command flakes";
-          nativeBuildInputs = [pkgs.nix pkgs.home-manager pkgs.git pkgs.age pkgs.age-to-ssh pkgs.sops];
-        };
-      });
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            NIX_CONFIG = "experimental-features = nix-command flakes";
+            nativeBuildInputs = [
+              pkgs.nix
+              pkgs.home-manager
+              pkgs.git
+              pkgs.age
+              pkgs.age-to-ssh
+              pkgs.sops
+            ];
+          };
+        }
+      );
 
-    formatter = forAllSystems (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
+      formatter = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
         pkgs.nixpkgs-fmt
-    );
+      );
 
-    overlays = import ./overlays {inherit inputs;};
+      overlays = import ./overlays { inherit inputs; };
 
-    darwinConfigurations = {
-      darwin = darwin.lib.darwinSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = darwinModules ++ [./machines/darwin/default.nix];
+      darwinConfigurations = {
+        darwin = darwin.lib.darwinSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = darwinModules ++ [ ./machines/darwin/default.nix ];
+        };
+      };
+
+      nixosConfigurations = {
+        legion = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = sharedModules ++ [ ./machines/legion/default.nix ];
+        };
+        chad = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = sharedModules ++ [ ./machines/chad/default.nix ];
+        };
+        ghost = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = wslModules ++ [ ./machines/ghost/default.nix ];
+        };
       };
     };
-
-    nixosConfigurations = {
-      legion = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = sharedModules ++ [./machines/legion/default.nix];
-      };
-      chad = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = sharedModules ++ [./machines/chad/default.nix];
-      };
-      ghost = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = wslModules ++ [./machines/ghost/default.nix];
-      };
-    };
-  };
 }

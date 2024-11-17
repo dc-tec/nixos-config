@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./fzf
     ./eza
@@ -11,6 +12,5 @@
     ./ssh
     ./sshd
     ./direnv
-    #./tmux
   ];
 }
