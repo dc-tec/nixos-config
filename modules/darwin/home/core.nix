@@ -11,6 +11,7 @@
         direnv
         dnsutils
         atac
+        mdbook
       ];
     };
   };
