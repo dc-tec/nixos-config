@@ -17,6 +17,7 @@
     home-manager.url = "github:nix-community/home-manager";  # User environment management
     impermanence.url = "github:nix-community/impermanence"; # Persistent storage configuration
     sops-nix.url = "github:Mic92/sops-nix";                # Secrets management
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix"; # Pre-commit hooks
 
     # Desktop environment - Hyprland (Wayland compositor) and related tools
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
@@ -178,13 +179,28 @@
         }
       );
 
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in {
+          pre-commit-check = pkgs.pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              statix.enable = true;
+              nixfmt-rfc-style.enable = true;
+            };
+          };
+        }
+      );
+
       # Code formatting configuration
       formatter = forAllSystems (
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
         in
-        pkgs.nixpkgs-fmt
+        pkgs.nixfmt-rfc-style
       );
 
       # Custom overlays
