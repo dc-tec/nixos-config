@@ -30,6 +30,11 @@ let
 
         cd docs
 
+        # Copy static documentation files
+        cp ${../docs/templates/introduction.md} src/introduction/index.md
+        cp ${../docs/templates/getting-started.md} src/guides/getting-started.md
+        cp ${../docs/templates/installation.md} src/guides/installation.md
+
         # Create book.toml
         cat > book.toml << EOF
         [book]
@@ -113,26 +118,6 @@ let
         - [Legion](generated/machines/legion.md)
         EOF
 
-        # Create placeholder files for custom documentation
-        cat > src/introduction/index.md << EOF
-        # Introduction
-
-        Welcome to the NixOS Configuration documentation. This guide covers the setup,
-        configuration, and usage of our NixOS system configurations.
-        EOF
-
-        cat > src/guides/getting-started.md << EOF
-        # Getting Started
-
-        This guide will help you get started with using and customizing these NixOS configurations.
-        EOF
-
-        cat > src/guides/installation.md << EOF
-        # Installation Guide
-
-        Step-by-step instructions for installing and configuring your NixOS system.
-        EOF
-
         # Create index files for each section
         for section in core development graphical wsl darwin; do
           cat > src/generated/$section/_index.md << EOF
@@ -160,12 +145,38 @@ let
               cat "$module_path/README.md" >> "$output_path"
             fi
             
+            # Function to extract documentation comments
+            extract_docs() {
+              local file=$1
+              # Extract multi-line comments starting with #: or ##
+              awk '
+                /^[[:space:]]*#:[[:space:]]/ {
+                  # Remove comment marker and print
+                  sub(/^[[:space:]]*#:[[:space:]]/, "");
+                  print;
+                }
+                /^[[:space:]]*##[[:space:]]/ {
+                  # Remove comment marker and print
+                  sub(/^[[:space:]]*##[[:space:]]/, "");
+                  print;
+                }
+              ' "$file"
+            }
+
             # Add Implementation section with code snippets
             echo "## Implementation" >> "$output_path"
             
             # Add default.nix if it exists
             if [ -f "$module_path/default.nix" ]; then
               echo "### default.nix" >> "$output_path"
+              
+              # Extract and add documentation comments
+              echo "#### Documentation" >> "$output_path"
+              extract_docs "$module_path/default.nix" >> "$output_path"
+              echo "" >> "$output_path"
+              
+              # Add the code
+              echo "#### Source" >> "$output_path"
               echo '```nix' >> "$output_path"
               cat "$module_path/default.nix" >> "$output_path"
               echo '```' >> "$output_path"
@@ -186,6 +197,14 @@ let
                 for nix_file in "$subdir"/*.nix; do
                   if [ -f "$nix_file" ]; then
                     echo "#### $(basename "$nix_file")" >> "$output_path"
+                    
+                    # Extract and add documentation comments
+                    echo "##### Documentation" >> "$output_path"
+                    extract_docs "$nix_file" >> "$output_path"
+                    echo "" >> "$output_path"
+                    
+                    # Add the code
+                    echo "##### Source" >> "$output_path"
                     echo '```nix' >> "$output_path"
                     cat "$nix_file" >> "$output_path"
                     echo '```' >> "$output_path"
@@ -198,6 +217,14 @@ let
             for nix_file in "$module_path"/*.nix; do
               if [ -f "$nix_file" ] && [ "$(basename "$nix_file")" != "default.nix" ]; then
                 echo "### $(basename "$nix_file")" >> "$output_path"
+                
+                # Extract and add documentation comments
+                echo "#### Documentation" >> "$output_path"
+                extract_docs "$nix_file" >> "$output_path"
+                echo "" >> "$output_path"
+                
+                # Add the code
+                echo "#### Source" >> "$output_path"
                 echo '```nix' >> "$output_path"
                 cat "$nix_file" >> "$output_path"
                 echo '```' >> "$output_path"
