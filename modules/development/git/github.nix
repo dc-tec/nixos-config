@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   base = home: {
     programs.gh = {
       enable = true;
@@ -12,13 +13,14 @@
       };
     };
   };
-in {
+in
+{
   dc-tec.core.zfs = lib.mkMerge [
     (lib.mkIf config.dc-tec.core.persistence.enable {
-      homeCacheLinks = [".gh"];
+      homeCacheLinks = [ ".gh" ];
     })
-    (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+    (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
   ];
 
-  home-manager.users.roelc = {...}: (base "/home/roelc");
+  home-manager.users.roelc = { ... }: (base "/home/roelc");
 }

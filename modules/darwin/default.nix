@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./home
     ./nix
@@ -7,4 +8,3 @@
     ./development
   ];
 }
-

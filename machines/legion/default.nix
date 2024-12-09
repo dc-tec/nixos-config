@@ -1,10 +1,14 @@
-{...}: {
-  imports = [./hardware.nix];
+{ ... }:
+{
+  imports = [ ./hardware.nix ];
 
   networking = {
     hostName = "legion";
     hostId = "6eea4e84";
-    nameservers = ["1.1.1.1" "1.0.0.1"];
+    nameservers = [
+      "1.1.1.1"
+      "1.0.0.1"
+    ];
   };
 
   dc-tec = {

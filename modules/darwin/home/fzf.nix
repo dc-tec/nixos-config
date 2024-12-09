@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   home-manager.users.roelc = {
     programs.fzf = {
       enable = true;
@@ -7,4 +8,3 @@
     };
   };
 }
-

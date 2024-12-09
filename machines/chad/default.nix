@@ -1,10 +1,14 @@
-{...}: {
-  imports = [./hardware.nix];
+{ ... }:
+{
+  imports = [ ./hardware.nix ];
 
   networking = {
     hostName = "chad";
     hostId = "a51b205b";
-    nameservers = ["1.1.1.1" "1.0.0.1"];
+    nameservers = [
+      "1.1.1.1"
+      "1.0.0.1"
+    ];
     useDHCP = false;
     interfaces = {
       br0 = {
@@ -23,7 +27,7 @@
     defaultGateway = "10.0.10.1";
     bridges = {
       "br0" = {
-        interfaces = ["enp27s0"];
+        interfaces = [ "enp27s0" ];
       };
     };
     extraHosts = ''

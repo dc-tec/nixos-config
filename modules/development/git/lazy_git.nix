@@ -1,4 +1,5 @@
-{...}: let
+{ ... }:
+let
   base = home: {
     programs.lazygit = {
       enable = true;
@@ -8,6 +9,7 @@
       };
     };
   };
-in {
-  home-manager.users.roelc = {...}: (base "/home/roelc");
+in
+{
+  home-manager.users.roelc = { ... }: (base "/home/roelc");
 }

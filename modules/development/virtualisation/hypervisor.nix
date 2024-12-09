@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development.virtualisation = {
       hypervisor.enable = lib.mkEnableOption "Libvirt/KVM";
@@ -11,7 +12,7 @@
   };
 
   config = lib.mkIf config.dc-tec.development.virtualisation.hypervisor.enable {
-    dc-tec.core.zfs.systemCacheLinks = ["/var/lib/libvirt"];
+    dc-tec.core.zfs.systemCacheLinks = [ "/var/lib/libvirt" ];
 
     virtualisation.libvirtd = {
       enable = true;
@@ -35,7 +36,7 @@
     };
 
     users.users.roelc = {
-      extraGroups = ["libvirtd"];
+      extraGroups = [ "libvirtd" ];
     };
   };
 }

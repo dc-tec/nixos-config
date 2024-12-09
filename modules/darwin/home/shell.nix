@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   programs.zsh.enable = true;
 
   home-manager.users.roelc = {
@@ -21,7 +22,10 @@
 
       syntaxHighlighting = {
         enable = true;
-        highlighters = ["main" "cursor"];
+        highlighters = [
+          "main"
+          "cursor"
+        ];
         styles = {
           comment = "fg=#5b6078";
           alias = "fg=#a6da95";

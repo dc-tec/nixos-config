@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development.virtualisation = {
       k8s.enable = lib.mkEnableOption "k8s tooling";

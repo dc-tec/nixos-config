@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development = {
       aws-cli.enable = lib.mkEnableOption "AWS CLI";

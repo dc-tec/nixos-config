@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   options.dc-tec = {
     stateVersion = lib.mkOption {
       example = "23.11";
@@ -54,7 +55,7 @@
         openssl
         tcpdump
         bridge-utils
-        (pkgs.callPackage ../../../pkgs/niks {})
+        (pkgs.callPackage ../../../pkgs/niks { })
       ];
     };
 
@@ -67,7 +68,7 @@
         enable = true;
         extraRules = [
           {
-            users = ["roelc"];
+            users = [ "roelc" ];
             noPass = true;
           }
         ];

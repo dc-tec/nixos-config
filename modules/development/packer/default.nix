@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development = {
       packer.enable = lib.mkEnableOption "Packer";

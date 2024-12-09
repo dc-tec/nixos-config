@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   config = {
     users = {
       mutableUsers = false;
@@ -6,7 +7,7 @@
         roelc = {
           isNormalUser = true;
           home = "/home/roelc";
-          extraGroups = ["systemd-journal"];
+          extraGroups = [ "systemd-journal" ];
           hashedPasswordFile = config.sops.secrets."users/roelc".path;
         };
         root.hashedPasswordFile = config.sops.secrets."users/root".path;

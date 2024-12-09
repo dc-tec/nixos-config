@@ -20,7 +20,7 @@ _: {
         neededForUsers = true;
       };
 
-      wireless = {};
+      wireless = { };
 
       "authorized_keys/root" = {
         path = "/root/.ssh/authorized_keys";

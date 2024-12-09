@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   home-manager.users.roelc = {
     programs.kitty = {
       enable = true;

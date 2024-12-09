@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   options.dc-tec.graphical.hyprpaper = {
     enable = lib.mkEnableOption "hyprpaper";
   };

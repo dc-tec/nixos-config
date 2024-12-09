@@ -3,14 +3,15 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   options.dc-tec.graphical.swaync = {
     enable = lib.mkEnableOption "Enable swaync";
   };
 
   config = lib.mkIf config.dc-tec.graphical.swaync.enable {
     home-manager.users.roelc = {
-      home.packages = [pkgs.libnotify];
+      home.packages = [ pkgs.libnotify ];
       services.swaync = {
         enable = true;
 

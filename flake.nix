@@ -11,18 +11,18 @@
     # Core Nix package repositories
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
-    nur.url = "github:nix-community/NUR";  # Nix User Repository
+    nur.url = "github:nix-community/NUR"; # Nix User Repository
 
     # Essential system management flakes
-    home-manager.url = "github:nix-community/home-manager";  # User environment management
+    home-manager.url = "github:nix-community/home-manager"; # User environment management
     impermanence.url = "github:nix-community/impermanence"; # Persistent storage configuration
-    sops-nix.url = "github:Mic92/sops-nix";                # Secrets management
+    sops-nix.url = "github:Mic92/sops-nix"; # Secrets management
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix"; # Pre-commit hooks
 
     # Desktop environment - Hyprland (Wayland compositor) and related tools
     hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    hyprpaper.url = "github:hyprwm/hyprpaper";  # Wallpaper manager
-    hyprlock.url = "github:hyprwm/hyprlock";    # Screen locker
+    hyprpaper.url = "github:hyprwm/hyprpaper"; # Wallpaper manager
+    hyprlock.url = "github:hyprwm/hyprlock"; # Screen locker
 
     # Theme-related flakes
     nix-colors.url = "github:misterio77/nix-colors";
@@ -49,7 +49,7 @@
     };
 
     # Custom flakes
-    nixvim.url = "github:dc-tec/nixvim";    # Neovim configuration
+    nixvim.url = "github:dc-tec/nixvim"; # Neovim configuration
     niks-cli.url = "github:dc-tec/niks-cli"; # Custom CLI tools
   };
 
@@ -75,16 +75,17 @@
       sops-nix,
       nixos-wsl,
       darwin,
+      pre-commit-hooks,
       ...
     }@inputs:
     let
       inherit (self) outputs;
-      
+
       # Documentation generation setup
-      docs = import ./lib/docs.nix { 
-        inherit nixpkgs self; 
+      docs = import ./lib/docs.nix {
+        inherit nixpkgs self;
       };
-      
+
       # Define supported system architectures
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
@@ -153,9 +154,11 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-        in {
-        inherit (docs) mkDocs serve-docs;
-        } // (import ./pkgs { inherit pkgs; })
+        in
+        {
+          inherit (docs) mkDocs serve-docs;
+        }
+        // (import ./pkgs { inherit pkgs; })
       );
 
       # Development shells for the project
@@ -183,7 +186,8 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-        in {
+        in
+        {
           pre-commit-check = pkgs.pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
@@ -233,7 +237,7 @@
           };
           modules = sharedModules ++ [ ./machines/legion/default.nix ];
         };
-        
+
         # Server configuration
         chad = nixpkgs.lib.nixosSystem {
           specialArgs = {
@@ -241,7 +245,7 @@
           };
           modules = sharedModules ++ [ ./machines/chad/default.nix ];
         };
-        
+
         # WSL development environment
         ghost = nixpkgs.lib.nixosSystem {
           specialArgs = {

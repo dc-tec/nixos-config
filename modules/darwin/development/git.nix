@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   home-manager.users.roelc = {
     programs.git = {
       enable = true;
@@ -27,4 +28,3 @@
     };
   };
 }
-

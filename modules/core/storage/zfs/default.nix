@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   options.dc-tec.core = {
     persistence = {
       enable = lib.mkEnableOption "Enable persistence";
@@ -16,18 +17,18 @@
       encrypted = lib.mkEnableOption "zfs request credentials";
 
       # Clear our symbolic links
-      systemCacheLinks = lib.mkOption {default = [];};
-      systemDataLinks = lib.mkOption {default = [];};
-      homeCacheLinks = lib.mkOption {default = [];};
-      homeDataLinks = lib.mkOption {default = [];};
+      systemCacheLinks = lib.mkOption { default = [ ]; };
+      systemDataLinks = lib.mkOption { default = [ ]; };
+      homeCacheLinks = lib.mkOption { default = [ ]; };
+      homeDataLinks = lib.mkOption { default = [ ]; };
 
       ensureSystemExists = lib.mkOption {
-        default = [];
-        example = ["/data/etc/ssh"];
+        default = [ ];
+        example = [ "/data/etc/ssh" ];
       };
       ensureHomeExists = lib.mkOption {
-        default = [];
-        example = [".ssh"];
+        default = [ ];
+        example = [ ".ssh" ];
       };
       rootDataset = lib.mkOption {
         default = "";
@@ -64,7 +65,7 @@
     };
 
     boot = {
-      supportedFilesystems = ["zfs"];
+      supportedFilesystems = [ "zfs" ];
       zfs = {
         devNodes = "/dev/";
         requestEncryptionCredentials = config.dc-tec.core.zfs.encrypted;
@@ -87,28 +88,32 @@
       '')
     ];
 
-    system.activationScripts = let
-      ensureSystemExistsScript =
-        lib.concatStringsSep "\n"
-        (map (path: ''mkdir -p "${path}"'')
-          config.dc-tec.core.zfs.ensureSystemExists);
-      ensureHomeExistsScript = lib.concatStringsSep "\n" (map
-        (path: ''
-          mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}
-        '')
-        config.dc-tec.core.zfs.ensureHomeExists);
-    in {
-      ensureSystemPathsExist = {
-        text = ensureSystemExistsScript;
-        deps = [];
+    system.activationScripts =
+      let
+        ensureSystemExistsScript = lib.concatStringsSep "\n" (
+          map (path: ''mkdir -p "${path}"'') config.dc-tec.core.zfs.ensureSystemExists
+        );
+        ensureHomeExistsScript = lib.concatStringsSep "\n" (
+          map (path: ''
+            mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}
+          '') config.dc-tec.core.zfs.ensureHomeExists
+        );
+      in
+      {
+        ensureSystemPathsExist = {
+          text = ensureSystemExistsScript;
+          deps = [ ];
+        };
+        ensureHomePathsExist = {
+          text = ''
+            mkdir -p /home/roelc/
+            ${ensureHomeExistsScript}
+          '';
+          deps = [
+            "users"
+            "groups"
+          ];
+        };
       };
-      ensureHomePathsExist = {
-        text = ''
-          mkdir -p /home/roelc/
-          ${ensureHomeExistsScript}
-        '';
-        deps = ["users" "groups"];
-      };
-    };
   };
 }

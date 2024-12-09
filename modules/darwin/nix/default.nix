@@ -2,7 +2,10 @@
 
 {
   # enable flakes globally
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -26,6 +29,6 @@
   # "error: cannot link '/nix/store/.tmp-link-xxxxx-xxxxx' to '/nix/store/.links/xxxx': File exists"
   nix.settings = {
     auto-optimise-store = false;
-    trusted-users = ["roelc"];
+    trusted-users = [ "roelc" ];
   };
 }

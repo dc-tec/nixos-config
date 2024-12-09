@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   config = {
     programs.tmux = {
       enable = true;
@@ -12,8 +13,7 @@
       clock24 = true;
       historyLimit = 100000;
       prefix = "C-a";
-      extraConfig = ''
-      '';
+      extraConfig = '''';
 
       plugins = with pkgs; [
         {

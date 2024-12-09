@@ -2,12 +2,13 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.core.nix = {
-      enableDirenv = lib.mkOption {default = true;};
+      enableDirenv = lib.mkOption { default = true; };
       unfreePackages = lib.mkOption {
-        default = [];
+        default = [ ];
       };
     };
   };
@@ -15,11 +16,11 @@
   config = {
     dc-tec.core.zfs = lib.mkMerge [
       (lib.mkIf config.dc-tec.core.persistence.enable {
-        homeCacheLinks = ["local/share/direnv"];
-        systemCacheLinks = ["/root/.local/share/direnv"];
-        systemDataLinks = ["/var/lib/nixos"];
+        homeCacheLinks = [ "local/share/direnv" ];
+        systemCacheLinks = [ "/root/.local/share/direnv" ];
+        systemDataLinks = [ "/var/lib/nixos" ];
       })
-      (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+      (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
     ];
 
     programs.nh = {
@@ -37,7 +38,10 @@
         trusted-users = [
           "roelc"
         ];
-        experimental-features = ["nix-command" "flakes"];
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
         warn-dirty = false;
       };
 

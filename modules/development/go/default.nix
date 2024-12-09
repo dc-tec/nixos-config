@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development = {
       go.enable = lib.mkEnableOption "Go";

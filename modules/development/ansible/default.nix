@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development = {
       ansible.enable = lib.mkEnableOption "Ansible";

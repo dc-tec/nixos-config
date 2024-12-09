@@ -3,14 +3,15 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   options.dc-tec.graphical.hyprlock = {
     enable = lib.mkEnableOption "hyprlock";
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprlock.enable {
     home-manager.users.roelc = {
-      home.packages = [pkgs.hyprlock];
+      home.packages = [ pkgs.hyprlock ];
 
       xdg.configFile."hypr/hyprlock.conf".text = ''
         general = {
@@ -55,6 +56,6 @@
         }
       '';
     };
-    security.pam.services.hyprlock = {};
+    security.pam.services.hyprlock = { };
   };
 }

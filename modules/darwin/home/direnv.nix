@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   home-manager.users.roelc = {
     programs.direnv = {
       enable = true;

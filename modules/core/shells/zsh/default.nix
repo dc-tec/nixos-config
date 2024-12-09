@@ -3,14 +3,15 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   config = {
     dc-tec.core.zfs = lib.mkMerge [
       (lib.mkIf config.dc-tec.core.persistence.enable {
-        systemCacheLinks = ["/root/.local/share/autojump"];
-        homeCacheLinks = [".local/share/autojump"];
+        systemCacheLinks = [ "/root/.local/share/autojump" ];
+        homeCacheLinks = [ ".local/share/autojump" ];
       })
-      (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+      (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
     ];
     programs.zsh.enable = true;
 
@@ -30,7 +31,10 @@
 
         syntaxHighlighting = {
           enable = true;
-          highlighters = ["main" "cursor"];
+          highlighters = [
+            "main"
+            "cursor"
+          ];
           styles = {
             comment = "fg=#5b6078";
             alias = "fg=#a6da95";
@@ -85,9 +89,10 @@
         history = {
           expireDuplicatesFirst = true;
           path =
-            if config.dc-tec.core.persistence.enable
-            then "/data/home/roelc/.local/share/zsh/zsh_history"
-            else "/home/roelc/.local/share/zsh/zsh_history";
+            if config.dc-tec.core.persistence.enable then
+              "/data/home/roelc/.local/share/zsh/zsh_history"
+            else
+              "/home/roelc/.local/share/zsh/zsh_history";
         };
 
         oh-my-zsh = {

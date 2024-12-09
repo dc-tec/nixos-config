@@ -1,5 +1,6 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   dc-tec = {
-    niks-cli = pkgs.callPackage ./niks {};
+    niks-cli = pkgs.callPackage ./niks { };
   };
 }

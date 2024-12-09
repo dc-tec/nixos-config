@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home-manager.users.roelc = {
     home = {
       packages = with pkgs; [

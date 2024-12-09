@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   options.dc-tec.graphical.sound = {
     enable = lib.mkEnableOption "Sound";
   };

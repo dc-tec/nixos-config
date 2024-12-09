@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.development = {
       powershell.enable = lib.mkEnableOption "Powershell";

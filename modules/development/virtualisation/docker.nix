@@ -3,7 +3,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec = {
       development.virtualisation = {
@@ -13,7 +14,7 @@
   };
 
   config = lib.mkIf config.dc-tec.development.virtualisation.docker.enable {
-    dc-tec.core.zfs.systemCacheLinks = ["/opt/docker"];
+    dc-tec.core.zfs.systemCacheLinks = [ "/opt/docker" ];
 
     virtualisation.docker = {
       enable = true;
@@ -26,6 +27,6 @@
         docker-compose
       ];
     };
-    users.users.roelc.extraGroups = ["docker"];
+    users.users.roelc.extraGroups = [ "docker" ];
   };
 }

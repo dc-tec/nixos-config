@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   config = {
     dc-tec.core.zfs = lib.mkMerge [
       (lib.mkIf config.dc-tec.core.persistence.enable {
@@ -14,7 +15,7 @@
           }
         ];
       })
-      (lib.mkIf (!config.dc-tec.core.persistence.enable) {})
+      (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
     ];
 
     environment = {
