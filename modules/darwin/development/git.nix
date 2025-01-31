@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   home-manager.users.roelc = {
     programs.git = {
       enable = true;
@@ -24,7 +25,11 @@
     programs.lazygit = {
       enable = true;
       catppuccin.enable = true;
+      settings = {
+        git = {
+          signOff = true;
+        };
+      };
     };
   };
 }
-
