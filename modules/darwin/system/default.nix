@@ -1,5 +1,6 @@
 #https://github.com/ryan4yin/nix-darwin-kickstarter/blob/main/rich-demo/modules/system.nix
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./yabai.nix
     ./skhd.nix
@@ -23,15 +24,8 @@
     packages = with pkgs; [
       material-design-icons
       font-awesome
-
-      (nerdfonts.override {
-        fonts = [
-          # symbols icon only
-          "NerdFontsSymbolsOnly"
-          # Characters
-          "0xProto"
-        ];
-      })
+      nerd-fonts.symbols-only
+      nerd-fonts._0xproto
     ];
   };
 
