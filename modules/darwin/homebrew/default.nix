@@ -58,6 +58,8 @@ _: {
       "opentofu"
       "openbao"
       "k3d"
+      "hcloud"
+      "coreutils"
     ];
 
     casks = [
@@ -84,6 +86,7 @@ _: {
       "notion"
       "shottr"
       "powershell"
+      "slack"
     ];
   };
 }
