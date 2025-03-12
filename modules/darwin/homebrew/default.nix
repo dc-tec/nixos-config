@@ -87,6 +87,7 @@ _: {
       "shottr"
       "powershell"
       "slack"
+      "citrix-workspace"
     ];
   };
 }

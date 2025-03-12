@@ -16,7 +16,9 @@
   ];
   environment.variables.EDITOR = "nvim";
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
+
+  ids.gids.nixbld = 30000;
 
   time.timeZone = "Europe/Amsterdam";
 
@@ -30,7 +32,7 @@
   };
 
   system = {
-    stateVersion = 5;
+    stateVersion = 6;
     activationScripts.postUserActivation.text = ''
       /System/Library/PrivateFrameworks/SystemAdministration.framework/\
       Resources/activatesettings -u
