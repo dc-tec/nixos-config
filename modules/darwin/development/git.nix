@@ -23,8 +23,8 @@
     };
 
     ## Personal gitconfig
-    file."~/projects/personal/.gitconfig" = {
-      source = ./gitconfig;
+    home.file."./projects/personal/.gitconfig" = {
+      source = ./.gitconfig;
       recursive = true;
     };
 
