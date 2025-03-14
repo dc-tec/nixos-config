@@ -1,9 +1,9 @@
 {lib, ...}: {
   config = {
     home-manager.users.roelc = {
+      catppuccin.starship.enable = true;
       programs.starship = {
         enable = true;
-        catppuccin.enable = true;
         enableZshIntegration = true;
         settings = {
           add_newline = false;
