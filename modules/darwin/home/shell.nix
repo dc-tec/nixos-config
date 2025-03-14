@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   programs.zsh.enable = true;
 
   home-manager.users.roelc = {
@@ -21,7 +22,10 @@
 
       syntaxHighlighting = {
         enable = true;
-        highlighters = ["main" "cursor"];
+        highlighters = [
+          "main"
+          "cursor"
+        ];
         styles = {
           comment = "fg=#5b6078";
           alias = "fg=#a6da95";
@@ -98,7 +102,7 @@
       };
       sessionVariables = {
         DEFAULT_USER = "roelc";
-        PATH = "/Users/roelc/Library/Python/3.9/bin:$PATH";
+        PATH = "/opt/homebrew/bin:/Users/roelc/Library/Python/3.9/bin:$PATH";
         GPG_TTY = ''$(tty)'';
       };
       shellAliases = {

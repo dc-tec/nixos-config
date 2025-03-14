@@ -1,8 +1,8 @@
 {...}: {
   home-manager.users.roelc = {
+    catppuccin.fzf.enable = true;
     programs.fzf = {
       enable = true;
-      catppuccin.enable = true;
       enableZshIntegration = true;
     };
   };

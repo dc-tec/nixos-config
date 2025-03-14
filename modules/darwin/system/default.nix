@@ -18,7 +18,7 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  ids.gids.nixbld = 30000;
+  ids.gids.nixbld = 350;
 
   time.timeZone = "Europe/Amsterdam";
 

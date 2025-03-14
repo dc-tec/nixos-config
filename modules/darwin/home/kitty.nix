@@ -1,8 +1,8 @@
 {...}: {
   home-manager.users.roelc = {
+    catppuccin.kitty.enable = true;
     programs.kitty = {
       enable = true;
-      catppuccin.enable = true;
       font = {
         name = "0xProto";
         size = 11;
