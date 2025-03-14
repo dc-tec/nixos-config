@@ -22,6 +22,12 @@
       };
     };
 
+    ## Personal gitconfig
+    file."~/projects/personal/.gitconfig" = {
+      source = ./gitconfig;
+      recursive = true;
+    };
+
     programs.lazygit = {
       enable = true;
       catppuccin.enable = true;
