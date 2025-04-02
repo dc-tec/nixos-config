@@ -88,6 +88,8 @@ _: {
       "powershell"
       "slack"
       "citrix-workspace"
+      "openvpn-connect"
+      "zoom"
     ];
   };
 }

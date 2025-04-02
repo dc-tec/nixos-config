@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./git.nix
   ];
@@ -20,6 +21,10 @@
         argocd
         cilium-cli
         kubeseal
+        kubescape
+        rakkess
+        kubectl-cnpg
+        kube-linter
       ];
     };
   };
