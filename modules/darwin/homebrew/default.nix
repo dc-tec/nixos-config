@@ -60,10 +60,12 @@ _: {
       "k3d"
       "hcloud"
       "coreutils"
+      "kwctl"
     ];
 
     casks = [
       "firefox"
+      "arc"
       "thunderbird"
       "microsoft-edge"
       "whatsapp"
