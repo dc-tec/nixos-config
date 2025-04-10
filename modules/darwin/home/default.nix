@@ -1,4 +1,5 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   imports = [
     ./shell.nix
     ./core.nix
@@ -11,6 +12,7 @@
     ./zoxide.nix
     ./ripgrep.nix
     ./kitty.nix
+    ./yazi.nix
     ./sketchybar
     ./jankyborders
     ./gpg
@@ -26,27 +28,29 @@
     useUserPackages = true;
 
     users = {
-      roelc = {...}: {
-        imports = [
-          inputs.catppuccin.homeManagerModules.catppuccin
-        ];
+      roelc =
+        { ... }:
+        {
+          imports = [
+            inputs.catppuccin.homeManagerModules.catppuccin
+          ];
 
-        home = {
-          username = "roelc";
-          homeDirectory = "/Users/roelc";
+          home = {
+            username = "roelc";
+            homeDirectory = "/Users/roelc";
 
-          stateVersion = "24.05";
-          packages = [inputs.nixvim.packages.aarch64-darwin.default];
+            stateVersion = "24.05";
+            packages = [ inputs.nixvim.packages.aarch64-darwin.default ];
+          };
+
+          catppuccin = {
+            flavor = "macchiato";
+            accent = "peach";
+          };
+
+          # Let Home Manager install and manage itself.
+          programs.home-manager.enable = true;
         };
-
-        catppuccin = {
-          flavor = "macchiato";
-          accent = "peach";
-        };
-
-        # Let Home Manager install and manage itself.
-        programs.home-manager.enable = true;
-      };
     };
   };
 }
