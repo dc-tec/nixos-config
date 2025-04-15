@@ -12,6 +12,10 @@
           path = "~/projects/personal/.gitconfig";
           condition = "gitdir:~/projects/personal/";
         }
+        {
+          path = "~/projects/secretz/.gitconfig";
+          condition = "gitdir:~/projects/secretz/";
+        }
       ];
 
       extraConfig = {
@@ -28,12 +32,20 @@
       recursive = true;
     };
 
+    ## Secretz gitconfig
+    home.file."./projects/secretz/.gitconfig" = {
+      source = ./.gitconfig-secretz;
+      recursive = true;
+    };
+
     catppuccin.lazygit.enable = true;
     programs.lazygit = {
       enable = true;
       settings = {
         git = {
-          signOff = true;
+          commit = {
+            signOff = true;
+          };
         };
       };
     };
