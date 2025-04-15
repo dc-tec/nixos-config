@@ -110,8 +110,7 @@
         config = "cd ~/projects/personal/nixos-config";
         work = "cd ~/projects/work";
         personal = "cd ~/projects/personal";
-        github = "cd ~/projects/personal/github";
-        gitlab = "cd ~/projects/personal/gitlab";
+        secretz = "cd ~/projects/secretz";
         gcl = "git clone";
         cat = "bat --paging=never";
         ls = "eza --icons --group-directories-first";
