@@ -25,6 +25,8 @@
         rakkess
         kubectl-cnpg
         kube-linter
+        bats
+        helm-docs
       ];
     };
   };

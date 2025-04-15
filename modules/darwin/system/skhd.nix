@@ -6,7 +6,7 @@
       cmd - return : open -na kitty
 
       # open finder
-      cmd + shift - return : open ~/
+      cmd + shift - return : open -na kitty --hold --title "Yazi" -e "yazi"
 
       # Open programs
       ctrl + alt - c : open -a "/Applications/Mattermost.app"

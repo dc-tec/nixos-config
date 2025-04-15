@@ -61,6 +61,10 @@ _: {
       "hcloud"
       "coreutils"
       "kwctl"
+      "kind"
+      "goreleaser"
+      "gosec"
+      "httpie"
     ];
 
     casks = [
@@ -92,6 +96,7 @@ _: {
       "citrix-workspace"
       "openvpn-connect"
       "zoom"
+      "lm-studio"
     ];
   };
 }
