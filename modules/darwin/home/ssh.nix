@@ -46,6 +46,11 @@
           identityFile = "~/.ssh/roelc_gh";
           proxyCommand = "/opt/homebrew/bin/cloudflared access ssh --hostname %h";
         };
+        "adfinis-openwebui" = {
+          hostname = "91.99.78.1";
+          user = "root";
+          identityFile = "~/.ssh/id_ed25519";
+        };
       };
     };
   };

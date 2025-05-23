@@ -7,7 +7,6 @@
   home-manager.users.roelc = {
     home = {
       packages = with pkgs; [
-        ansible-lint
         awscli2
         go
         tenv
@@ -27,6 +26,7 @@
         kube-linter
         bats
         helm-docs
+        uv
       ];
     };
   };

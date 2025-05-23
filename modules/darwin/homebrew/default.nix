@@ -65,6 +65,7 @@ _: {
       "goreleaser"
       "gosec"
       "httpie"
+      "npm"
     ];
 
     casks = [
