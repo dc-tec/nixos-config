@@ -27,6 +27,7 @@
         bats
         helm-docs
         uv
+        devenv
       ];
     };
   };

@@ -36,7 +36,7 @@
         { ... }:
         {
           imports = [
-            inputs.catppuccin.homeManagerModules.catppuccin
+            inputs.catppuccin.homeModules.catppuccin
           ];
           home = {
             stateVersion = config.dc-tec.stateVersion;
