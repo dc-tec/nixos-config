@@ -55,6 +55,15 @@
       else
         "/home/${config.dc-tec.user.name}"
     );
+
+    users = {
+      mutableUsers = if config.dc-tec.persistence.enable then true else false;
+      users.${config.dc-tec.user.name} = {
+        home = config.dc-tec.user.homeDirectory;
+        extraGroups = lib.optionals config.dc-tec.isLinux ["systemd-journal"];
+        hashedPasswordFile = config.sops.secrets."users/${config.dc-tec.user.name}".path;
+      };
+    };
   };
 }
 

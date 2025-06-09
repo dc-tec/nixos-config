@@ -41,6 +41,7 @@
           comma
           autojump
           ollama
+          inputs.nixvim.packages.${pkgs.system}.default
         ];
       };
     };

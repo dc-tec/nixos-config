@@ -15,14 +15,14 @@
   config = {
     dc-tec.core.zfs = lib.mkMerge [
       (
-        lib.mkIf config.dc-tec.core.persistence.enable
+        lib.mkIf config.dc-tec.persistence.enable
         && config.dc-tec.isLinux {
           homeCacheLinks = [ "local/share/direnv" ];
           systemCacheLinks = [ "/root/.local/share/direnv" ];
           systemDataLinks = [ "/var/lib/nixos" ];
         }
       )
-      (lib.mkIf (!config.dc-tec.core.persistence.enable && config.dc-tec.isLinux) { })
+      (lib.mkIf (!config.dc-tec.persistence.enable && config.dc-tec.isLinux) { })
     ];
 
     programs.nh = {

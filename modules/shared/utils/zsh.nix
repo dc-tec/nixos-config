@@ -6,11 +6,11 @@
 {
   config = lib.mkIf config.dc-tec.isLinux {
     dc-tec.core.zfs = lib.mkMerge [
-      (lib.mkIf config.dc-tec.core.persistence.enable {
+      (lib.mkIf config.dc-tec.persistence.enable {
         systemCacheLinks = [ "/root/.local/share/autojump" ];
         homeCacheLinks = [ ".local/share/autojump" ];
       })
-      (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
+      (lib.mkIf (!config.dc-tec.persistence.enable) { })
     ];
 
     programs.zsh.enable = true;
@@ -84,8 +84,8 @@
         history = {
           expireDuplicatesFirst = true;
           path =
-            if config.dc-tec.core.persistence.enable then
-              "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.local/share/zsh/zsh_history"
+            if config.dc-tec.persistence.enable then
+              "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.local/share/zsh/zsh_history"
             else
               "${config.dc-tec.user.homeDirectory}/.local/share/zsh/zsh_history";
         };

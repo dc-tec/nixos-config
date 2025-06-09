@@ -6,7 +6,7 @@
 {
   config = {
     dc-tec.core.zfs = lib.mkMerge [
-      (lib.mkIf config.dc-tec.core.persistence.enable {
+      (lib.mkIf config.dc-tec.persistence.enable {
         homeDataLinks = [
           {
             directory = ".ssh";
@@ -20,7 +20,7 @@
           }
         ];
       })
-      (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
+      (lib.mkIf (!config.dc-tec.persistence.enable) { })
     ];
 
     home-manager.users.${config.dc-tec.user.name} = {
@@ -32,15 +32,15 @@
         enable = true;
         hashKnownHosts = true;
         userKnownHostsFile =
-          if config.dc-tec.core.persistence.enable && lib.dc-tec.isLinux then
-            "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/known_hosts"
+          if config.dc-tec.persistence.enable && lib.dc-tec.isLinux then
+            "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/known_hosts"
           else
             "${config.dc-tec.user.homeDirectory}/.ssh/known_hosts";
         extraOptionOverrides = {
           AddKeysToAgent = "yes";
           IdentityFile =
-            if config.dc-tec.core.persistence.enable && lib.dc-tec.isLinux then
-              "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/id_ed25519"
+            if config.dc-tec.persistence.enable && lib.dc-tec.isLinux then
+              "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/id_ed25519"
             else
               "${config.dc-tec.user.homeDirectory}/.ssh/id_ed25519";
         };

@@ -5,10 +5,6 @@
   ...
 }: {
   options.dc-tec.core = {
-    persistence = {
-      enable = lib.mkEnableOption "Enable persistence";
-    };
-
     zfs = {
       # Enable ZFS
       enable = lib.mkEnableOption "zfs";
@@ -39,55 +35,49 @@
   config = {
     dc-tec = {
       core = {
-        persistence = {
-          enable = lib.mkDefault true;
-        };
         zfs = {
           enable = lib.mkDefault true;
         };
       };
-
-      dataPrefix = lib.mkDefault "/data";
-      cachePrefix = lib.mkDefault "/cache";
     };
 
-    environment.persistence."${config.dc-tec.cachePrefix}" = {
+    environment.persistence."${config.dc-tec.persistence.cachePrefix}" = lib.mkIf config.dc-tec.persistence.enable {
       hideMounts = true;
       directories = config.dc-tec.core.zfs.systemCacheLinks;
       users.roelc.directories = config.dc-tec.core.zfs.homeCacheLinks;
     };
 
-    environment.persistence."${config.dc-tec.dataPrefix}" = {
+    environment.persistence."${config.dc-tec.persistence.dataPrefix}" = lib.mkIf config.dc-tec.persistence.enable {
       hideMounts = true;
       directories = config.dc-tec.core.zfs.systemDataLinks;
       users.roelc.directories = config.dc-tec.core.zfs.homeDataLinks;
     };
 
-    boot = {
+    boot = lib.mkIf config.dc-tec.core.zfs.enable {
       supportedFilesystems = ["zfs"];
       zfs = {
         devNodes = "/dev/";
         requestEncryptionCredentials = config.dc-tec.core.zfs.encrypted;
       };
-      initrd.postDeviceCommands = lib.mkAfter ''
+      initrd.postDeviceCommands = lib.mkIf (config.dc-tec.persistence.enable && config.dc-tec.core.zfs.rootDataset != "") (lib.mkAfter ''
         zfs rollback -r ${config.dc-tec.core.zfs.rootDataset}@blank
-      '';
+      '');
     };
 
-    services = {
+    services = lib.mkIf config.dc-tec.core.zfs.enable {
       zfs = {
         autoScrub.enable = true;
         trim.enable = true;
       };
     };
 
-    environment.systemPackages = [
+    environment.systemPackages = lib.mkIf (config.dc-tec.core.zfs.enable && config.dc-tec.persistence.enable && config.dc-tec.core.zfs.rootDataset != "") [
       (pkgs.writeScriptBin "zfsdiff" ''
         doas zfs diff ${config.dc-tec.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/roelc/"
       '')
     ];
 
-    system.activationScripts = let
+    system.activationScripts = lib.mkIf config.dc-tec.persistence.enable (let
       ensureSystemExistsScript =
         lib.concatStringsSep "\n"
         (map (path: ''mkdir -p "${path}"'')
@@ -109,6 +99,6 @@
         '';
         deps = ["users" "groups"];
       };
-    };
+    });
   };
 }

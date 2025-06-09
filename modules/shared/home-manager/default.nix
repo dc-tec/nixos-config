@@ -17,7 +17,7 @@ in
   ];
 
   dc-tec.core.zfs = lib.mkMerge [
-    (lib.mkIf config.dc-tec.core.persistence.enable {
+    (lib.mkIf config.dc-tec.persistence.enable {
       homeCacheLinks = [
         ".config"
         ".cache"
@@ -25,7 +25,7 @@ in
         ".cloudflared"
       ];
     })
-    (lib.mkIf (!config.dc-tec.core.persistence.enable) { })
+    (lib.mkIf (!config.dc-tec.persistence.enable) { })
   ];
 
   colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
@@ -50,10 +50,6 @@ in
               home = {
                 stateVersion = config.dc-tec.stateVersion;
                 inherit (config.dc-tec.user) username homeDirectory;
-
-                packages = [
-                  inputs.nixvim.packages.${pkgs.system}.default
-                ];
 
                 programs.home-manager.enable = true;
               };
