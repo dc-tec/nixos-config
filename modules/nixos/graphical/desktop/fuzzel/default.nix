@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   options.dc-tec.graphical.fuzzel = {
     enable = lib.mkEnableOption "fuzzel";
   };

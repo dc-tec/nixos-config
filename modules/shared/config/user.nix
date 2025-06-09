@@ -58,11 +58,22 @@
 
     users = {
       mutableUsers = if config.dc-tec.persistence.enable then true else false;
-      users.${config.dc-tec.user.name} = {
-        home = config.dc-tec.user.homeDirectory;
-        extraGroups = lib.optionals config.dc-tec.isLinux ["systemd-journal"];
-        hashedPasswordFile = config.sops.secrets."users/${config.dc-tec.user.name}".path;
-      };
+      users.${config.dc-tec.user.name} = lib.mkMerge [
+        # Base user configuration
+        {
+          home = config.dc-tec.user.homeDirectory;
+          extraGroups = lib.optionals config.dc-tec.isLinux ["systemd-journal"];
+        }
+        # Linux-specific user configuration
+        (lib.mkIf config.dc-tec.isLinux {
+          hashedPasswordFile = config.sops.secrets."users/${config.dc-tec.user.name}".path;
+        })
+        # Darwin-specific user configuration
+        (lib.mkIf config.dc-tec.isDarwin {
+          # On macOS, user management is handled by the system
+          # No hashedPasswordFile needed
+        })
+      ];
     };
   };
 }
