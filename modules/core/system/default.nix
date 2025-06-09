@@ -4,6 +4,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./os.nix
+  ];
+
   options.dc-tec = {
     stateVersion = lib.mkOption {
       example = "23.11";

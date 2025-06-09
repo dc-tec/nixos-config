@@ -66,6 +66,7 @@ _: {
       "gosec"
       "httpie"
       "npm"
+      "ollama"
     ];
 
     casks = [

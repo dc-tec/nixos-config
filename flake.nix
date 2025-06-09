@@ -71,6 +71,12 @@
         "aarch64-darwin"
       ];
 
+      lib = system:
+        nixpkgs.lib.recursiveUpdate (import ./lib {
+          pkgs = nixpkgs.legacyPackages.${system};
+          lib = nixpkgs.lib;
+        }) nixpkgs.lib;
+
       wslModules = [
         home-manager.nixosModule
         catppuccin.nixosModules.catppuccin
@@ -166,6 +172,7 @@
         darwin = darwin.lib.darwinSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "aarch64-darwin";
           };
           modules = darwinModules ++ [ ./machines/darwin/default.nix ];
         };
@@ -175,18 +182,21 @@
         legion = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "x86_64-linux";
           };
           modules = sharedModules ++ [ ./machines/legion/default.nix ];
         };
         chad = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "x86_64-linux";
           };
           modules = sharedModules ++ [ ./machines/chad/default.nix ];
         };
         ghost = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "x86_64-linux";
           };
           modules = wslModules ++ [ ./machines/ghost/default.nix ];
         };
