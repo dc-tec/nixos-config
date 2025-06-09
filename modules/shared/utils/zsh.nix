@@ -112,9 +112,10 @@
         sessionVariables = {
           DEFAULT_USER = config.dc-tec.user.name;
           PATH =
-            if config.dc-tec.isDarwin
-            then "/opt/homebrew/bin:/Users/${config.dc-tec.user.name}/Library/Python/3.9/bin:$PATH"
-            else "$PATH";
+            if config.dc-tec.isDarwin then
+              "/opt/homebrew/bin:/Users/${config.dc-tec.user.name}/Library/Python/3.9/bin:$PATH"
+            else
+              "$PATH";
           GPG_TTY = ''$(tty)'';
         };
         shellAliases = {

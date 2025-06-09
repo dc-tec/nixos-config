@@ -32,15 +32,17 @@
         enable = true;
         hashKnownHosts = true;
         userKnownHostsFile =
-          if config.dc-tec.core.persistence.enable && lib.dc-tec.isLinux
-          then "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/known_hosts"
-          else "${config.dc-tec.user.homeDirectory}/.ssh/known_hosts";
+          if config.dc-tec.core.persistence.enable && lib.dc-tec.isLinux then
+            "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/known_hosts"
+          else
+            "${config.dc-tec.user.homeDirectory}/.ssh/known_hosts";
         extraOptionOverrides = {
           AddKeysToAgent = "yes";
           IdentityFile =
-            if config.dc-tec.core.persistence.enable && lib.dc-tec.isLinux
-            then "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/id_ed25519"
-            else "${config.dc-tec.user.homeDirectory}/.ssh/id_ed25519";
+            if config.dc-tec.core.persistence.enable && lib.dc-tec.isLinux then
+              "${config.dc-tec.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/id_ed25519"
+            else
+              "${config.dc-tec.user.homeDirectory}/.ssh/id_ed25519";
         };
         extraConfig = lib.mkIf lib.dc-tec.isDarwin ''
           UseKeychain yes

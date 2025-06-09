@@ -1,4 +1,5 @@
-{lib, ...}: {
+{ lib, ... }:
+{
   config = {
     home-manager.users.roelc = {
       catppuccin.starship.enable = true;

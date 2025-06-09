@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   options = {
     dc-tec.isLinux = lib.mkOption {
       type = lib.types.bool;
@@ -20,6 +21,18 @@
       type = lib.types.str;
       description = "Default font for the system.";
     };
+
+    dc-tec.colorScheme.flavor = lib.mkOption {
+      type = lib.types.str;
+      description = "Default flavor for the color scheme.";
+      default = "macchiato";
+    };
+
+    dc-tec.colorScheme.accent = lib.mkOption {
+      type = lib.types.str;
+      description = "Default accent for the color scheme.";
+      default = "peach";
+    };
   };
 
   config = {
@@ -27,4 +40,5 @@
     dc-tec.isDarwin = lib.dc-tec.isDarwin;
     dc-tec.font = if lib.dc-tec.isDarwin then "0xProto" else "0xProto Nerd Font";
   };
-} 
+}
+

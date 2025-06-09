@@ -1,4 +1,10 @@
-{ lib, pkgs, config, ... }: {
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
+{
   options.dc-tec.user = {
     name = lib.mkOption {
       type = lib.types.str;
@@ -44,9 +50,11 @@
 
   config = {
     dc-tec.user.homeDirectory = lib.mkDefault (
-      if config.dc-tec.isDarwin
-      then "/Users/${config.dc-tec.user.name}"
-      else "/home/${config.dc-tec.user.name}"
+      if config.dc-tec.isDarwin then
+        "/Users/${config.dc-tec.user.name}"
+      else
+        "/home/${config.dc-tec.user.name}"
     );
   };
 }
+

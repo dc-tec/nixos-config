@@ -8,8 +8,8 @@
 }:
 let
   user = config.dc-tec.user.name;
-  flavor = "macchiato";
-  accent = "peach";
+  flavor = config.dc-tec.colorScheme.flavor;
+  accent = config.dc-tec.colorScheme.accent;
 in
 {
   imports = [
