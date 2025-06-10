@@ -1,7 +1,7 @@
 {...}: {
   imports = [
-    ./core
-    ./development
-    ./graphical
+    ./shared
+    ./nixos
+    ./darwin
   ];
 }
