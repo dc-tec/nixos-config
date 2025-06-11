@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -28,7 +29,7 @@
               "dom.security.https_only_mode" = true;
               "dom.security.https_only_mode_ever_enabled" = true;
             };
-            extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+            extensions = with inputs.firefox-addons.packages.${pkgs.system}; [
               ublock-origin
               firefox-color
               canvasblocker

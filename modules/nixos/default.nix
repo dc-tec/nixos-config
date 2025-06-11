@@ -1,7 +1,11 @@
-_: {
+{
+  config,
+  lib,
+  ...
+}: {
   imports = [
     ./connectivity
-    ./graphical
+    ./desktop
     ./storage
     ./virtualization
     ./system.nix

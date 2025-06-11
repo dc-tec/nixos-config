@@ -4,7 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
-    nur.url = "github:nix-community/NUR";
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Flakes
     home-manager.url = "github:nix-community/home-manager";
@@ -61,6 +64,7 @@
       catppuccin,
       sops-nix,
       nixos-wsl,
+      firefox-addons,
       darwin,
       ...
     }@inputs:
@@ -77,28 +81,7 @@
           lib = nixpkgs.lib;
         }) nixpkgs.lib;
 
-      wslModules = [
-        home-manager.nixosModule
-        catppuccin.nixosModules.catppuccin
-        impermanence.nixosModule # Needed to disable certain options
-        nixos-wsl.nixosModules.default
-
-        ./modules/wsl
-        ./modules/core/home-manager
-        ./modules/core/nix
-        ./modules/core/utils
-        ./modules/core/shells
-        ./modules/core/system
-        ./modules/core/storage # Needed to disable certain options
-        ./modules/development
-      ];
-
-      darwinModules = [
-        home-manager.darwinModules.home-manager
-
-        ./modules/darwin
-      ];
-
+      # Truly shared modules between NixOS and Darwin
       sharedModules = [
         (
           {
@@ -112,21 +95,32 @@
           {
             nixpkgs = {
               overlays = [
-                nur.overlay
                 (import ./overlays { inherit inputs; }).stable-packages
               ];
             };
           }
         )
 
+        ./modules/shared
+      ];
+
+      # NixOS-specific modules
+      nixosModules = [
         sops-nix.nixosModules.sops
         impermanence.nixosModule
-        home-manager.nixosModule
+        home-manager.nixosModules.home-manager
         catppuccin.nixosModules.catppuccin
         nixos-wsl.nixosModules.default
-        nur.nixosModules.nur
+        nur.modules.nixos.default
 
-        ./modules
+        ./modules/nixos
+      ];
+
+      # Darwin-specific modules  
+      darwinModules = [
+        home-manager.darwinModules.home-manager
+
+        ./modules/darwin
       ];
     in
     {
@@ -151,7 +145,7 @@
               pkgs.home-manager
               pkgs.git
               pkgs.age
-              pkgs.age-to-ssh
+              pkgs.ssh-to-age
               pkgs.sops
             ];
           };
@@ -173,8 +167,9 @@
           specialArgs = {
             inherit inputs outputs;
             lib = lib "aarch64-darwin";
+            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
-          modules = darwinModules ++ [ ./machines/darwin/default.nix ];
+          modules = sharedModules ++ darwinModules ++ [ ./machines/darwin/default.nix ];
         };
       };
 
@@ -183,22 +178,25 @@
           specialArgs = {
             inherit inputs outputs;
             lib = lib "x86_64-linux";
+            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
-          modules = sharedModules ++ [ ./machines/legion/default.nix ];
+          modules = sharedModules ++ nixosModules ++ [ ./machines/legion/default.nix ];
         };
         chad = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
             lib = lib "x86_64-linux";
+            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
-          modules = sharedModules ++ [ ./machines/chad/default.nix ];
+          modules = sharedModules ++ nixosModules ++ [ ./machines/chad/default.nix ];
         };
         ghost = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
             lib = lib "x86_64-linux";
+            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
-          modules = wslModules ++ [ ./machines/ghost/default.nix ];
+          modules = sharedModules ++ nixosModules ++ [ ./machines/ghost/default.nix ];
         };
       };
     };

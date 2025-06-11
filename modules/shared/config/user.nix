@@ -67,6 +67,8 @@
       users.${config.dc-tec.user.name} = lib.mkMerge [
         # Base user configuration
         {
+          isNormalUser = true;
+          group = config.dc-tec.user.name;
           home = config.dc-tec.user.homeDirectory;
           extraGroups = lib.optionals config.dc-tec.isLinux ["systemd-journal"];
         }
@@ -80,6 +82,7 @@
           # No hashedPasswordFile needed
         })
       ];
+      groups.${config.dc-tec.user.name} = {};
     };
   };
 }

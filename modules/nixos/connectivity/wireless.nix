@@ -9,10 +9,10 @@
   config = lib.mkIf config.dc-tec.core.wireless.enable {
     networking.wireless = {
       enable = true;
-      environmentFile = config.sops.secrets.wireless.path;
+      secretsFile = config.sops.secrets.wireless.path;
       networks = {
         "@home_uuid@" = {
-          psk = "@home_psk@";
+          pskRaw = "ext:home_psk";
         };
       };
     };

@@ -35,7 +35,7 @@
           };
           settings = {
             Wayland = {
-              SessionDir = "${inputs.hyprland.packages.${pkgs.system}.hyprland}/share/wayland-sessions";
+              SessionDir = "${pkgs.hyprland}/share/wayland-sessions";
             };
           };
           catppuccin = {
@@ -67,12 +67,9 @@
         ## Took some stuff from the end4 dots config @ https://github.com/end-4/dots-hyprland/blob/main/.config/hypr/hyprland/general.conf
         wayland.windowManager.hyprland = {
           enable = true;
-          catppuccin.enable = true;
           xwayland = {
             enable = true;
           };
-
-          package = inputs.hyprland.packages.${pkgs.system}.hyprland;
 
           settings = {
             "$terminal" = "kitty";

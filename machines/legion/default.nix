@@ -9,6 +9,7 @@
 
   dc-tec = {
     stateVersion = "24.05";
+    persistence.enable = true;
     core = {
       zfs = {
         enable = true;
@@ -17,9 +18,6 @@
       };
       wireless = {
         enable = true;
-      };
-      routing = {
-        enable = false;
       };
     };
     graphical = {

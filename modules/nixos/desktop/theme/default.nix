@@ -26,7 +26,7 @@
         };
       };
       packages = with pkgs; [
-        nerd-fonts._0xProto
+        nerd-fonts._0xproto
       ];
     };
 
@@ -67,7 +67,8 @@
 
         qt = {
           enable = true;
-          platformTheme.name = "gtk";
+          platformTheme.name = "kvantum";
+          style.name = "kvantum";
         };
       };
   };

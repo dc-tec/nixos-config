@@ -17,7 +17,7 @@
 
     virtualisation.docker = {
       enable = true;
-      extraOptions = "--data-root ${config.dc-tec.dataPrefix}/var/lib/docker";
+      extraOptions = "--data-root ${config.dc-tec.persistence.dataPrefix}/var/lib/docker";
       storageDriver = "zfs";
     };
 

@@ -1,5 +1,5 @@
 #https://github.com/ryan4yin/nix-darwin-kickstarter/blob/main/rich-demo/modules/system.nix
-{ pkgs, ... }:
+{ pkgs, config,... }:
 {
   config = {
     security.pam.services.sudo_local.touchIdAuth = true;
@@ -11,6 +11,7 @@
         # Following line should allow us to avoid a logout/login cycle
         /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
       '';
+      primaryUser = config.dc-tec.user.name;
 
       defaults = {
         dock = {

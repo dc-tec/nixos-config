@@ -2,7 +2,6 @@
 {
   config = {
     home-manager.users.${config.dc-tec.user.name} = {
-      catppuccin.kitty.enable = true;
       programs.kitty = {
         enable = true;
         font = {

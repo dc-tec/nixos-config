@@ -14,7 +14,6 @@
         dates = "01/04:00";
         randomizedDelaySec = "15min";
       };
-      primaryUser = config.dc-tec.user.name;
     };
 
     programs.nh = {
@@ -31,7 +30,7 @@
 
     programs.zsh.enable = true;
     environment.shells = with pkgs; [
-      config.dc-tec.user.shell
+      zsh
     ];
 
     environment.variables.EDITOR = config.dc-tec.user.editor;
