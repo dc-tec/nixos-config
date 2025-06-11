@@ -6,9 +6,8 @@
 </p>
 
 <p align="center">
-    This is my NixOS configuration, the goal is to create fully reproducable operating systems based on the Nix package manager, home-manager and flakes.
-    My main use case is cloud automation and development, with this configuration I want to create a fully streamlined workflow fully catered to my needs in a declarative fasion.
-
+    This is my NixOS configuration, designed to create fully reproducible operating systems using the Nix package manager, home-manager, and flakes.
+    The primary focus is on cloud automation and development workflows, providing a streamlined and declarative configuration tailored to my needs.
 </p>
 
 #### NixOS
@@ -21,57 +20,134 @@
 
 ## Highlights
 
-- ZFS with impermanence (blank snapshot at boot)
+- ZFS with impermanence (blank snapshot at boot) - configurable per machine
 - SOPS Nix for secret management
 - Custom [NixVim](https://github.com/dc-tec/nixvim) flake
 - Hyprland as tiling window manager
-- Catppuccin themed
-- WSL Config
-- Darwin Config
+- Catppuccin themed across all systems
+- WSL2 support with persistence disabled
+- Darwin configuration with shared modules
+- Flexible architecture supporting both persistent and ephemeral systems
 
-## Configuration
+## Architecture
 
-The repository is setup in a modular fasion. The configuration can be split into the following main components:
+The repository follows a modular architecture with clear separation between different system types and shared functionality:
 
-- Machines
-  - Contains the per device hardware configuration and host settings.
-- Core
-  - The core module contains applications and configuration settings that will be applied on all systems.
-- Darwin
-  - The Nix Darwin module to configure MacOS.
-- Development
-  - The development module contains the different development tools I need on a day to day basis. The submodules all contain options to either enable or disable certain tools. By default they are all enabled
-- Graphical
-  - The graphical module contains different submodules related to my desktop enviroment based on Hyprland and other required applications and configurations that are needed for a smooth experience.
-- WSL
-  - Windows Subsystem for Linux module.
-- Overlays
-  - If needed we can apply an overlay over certain packages. These overlays are defined here.
-- Pkgs
-  - The pkgs directory contains custom packages.
-- Secrets
-  - Encrypted secrets using Nix SOPS.
+### Machines
 
-### ZFS
+Contains per-device hardware configuration and host-specific settings:
 
-ZFS is used on the storage layer. I'm making use of impermanence where the filesystem is reset to a blank state on each reboot. For first time use, see the README's in the machines direc
+- **chad** - Desktop workstation with ZFS + impermanence, virtualization
+- **legion** - Laptop with ZFS + impermanence, mobile setup
+- **ghost** - WSL2 instance with persistence disabled
+- **darwin** - macOS configuration using nix-darwin
 
-### SOPS
+### Modules
 
-For secret management in a pure Nix way Nix SOPS is used. See [add new host](docs/add-new-host.md)
+#### Shared
 
-### Darwin
+Common configuration and utilities used across all systems:
 
-Currently using a Macbook Pro M3, that is configured using Home-Manager and Nix Darwin. This is a stand-alone module, in the future I should figure out how to make use of the shared modules in this repository. For now I'm using a configuration that is seperated from my NixOS config.
+- **config/** - Base system configuration (OS detection, persistence options, theming)
+- **development/** - Development tools and environments
+- **home-manager/** - Home Manager integration with Catppuccin theming
+- **utils/** - Common utilities (SSH, ZSH, direnv, etc.)
 
-### WSL
+#### NixOS
 
-I want to be able to use my configuration when working on a Windows machine. I make use of [NixOS-WSL](https://github.com/nix-community/NixOS-WSL). Because the main configuration uses impermanence and ZFS and this is ofcourse not supported in WSL I created options throughout the config to enable / disable impermanence. Also the graphical module is not loaded. See the [flake](flake.nix).
+Linux-specific modules:
 
-### References
+- **connectivity/** - Network and wireless configuration
+- **desktop/** - Desktop environment components (Hyprland, applications, themes)
+- **storage/** - ZFS and filesystem management
+- **virtualization/** - Docker and KVM/QEMU setup
+
+#### Darwin
+
+macOS-specific modules:
+
+- **desktop/** - macOS desktop customization
+- **homebrew/** - Homebrew package management integration
+
+### Additional Components
+
+- **lib/** - Custom library functions and utilities
+- **overlays/** - Nixpkgs overlays and package modifications
+- **pkgs/** - Custom packages and derivations
+- **secrets/** - SOPS-encrypted secrets management
+
+## Key Features
+
+### Flexible Persistence Model
+
+The configuration supports both persistent and ephemeral systems:
+
+- **NixOS machines** (chad, legion): ZFS with impermanence enabled by default
+- **WSL2** (ghost): Persistence disabled for compatibility
+- **Darwin** (darwin): Standard macOS filesystem behavior
+- Configurable per-machine via `dc-tec.persistence.enable`
+
+### ZFS Configuration
+
+ZFS is used on compatible systems with:
+
+- Encrypted datasets with passphrase unlock
+- Automatic snapshots and rollback to blank state on boot
+- Optimized compression settings
+- Separate pools for ephemeral and persistent data
+
+### Cross-Platform Theming
+
+Catppuccin theme consistently applied across:
+
+- Terminal applications
+- Desktop environments
+- Development tools
+- Both NixOS and Darwin systems
+
+### Development Environment
+
+Comprehensive development setup including:
+
+- Docker and virtualization support
+- Custom NixVim configuration
+- Shell environment with ZSH and modern CLI tools
+- Direnv for project-specific environments
+
+## System Configurations
+
+### NixOS with ZFS + Impermanence (chad, legion)
+
+Full desktop systems with ephemeral root filesystem, automated backups, and development tools.
+
+### WSL2 (ghost)
+
+Lightweight development environment for Windows hosts with persistence disabled for compatibility.
+
+### Darwin (darwin)
+
+Native macOS configuration using nix-darwin with homebrew integration and shared module architecture.
+
+## Quick Start
+
+Build and switch to a configuration:
+
+```bash
+# NixOS
+sudo nixos-rebuild switch --flake .#<hostname>
+
+# Darwin
+darwin-rebuild switch --flake .#darwin
+
+# Check available configurations
+nix flake show
+```
+
+## References
 
 - [Erase Your Darlings](https://grahamc.com/blog/erase-your-darlings/)
-- [Anton Hakansson](https://github.com/AntonHakansson/nixos-config/)
+- [NixOS Impermanence](https://github.com/nix-community/impermanence)
+- [nix-darwin](https://github.com/LnL7/nix-darwin)
 
 #### Wallpapers
 
@@ -79,4 +155,4 @@ I want to be able to use my configuration when working on a Windows machine. I m
 
 #### Disclaimer
 
-Feel free to use this repository as a reference for your own configuration. However do not expect to be able to run this configuration on your own system as-is. If you have a question feel free to create an issue.
+This repository serves as a reference implementation but is not intended to run as-is on other systems. Feel free to use components and concepts for your own configuration. For questions or issues, please create a GitHub issue.
