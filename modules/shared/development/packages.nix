@@ -6,7 +6,7 @@
 }:
 {
   options = {
-    shared.development = {
+    dc-tec.development-packages = {
       enable = lib.mkEnableOption "shared development packages";
       tools = {
         go = lib.mkEnableOption "Go development";
@@ -23,13 +23,13 @@
     };
   };
 
-  config = lib.mkIf config.shared.development.enable {
+  config = lib.mkIf config.dc-tec.development-packages.enable {
     home-manager.users.${config.dc-tec.user.name} = {
       home.packages =
         with pkgs;
         lib.flatten [
           # Go Tools
-          (lib.optionals config.shared.development.tools.go [
+          (lib.optionals config.dc-tec.development-packages.tools.go [
             go
             gopls
             golangci-lint
@@ -37,14 +37,14 @@
             goreleaser
           ])
           # Python Tools
-          (lib.optionals config.shared.development.tools.python [
+          (lib.optionals config.dc-tec.development-packages.tools.python [
             python3
             python3Packages.python-lsp-server
             python3Packages.python-lsp-ruff
             uv
           ])
           # IaC Tools
-          (lib.optionals config.shared.development.tools.iac [
+          (lib.optionals config.dc-tec.development-packages.tools.iac [
             tenv
             terraform-docs
             tflint
@@ -54,7 +54,7 @@
             ansible-lint
           ])
           # K8s Tools
-          (lib.optionals config.shared.development.tools.k8s [
+          (lib.optionals config.dc-tec.development-packages.tools.k8s [
             kubectl
             kubernetes-helm
             kustomize
@@ -71,13 +71,13 @@
             rakkess
           ])
           # Cloud CLI Tools
-          (lib.optionals config.shared.development.tools.cloud [
+          (lib.optionals config.dc-tec.development-packages.tools.cloud [
             awscli2
             azure-cli
             hcloud
           ])
           # Dev Tools
-          (lib.optionals config.shared.development.tools.dev [
+          (lib.optionals config.dc-tec.development-packages.tools.dev [
             devenv
             httpie
             nodejs
@@ -88,19 +88,19 @@
             powershell
           ])
           # Infrastructure Tools
-          (lib.optionals config.shared.development.tools.infra [
+          (lib.optionals config.dc-tec.development-packages.tools.infra [
             packer
             boundary
             consul
             nomad
           ])
           # Security Tools
-          (lib.optionals config.shared.development.tools.security [
+          (lib.optionals config.dc-tec.development-packages.tools.security [
             vault
             openbao
           ])
           # Database Tools
-          (lib.optionals config.shared.development.tools.database [
+          (lib.optionals config.dc-tec.development-packages.tools.database [
             postgresql
           ])
         ];

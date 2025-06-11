@@ -6,16 +6,6 @@
 }:
 {
   config = {
-    dc-tec.core.zfs = lib.mkMerge [
-      (
-        lib.mkIf config.dc-tec.persistence.enable
-        && config.dc-tec.isLinux {
-          systemDataLinks = [ "/var/lib/nixos" ];
-        }
-      )
-      (lib.mkIf (!config.dc-tec.persistence.enable && config.dc-tec.isLinux) { })
-    ];
-
     system = {
       stateVersion = config.dc-tec.stateVersion;
       autoUpgrade = {
@@ -24,6 +14,7 @@
         dates = "01/04:00";
         randomizedDelaySec = "15min";
       };
+      primaryUser = config.dc-tec.user.name;
     };
 
     programs.nh = {
@@ -34,6 +25,24 @@
 
     nixpkgs.config = {
       allowUnfree = true;
+    };
+
+    time.timeZone = config.dc-tec.timeZone;
+
+    programs.zsh.enable = true;
+    environment.shells = with pkgs; [
+      config.dc-tec.user.shell
+    ];
+
+    environment.variables.EDITOR = config.dc-tec.user.editor;
+
+    fonts = {
+      packages = with pkgs; [
+        material-design-icons
+        font-awesome
+        nerd-fonts.symbols-only
+        nerd-fonts._0xproto
+      ];
     };
 
     nix = {
@@ -57,4 +66,3 @@
     };
   };
 }
-

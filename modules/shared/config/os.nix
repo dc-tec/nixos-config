@@ -41,6 +41,12 @@
       description = "NixOS state version";
     };
 
+    dc-tec.timeZone = lib.mkOption {
+      type = lib.types.str;
+      default = "Europe/Amsterdam";
+      description = "Time zone for the system.";
+    };
+
     # Impermanence options
     dc-tec.persistence = {
       enable = lib.mkEnableOption "Enable persistence/impermanence";

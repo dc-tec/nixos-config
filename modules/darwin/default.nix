@@ -1,10 +1,7 @@
-{...}: {
+_: {
   imports = [
-    ./home
-    ./nix
+    ./desktop
     ./homebrew
-    ./system
-    ./development
+    ./system.nix
   ];
 }
-

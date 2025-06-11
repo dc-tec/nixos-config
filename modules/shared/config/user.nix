@@ -46,6 +46,12 @@
       default = "zsh";
       description = "Default shell";
     };
+
+    editor = lib.mkOption {
+      type = lib.types.str;
+      default = "nvim";
+      description = "Default editor";
+    };
   };
 
   config = {
