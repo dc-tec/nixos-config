@@ -9,7 +9,7 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprlock.enable {
-    home-manager.users.roelc = {
+    home-manager.users.${config.dc-tec.user.name} = {
       home.packages = [pkgs.hyprlock];
 
       xdg.configFile."hypr/hyprlock.conf".text = ''
@@ -46,7 +46,7 @@
           }
 
         lablel {
-          font_family = 0xProto Nerd Font
+          font_family = ${config.dc-tec.font}
           text = Yo..., Wassup!
           font_size = 25
           position = 0,300

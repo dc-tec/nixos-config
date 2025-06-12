@@ -10,7 +10,7 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.fuzzel.enable {
-    home-manager.users.roelc = {
+    home-manager.users.${config.dc-tec.user.name} = {
       home.packages = with pkgs; [
         papirus-icon-theme
       ];
@@ -23,7 +23,7 @@
             layer = "overlay";
             icon-theme = "Papirus-Dark";
             prompt = " ";
-            font = "0xProto Nerd Font";
+            font = "${config.dc-tec.font}";
           };
           colors = {
             background = "24273add";

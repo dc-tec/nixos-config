@@ -1,6 +1,6 @@
 { config, lib, ... }:
 {
-  options.dc-tec.core.direnv = lib.mkMerge [
+  options = lib.mkMerge [
     (
       lib.mkIf config.dc-tec.persistence.enable
       && config.dc-tec.isLinux {

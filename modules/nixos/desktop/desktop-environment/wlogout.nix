@@ -4,7 +4,7 @@
   ...
 }: {
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
-    home-manager.users.roelc = {pkgs, ...}: {
+    home-manager.users.${config.dc-tec.user.name} = {pkgs, ...}: {
       programs.wlogout = {
         enable = true;
         layout = [

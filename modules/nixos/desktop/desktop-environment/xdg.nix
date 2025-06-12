@@ -19,7 +19,7 @@
       };
     };
 
-    home-manager.users.roelc = {pkgs, ...}: {
+    home-manager.users.${config.dc-tec.user.name} = {pkgs, ...}: {
       home.packages = with pkgs; [xdg-user-dirs xdg-utils];
       xdg = {
         enable = true;

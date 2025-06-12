@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./firefox
-    ./obsidian
+    ./firefox.nix
+    ./obsidian.nix
   ];
 }

@@ -1,13 +1,14 @@
 { ... }:
 {
   imports = [
-    ./hyprland
-    ./waybar
-    ./hyprpaper
-    ./hyprlock
-    ./wlogout
-    ./swaync
-    ./fuzzel
-    ./key_management
+    ./hyprland.nix
+    ./waybar.nix
+    ./hyprpaper.nix
+    ./hyprlock.nix
+    ./wlogout.nix
+    ./swaync.nix
+    ./fuzzel.nix
+    ./key-ring.nix
+    ./xdg.nix
   ];
 }

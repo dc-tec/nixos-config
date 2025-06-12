@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -167,7 +167,6 @@
           specialArgs = {
             inherit inputs outputs;
             lib = lib "aarch64-darwin";
-            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
           modules = sharedModules ++ darwinModules ++ [ ./machines/darwin/default.nix ];
         };
@@ -186,7 +185,6 @@
           specialArgs = {
             inherit inputs outputs;
             lib = lib "x86_64-linux";
-            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
           modules = sharedModules ++ nixosModules ++ [ ./machines/chad/default.nix ];
         };
@@ -194,7 +192,6 @@
           specialArgs = {
             inherit inputs outputs;
             lib = lib "x86_64-linux";
-            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
           modules = sharedModules ++ nixosModules ++ [ ./machines/ghost/default.nix ];
         };

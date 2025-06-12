@@ -8,10 +8,10 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprpaper.enable {
-    home-manager.users.roelc = {
+    home-manager.users.${config.dc-tec.user.name} = {
       home.file.".config/hypr/hyprpaper.conf".text = ''
-        preload = ${/. + ../_assets/wallpaper.jpg}
-        wallpaper = ,${/. + ../_assets/wallpaper.jpg}
+        preload = ${/. + _assets/wallpaper.jpg}
+        wallpaper = ,${/. + _assets/wallpaper.jpg}
         splash = false
       '';
     };

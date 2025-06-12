@@ -1,7 +1,7 @@
-{ lib, ... }:
+{ lib, config, ... }:
 {
   config = {
-    home-manager.users.roelc = {
+    home-manager.users.${config.dc-tec.user.name} = {
       programs.starship = {
         enable = true;
         enableZshIntegration = true;

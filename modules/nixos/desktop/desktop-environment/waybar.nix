@@ -8,7 +8,7 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.waybar.enable {
-    home-manager.users.roelc = {pkgs, ...}: {
+    home-manager.users.${config.dc-tec.user.name} = {pkgs, ...}: {
       programs.waybar = {
         enable = true;
         systemd.enable = true;

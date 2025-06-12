@@ -9,7 +9,7 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.swaync.enable {
-    home-manager.users.roelc = {
+    home-manager.users.${config.dc-tec.user.name} = {
       home.packages = [pkgs.libnotify];
       services.swaync = {
         enable = true;

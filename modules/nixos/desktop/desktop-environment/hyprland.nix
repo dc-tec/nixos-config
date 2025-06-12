@@ -41,8 +41,8 @@
           catppuccin = {
             enable = true;
             assertQt6Sddm = true;
-            flavor = "macchiato";
-            font = "0xProto Nerd Font";
+            flavor = config.dc-tec.colorScheme.flavor;
+            font = config.dc-tec.font;
             fontSize = "12";
             loginBackground = true;
           };
@@ -50,7 +50,7 @@
       };
     };
 
-    home-manager.users.roelc =
+    home-manager.users.${config.dc-tec.user.name} =
       { pkgs, ... }:
       {
         home.packages = with pkgs; [

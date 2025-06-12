@@ -12,9 +12,7 @@ let
   accent = config.dc-tec.colorScheme.accent;
 in
 {
-  imports = [inputs.nix-colors.homeManagerModule];
-
-  colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
+  # Only system-level configuration here - no homeManager class imports
 
   dc-tec.core.zfs = lib.mkMerge [
     (lib.mkIf config.dc-tec.persistence.enable {
@@ -30,6 +28,7 @@ in
 
   # System-wide catppuccin configuration
   catppuccin = {
+    enable = true;
     flavor = flavor;
     accent = accent;
   };
@@ -46,6 +45,10 @@ in
               inputs.catppuccin.homeModules.catppuccin
               inputs.nix-colors.homeManagerModules.default
             ];
+            
+            # colorScheme belongs in home-manager, not system level
+            colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
+            
             home = {
               stateVersion = config.dc-tec.stateVersion;
               username = config.dc-tec.user.name;

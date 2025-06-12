@@ -6,7 +6,6 @@
 {
   imports = [
     ./desktop-environment
-    ./xdg
     ./theme
     ./applications
     ./sound
