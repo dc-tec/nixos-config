@@ -62,28 +62,27 @@
         "/home/${config.dc-tec.user.name}"
     );
 
-    users = {
-      mutableUsers = if config.dc-tec.persistence.enable then true else false;
-      users.${config.dc-tec.user.name} = lib.mkMerge [
-        # Base user configuration
-        {
-          isNormalUser = true;
-          group = config.dc-tec.user.name;
-          home = config.dc-tec.user.homeDirectory;
-          extraGroups = lib.optionals config.dc-tec.isLinux ["systemd-journal"];
-        }
-        # Linux-specific user configuration
-        (lib.mkIf config.dc-tec.isLinux {
-          hashedPasswordFile = config.sops.secrets."users/${config.dc-tec.user.name}".path;
-        })
-        # Darwin-specific user configuration
-        (lib.mkIf config.dc-tec.isDarwin {
-          # On macOS, user management is handled by the system
-          # No hashedPasswordFile needed
-        })
-      ];
-      groups.${config.dc-tec.user.name} = {};
-    };
+    users =
+      # Add mutableUsers only on NixOS; nix-darwin does not have this option.
+      (lib.optionalAttrs config.dc-tec.isLinux {
+        mutableUsers = config.dc-tec.persistence.enable;
+      }) // {
+        users.${config.dc-tec.user.name} = lib.mkMerge [
+          # Base user configuration
+          {
+            home = config.dc-tec.user.homeDirectory;
+          }
+          # Linux-specific user configuration
+          (lib.mkIf config.dc-tec.isLinux {
+            isNormalUser = true;
+            group = config.dc-tec.user.name;
+            hashedPasswordFile = config.sops.secrets."users/${config.dc-tec.user.name}".path;
+            extraGroups = lib.mkIf config.dc-tec.isLinux ["systemd-journal"];
+          })
+          # Darwin-specific user configuration (no extra fields needed)
+        ];
+        groups.${config.dc-tec.user.name} = {};
+      };
   };
 }
 

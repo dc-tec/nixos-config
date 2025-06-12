@@ -12,69 +12,61 @@ let
   accent = config.dc-tec.colorScheme.accent;
 in
 {
-  # Only system-level configuration here - no homeManager class imports
-
-  dc-tec.core.zfs = lib.mkMerge [
-    (lib.mkIf config.dc-tec.persistence.enable {
-      homeCacheLinks = [
-        ".config"
-        ".cache"
-        ".local"
-        ".cloudflared"
+  config = lib.mkMerge [
+    (lib.mkIf config.dc-tec.isLinux {
+      dc-tec.core.zfs = lib.mkMerge [
+        (lib.mkIf config.dc-tec.persistence.enable {
+          homeCacheLinks = [
+            ".config"
+            ".cache"
+            ".local"
+            ".cloudflared"
+          ];
+        })
       ];
+
+      # System-wide catppuccin configuration (Linux only)
+      #catppuccin = {
+      #  enable = true;
+      #  flavor = flavor;
+      #  accent = accent;
+      #};
     })
-    (lib.mkIf (!config.dc-tec.persistence.enable) { })
-  ];
+    {
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        # Fix for file conflicts during darwin-rebuild/home-manager activation
+        backupFileExtension = "backup";
+        users = {
+          "${user}" =
+            { ... }:
+            {
+              # Common config
+              imports = [
+                inputs.catppuccin.homeModules.catppuccin
+                inputs.nix-colors.homeManagerModules.default
+              ];
 
-  # System-wide catppuccin configuration
-  catppuccin = {
-    enable = true;
-    flavor = flavor;
-    accent = accent;
-  };
+              colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
 
-  home-manager = {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users = lib.mkMerge [
-      {
-        "${user}" = lib.mkMerge [
-          # Common config
-           {
-            imports = [
-              inputs.catppuccin.homeModules.catppuccin
-              inputs.nix-colors.homeManagerModules.default
-            ];
-            
-            # colorScheme belongs in home-manager, not system level
-            colorScheme = inputs.nix-colors.colorSchemes.catppuccin-macchiato;
-            
-            home = {
-              stateVersion = config.dc-tec.stateVersion;
-              username = config.dc-tec.user.name;
-              homeDirectory = config.dc-tec.user.homeDirectory;
+              home = {
+                stateVersion = config.dc-tec.stateVersion;
+                username = config.dc-tec.user.name;
+                homeDirectory = config.dc-tec.user.homeDirectory;
+              };
+
+              programs.home-manager.enable = true;
+
+              # User-specific catppuccin configuration
+              catppuccin = {
+                enable = true;
+                flavor = flavor;
+                accent = accent;
+              };
             };
-
-            programs.home-manager.enable = true;
-
-            # User-specific catppuccin configuration
-            catppuccin = {
-              enable = true;
-              flavor = flavor;
-              accent = accent;
-            };
-          }
-          # Linux config
-          (lib.mkIf config.dc-tec.isLinux {
-            systemd.user.sessionVariables = config.home-manager.users.${user}.home.sessionVariables;
-          })
-        ];
-      }
-      (lib.mkIf config.dc-tec.isLinux {
-        root = _: {
-          home.stateVersion = config.dc-tec.stateVersion;
         };
-      })
-    ];
-  };
+      };
+    }
+  ];
 }

@@ -4,5 +4,7 @@ _:
     ./sketchybar
     ./jankyborders
     ./gpg
+    ./skhd.nix
+    ./yabai.nix
   ];
 }

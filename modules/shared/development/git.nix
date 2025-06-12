@@ -83,7 +83,6 @@
         };
       };
 
-      catppuccin.lazygit.enable = false;
       programs.lazygit = {
         enable = true;
         settings = {

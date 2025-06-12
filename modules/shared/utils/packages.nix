@@ -16,7 +16,6 @@
       openssl
       dnsutils
       nmap
-      lshw
       util-linux
       whois
       moreutils
@@ -25,7 +24,7 @@
       sops
       ssh-to-age
       tcpdump
-      bridge-utils
+      nvd
     ];
 
     # User Packages

@@ -6,21 +6,7 @@
 }:
 {
   config = {
-    system = {
-      stateVersion = config.dc-tec.stateVersion;
-      autoUpgrade = {
-        enable = lib.mkDefault true;
-        flake = "github:dc-tec/nixos-config";
-        dates = "01/04:00";
-        randomizedDelaySec = "15min";
-      };
-    };
-
-    programs.nh = {
-      enable = true;
-      clean.enable = false;
-      flake = "${config.dc-tec.user.homeDirectory}/projects/personal/nixos-config";
-    };
+    system.stateVersion = 6;
 
     nixpkgs.config = {
       allowUnfree = true;
@@ -59,7 +45,11 @@
 
       gc = {
         automatic = true;
-        dates = "daily";
+        interval = {
+          Hour = 1;
+          Minute = 0;
+          Weekday = 7;
+        };
         options = "--delete-older-than 7d";
       };
     };

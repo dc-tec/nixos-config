@@ -10,6 +10,15 @@
       (lib.mkIf (!config.dc-tec.persistence.enable && config.dc-tec.isLinux) { })
     ];
 
+    system = {
+      autoUpgrade = {
+        enable = lib.mkDefault true;
+        flake = "github:dc-tec/nixos-config";
+        dates = "01/04:00";
+        randomizedDelaySec = "15min";
+      };
+    };
+
     security = {
       sudo = {
         enable = false;
@@ -29,6 +38,13 @@
         enable = true;
       };
     };
+
+    systemd.user.sessionVariables = config.home-manager.users.${config.dc-tec.user.name}.home.sessionVariables;
+
+    environment.systemPackages = with pkgs; [
+      lshw
+      bridge-utils
+    ];
 
     services = {
       fwupd = {

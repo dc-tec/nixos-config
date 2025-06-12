@@ -31,7 +31,6 @@ _: {
       }
       "gpg"
       "pinentry-mac"
-      "terraform-ls"
       "container-structure-test"
       "npm"
       "ollama"

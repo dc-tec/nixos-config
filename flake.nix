@@ -119,6 +119,7 @@
       # Darwin-specific modules  
       darwinModules = [
         home-manager.darwinModules.home-manager
+        sops-nix.darwinModules.sops
 
         ./modules/darwin
       ];
