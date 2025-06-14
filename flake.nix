@@ -3,8 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
-    nur.url = "github:nix-community/NUR";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Flakes
     home-manager.url = "github:nix-community/home-manager";
@@ -43,6 +46,10 @@
     # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
     niks-cli.url = "github:dc-tec/niks-cli";
+    nur.url = "github:nix-community/NUR";
+
+    # Documentation
+    ndg.url = "github:feel-co/ndg";
   };
 
   outputs =
@@ -61,7 +68,9 @@
       catppuccin,
       sops-nix,
       nixos-wsl,
+      firefox-addons,
       darwin,
+      ndg,
       ...
     }@inputs:
     let
@@ -71,28 +80,14 @@
         "aarch64-darwin"
       ];
 
-      wslModules = [
-        home-manager.nixosModule
-        catppuccin.nixosModules.catppuccin
-        impermanence.nixosModule # Needed to disable certain options
-        nixos-wsl.nixosModules.default
+      lib =
+        system:
+        nixpkgs.lib.recursiveUpdate (import ./lib {
+          pkgs = nixpkgs.legacyPackages.${system};
+          lib = nixpkgs.lib;
+        }) nixpkgs.lib;
 
-        ./modules/wsl
-        ./modules/core/home-manager
-        ./modules/core/nix
-        ./modules/core/utils
-        ./modules/core/shells
-        ./modules/core/system
-        ./modules/core/storage # Needed to disable certain options
-        ./modules/development
-      ];
-
-      darwinModules = [
-        home-manager.darwinModules.home-manager
-
-        ./modules/darwin
-      ];
-
+      # Truly shared modules between NixOS and Darwin
       sharedModules = [
         (
           {
@@ -106,21 +101,33 @@
           {
             nixpkgs = {
               overlays = [
-                nur.overlay
                 (import ./overlays { inherit inputs; }).stable-packages
               ];
             };
           }
         )
 
+        ./modules/shared
+      ];
+
+      # NixOS-specific modules
+      nixosModules = [
         sops-nix.nixosModules.sops
         impermanence.nixosModule
-        home-manager.nixosModule
+        home-manager.nixosModules.home-manager
         catppuccin.nixosModules.catppuccin
         nixos-wsl.nixosModules.default
-        nur.nixosModules.nur
+        nur.modules.nixos.default
 
-        ./modules
+        ./modules/nixos
+      ];
+
+      # Darwin-specific modules
+      darwinModules = [
+        home-manager.darwinModules.home-manager
+        sops-nix.darwinModules.sops
+
+        ./modules/darwin
       ];
     in
     {
@@ -128,8 +135,23 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          
+          # Collect every module tree you want documented
+          rawModules = [
+            ./modules/shared
+            ./modules/nixos         # linux-specific bits
+            ./modules/darwin        # macOS-specific bits
+          ];
         in
-        import ./pkgs { inherit pkgs; }
+        (import ./pkgs { inherit pkgs; }) // {
+          # Simple docs generation - just use the docs directory directly
+          docs = ndg.packages.${system}.ndg-builder.override {
+            title = "deCort.tech – Nix & Darwin systems";
+            inputDir = ./docs;
+            rawModules = rawModules;
+            optionsDepth = 3;
+          };
+        }
       );
 
       devShells = forAllSystems (
@@ -145,7 +167,7 @@
               pkgs.home-manager
               pkgs.git
               pkgs.age
-              pkgs.age-to-ssh
+              pkgs.ssh-to-age
               pkgs.sops
             ];
           };
@@ -166,8 +188,9 @@
         darwin = darwin.lib.darwinSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "aarch64-darwin";
           };
-          modules = darwinModules ++ [ ./machines/darwin/default.nix ];
+          modules = sharedModules ++ darwinModules ++ [ ./machines/darwin/default.nix ];
         };
       };
 
@@ -175,20 +198,25 @@
         legion = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "x86_64-linux";
           };
-          modules = sharedModules ++ [ ./machines/legion/default.nix ];
+          modules = sharedModules ++ nixosModules ++ [ ./machines/legion/default.nix ];
         };
+
         chad = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "x86_64-linux";
           };
-          modules = sharedModules ++ [ ./machines/chad/default.nix ];
+          modules = sharedModules ++ nixosModules ++ [ ./machines/chad/default.nix ];
         };
+
         ghost = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
+            lib = lib "x86_64-linux";
           };
-          modules = wslModules ++ [ ./machines/ghost/default.nix ];
+          modules = sharedModules ++ nixosModules ++ [ ./machines/ghost/default.nix ];
         };
       };
     };

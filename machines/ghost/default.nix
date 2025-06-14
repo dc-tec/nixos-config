@@ -22,10 +22,8 @@
 
   dc-tec = {
     stateVersion = "24.05";
+    persistence.enable = false;
     core = {
-      persistence = {
-        enable = false;
-      };
       zfs = {
         enable = false;
       };

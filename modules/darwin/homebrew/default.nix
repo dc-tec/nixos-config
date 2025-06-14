@@ -17,14 +17,9 @@ _: {
     taps = [
       "homebrew/services"
       "FelixKratz/formulae"
-      "hashicorp/tap"
-      "jeffreywildman/homebrew-virt-manager"
     ];
 
     brews = [
-      "curl"
-      "unzip"
-      "fontconfig"
       "ical-buddy"
       {
         name = "sketchybar";
@@ -34,37 +29,9 @@ _: {
         name = "borders";
         start_service = true;
       }
-      "ifstat"
-      "jq"
-      "yq"
-      "hashicorp/tap/vault"
-      "hashicorp/tap/boundary"
-      "hashicorp/tap/consul"
-      "hashicorp/tap/nomad"
-      "hashicorp/tap/packer"
-      "cloudflared"
       "gpg"
       "pinentry-mac"
-      "pre-commit"
-      "just"
-      "netcat"
-      "gh"
-      "tflint"
-      "terraform-ls"
       "container-structure-test"
-      "virt-manager"
-      "virt-viewer"
-      "azure-cli"
-      "opentofu"
-      "openbao"
-      "k3d"
-      "hcloud"
-      "coreutils"
-      "kwctl"
-      "kind"
-      "goreleaser"
-      "gosec"
-      "httpie"
       "npm"
     ];
 

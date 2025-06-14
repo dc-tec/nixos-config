@@ -35,10 +35,8 @@
 
   dc-tec = {
     stateVersion = "24.05";
+    persistence.enable = true;
     core = {
-      persistence = {
-        enable = true;
-      };
       zfs = {
         enable = true;
         encrypted = true;
@@ -47,15 +45,10 @@
       wireless = {
         enable = false;
       };
-      cloudflared = {
-        enable = false;
-      };
     };
     development = {
-      vscode-server.enable = true;
       virtualisation = {
         docker.enable = true;
-        k8s.enable = true;
         hypervisor.enable = true;
       };
     };
