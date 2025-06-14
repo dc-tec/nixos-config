@@ -74,7 +74,7 @@ These are full-featured desktop and laptop configurations that boot from an encr
 
 ### WSL2 (ghost)
 
-This configuration provides a lightweight, stateless development environment for use with Windows Subsystem for Linux. It's designed for quick access to a Nix shell without affecting the underlying Windows system. All changes are discarded when the instance is shut down, making it perfect for testing and isolated tasks.
+This configuration provides a lightweight, NixOS-based development environment for use with Windows Subsystem for Linux.
 
 ### Darwin (darwin)
 
@@ -100,13 +100,27 @@ The documentation is also automatically built and deployed to GitHub Pages on ev
 Build and switch to a configuration:
 
 ```bash
+# Using nh to build and switch to a configuration
 # NixOS
-sudo nixos-rebuild switch --flake .#<hostname>
+nh os switch --hostname <hostname>
 
 # Darwin
-darwin-rebuild switch --flake .#darwin
+nh darwin switch --hostname <hostname>
+```
 
-# Check available configurations
+or use the following commands:
+
+```bash
+# NixOS
+nixos-rebuild switch --flake .#<hostname>
+
+# Darwin
+darwin-rebuild switch --flake .#<hostname>
+```
+
+Check available configurations:
+
+```bash
 nix flake show
 ```
 

@@ -8,9 +8,9 @@
 
     system = {
       stateVersion = 6;
-      activationScripts.postActivation.text = ''
+      activationScripts.afterActivation.text = ''
         # Following line should allow us to avoid a logout/login cycle
-        /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+        sudo /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
       '';
       primaryUser = config.dc-tec.user.name;
 
