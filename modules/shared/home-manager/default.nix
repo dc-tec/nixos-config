@@ -25,12 +25,6 @@ in
         })
       ];
 
-      # System-wide catppuccin configuration (Linux only)
-      #catppuccin = {
-      #  enable = true;
-      #  flavor = flavor;
-      #  accent = accent;
-      #};
     })
     {
       home-manager = {

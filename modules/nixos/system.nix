@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 {
   config = {
     dc-tec.core.zfs = lib.mkMerge [
@@ -38,8 +38,6 @@
         enable = true;
       };
     };
-
-    systemd.user.sessionVariables = config.home-manager.users.${config.dc-tec.user.name}.home.sessionVariables;
 
     environment.systemPackages = with pkgs; [
       lshw

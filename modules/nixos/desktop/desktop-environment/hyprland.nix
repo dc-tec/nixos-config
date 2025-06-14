@@ -11,10 +11,18 @@
   };
 
   config = lib.mkIf config.dc-tec.graphical.hyprland.enable {
-    environment.systemPackages = [
-      pkgs.wl-clipboard
-      pkgs.slurp
-      pkgs.grim
+    environment.systemPackages = with pkgs; [
+      wl-clipboard
+      slurp
+      grim
+      catppuccin-sddm.override {
+        flavor = config.dc-tec.colorScheme.flavor;
+        accent = config.dc-tec.colorScheme.accent;
+        font  = config.dc-tec.font;
+        fontSize = "12";
+        background = "${./_assets/lockscreen.png}";
+        loginBackground = true;
+      }
     ];
 
     nix.settings = {
@@ -33,19 +41,17 @@
           wayland = {
             enable = true;
           };
+          theme = "catppuccin-macchiato";
           settings = {
             Wayland = {
               SessionDir = "${pkgs.hyprland}/share/wayland-sessions";
             };
           };
-          catppuccin = {
-            enable = true;
-            assertQt6Sddm = true;
-            flavor = config.dc-tec.colorScheme.flavor;
-            font = config.dc-tec.font;
-            fontSize = "12";
-            loginBackground = true;
-          };
+          extraPackages = with pkgs.kdePackages; [
+            plasma5support
+            qtsvg
+            qtvirtualkeyboard
+          ];
         };
       };
     };

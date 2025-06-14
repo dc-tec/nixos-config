@@ -8,6 +8,7 @@
   options.dc-tec.graphical.theme = {
     enable = lib.mkOption {
       default = true;
+      description = "Enable graphical theme configuration including fonts, GTK, and Qt theming";
     };
   };
 
@@ -20,26 +21,28 @@
       fontconfig = {
         enable = true;
         defaultFonts = {
-          monospace = [ "0xProto Nerd Font" ];
-          sansSerif = [ "0xProto Nerd Font" ];
-          serif = [ "0xProto Nerd Font" ];
+          monospace = [ config.dc-tec.font ];
+          sansSerif = [ config.dc-tec.font ];
+          serif = [ config.dc-tec.font ];
         };
       };
       packages = with pkgs; [
         nerd-fonts._0xproto
       ];
+      # System-wide catppuccin configuration (Linux only)
+      # (Removed: catppuccin configuration here was invalid for the fonts module)
     };
 
     programs.dconf.enable = true;
 
-    home-manager.users.roelc =
+    home-manager.users.${config.dc-tec.user.name} =
       { pkgs, ... }:
       {
         catppuccin = {
           pointerCursor = {
             enable = true;
             accent = "dark";
-            flavor = "macchiato";
+            flavor = config.dc-tec.colorScheme.flavor;
           };
         };
 
@@ -49,19 +52,14 @@
           gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
 
           font = {
-            name = "0xProto Nerd Font";
+            name = config.dc-tec.font;
             size = 10;
           };
 
           catppuccin = {
-            flavor = "macchiato";
-            accent = "peach";
+            flavor = config.dc-tec.colorScheme.flavor;
+            accent = config.dc-tec.colorScheme.accent;
             size = "compact";
-            #icon = {
-            #  enable = true;
-            #  flavor = "macchiato";
-            #  accent = "peach";
-            #};
           };
         };
 

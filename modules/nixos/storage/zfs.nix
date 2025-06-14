@@ -12,22 +12,37 @@
       encrypted = lib.mkEnableOption "zfs request credentials";
 
       # Clear our symbolic links
-      systemCacheLinks = lib.mkOption {default = [];};
-      systemDataLinks = lib.mkOption {default = [];};
-      homeCacheLinks = lib.mkOption {default = [];};
-      homeDataLinks = lib.mkOption {default = [];};
+      systemCacheLinks = lib.mkOption {
+        default = [];
+        description = "List of system cache directories to persist";
+      };
+      systemDataLinks = lib.mkOption {
+        default = [];
+        description = "List of system data directories to persist";
+      };
+      homeCacheLinks = lib.mkOption {
+        default = [];
+        description = "List of home cache directories to persist";
+      };
+      homeDataLinks = lib.mkOption {
+        default = [];
+        description = "List of home data directories to persist";
+      };
 
       ensureSystemExists = lib.mkOption {
         default = [];
         example = ["/data/etc/ssh"];
+        description = "List of system directories to ensure exist on boot";
       };
       ensureHomeExists = lib.mkOption {
         default = [];
         example = [".ssh"];
+        description = "List of home directories to ensure exist on boot";
       };
       rootDataset = lib.mkOption {
         default = "";
         example = "rpool/local/root";
+        description = "ZFS root dataset for rollback functionality";
       };
     };
   };

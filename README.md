@@ -1,13 +1,13 @@
-<h1 align="center">Welcome to my NixOS Configuration Repository</h1>
+<h1 align="center">deCort.tech – Nix & Darwin System Configuration</h1>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Version-69.420.0-orange" alt="Version Deez-Nutzzzz">
-    <img src="https://img.shields.io/badge/NixOS-5277C3?style=for-the-badge&logo=nixos&logoColor=white" alt="Version Yo Mama">
+    <img src="https://img.shields.io/badge/Built%20with-Nix-blue?logo=nixos" alt="Built with Nix">
+    <img src="https://img.shields.io/badge/Flake-ready-green" alt="Nix flake ready">
 </p>
 
 <p align="center">
-    This is my NixOS configuration, designed to create fully reproducible operating systems using the Nix package manager, home-manager, and flakes.
-    The primary focus is on cloud automation and development workflows, providing a streamlined and declarative configuration tailored to my needs.
+    This flake is the single source of truth for <em>all</em> of my machines – from a beefy desktop to a MacBook (and even a WSL2 shell on Windows).
+    With Nix, Home Manager and a handful of extras I can go from a blank disk to a fully-configured, themed and encrypted system in one command.
 </p>
 
 #### NixOS
@@ -20,113 +20,80 @@
 
 ## Highlights
 
-- ZFS with impermanence (blank snapshot at boot) - configurable per machine
-- SOPS Nix for secret management
-- Custom [NixVim](https://github.com/dc-tec/nixvim) flake
-- Hyprland as tiling window manager
-- Catppuccin themed across all systems
-- WSL2 support with persistence disabled
-- Darwin configuration with shared modules
-- Flexible architecture supporting both persistent and ephemeral systems
+This flake bundles everything I rely on day-to-day: encrypted ZFS roots with impermanence, secret management through SOPS-age, a custom NixVim setup and a Hyprland-powered desktop – all wrapped in Catppuccin colours. It runs the same on NixOS, macOS (via nix-darwin) and even inside WSL2, providing a flexible foundation whether the machine is fully persistent or stateless.
+
+## Flake Overview
+
+This repository is a Nix _flake_, a self-contained unit that bundles all the dependencies and code needed to build the systems it describes. This includes not just packages from `nixpkgs` (both `unstable` and `25.05` channels) but also essential community flakes like `home-manager` for user-level configuration, `impermanence` for ephemeral systems, and `sops-nix` for secure secret management.
+
+The flake also pulls in specialized inputs for hardware and platform support, such as `nix-darwin` and `nix-homebrew` for macOS, `nixos-wsl` for Windows Subsystem for Linux, and specific `hyprland` components for the Wayland desktop. For a complete list of dependencies, see the [`flake.nix`](./flake.nix) file. You can inspect the flake's outputs by running:
+
+```bash
+nix flake show
+```
 
 ## Architecture
 
-The repository follows a modular architecture with clear separation between different system types and shared functionality:
+The configuration is structured into a three-tiered modular architecture that cleanly separates hardware-specific, OS-specific, and shared concerns. This design makes it easy to reuse code, override settings for a particular machine, and understand the flow of the build.
 
 ### Machines
 
-Contains per-device hardware configuration and host-specific settings:
+At the top level, the `machines/` directory defines the individual hosts. Each machine has a dedicated file (e.g., `machines/chad/default.nix`) that specifies its hardware configuration, network settings, and which modules to import. This is where you would define things like disk layouts, graphics drivers, and other host-specific parameters.
 
-- **chad** - Desktop workstation with ZFS + impermanence, virtualization
-- **legion** - Laptop with ZFS + impermanence, mobile setup
-- **ghost** - WSL2 instance with persistence disabled
-- **darwin** - macOS configuration using nix-darwin
+The flake includes four reference machines:
+
+- **chad**: A powerful desktop workstation running NixOS with ZFS, impermanence, and virtualization enabled.
+- **legion**: A NixOS laptop with a similar ZFS and impermanence setup, but tailored for a mobile environment.
+- **ghost**: A minimal WSL2 instance on Windows, configured to be stateless.
+- **darwin**: A macOS environment managed with `nix-darwin`.
 
 ### Modules
 
-#### Shared
+The core logic is organized in the `modules/` directory, which is split into three categories:
 
-Common configuration and utilities used across all systems:
+- **Shared Modules** (`modules/shared`): This is the foundation for all systems, regardless of the operating system. It includes common configurations for `home-manager`, development tools (`development/`), base system settings (`config/`), and essential utilities like ZSH, Git, and SSH (`utils/`). These modules ensure a consistent user experience across every machine.
 
-- **config/** - Base system configuration (OS detection, persistence options, theming)
-- **development/** - Development tools and environments
-- **home-manager/** - Home Manager integration with Catppuccin theming
-- **utils/** - Common utilities (SSH, ZSH, direnv, etc.)
+- **NixOS Modules** (`modules/nixos`): These modules are specific to Linux hosts. They handle system-level concerns like network connectivity (`connectivity/`), the desktop environment (Hyprland, applications, theming in `desktop/`), storage with ZFS (`storage/`), and virtualization with Docker and KVM (`virtualization/`).
 
-#### NixOS
-
-Linux-specific modules:
-
-- **connectivity/** - Network and wireless configuration
-- **desktop/** - Desktop environment components (Hyprland, applications, themes)
-- **storage/** - ZFS and filesystem management
-- **virtualization/** - Docker and KVM/QEMU setup
-
-#### Darwin
-
-macOS-specific modules:
-
-- **desktop/** - macOS desktop customization
-- **homebrew/** - Homebrew package management integration
+- **Darwin Modules** (`modules/darwin`): These modules target macOS. They configure macOS-specific desktop customizations (`desktop/`) and manage packages through Homebrew (`homebrew/`), integrating them cleanly into the Nix environment.
 
 ### Additional Components
 
-- **lib/** - Custom library functions and utilities
-- **overlays/** - Nixpkgs overlays and package modifications
-- **pkgs/** - Custom packages and derivations
-- **secrets/** - SOPS-encrypted secrets management
-
-## Key Features
-
-### Flexible Persistence Model
-
-The configuration supports both persistent and ephemeral systems:
-
-- **NixOS machines** (chad, legion): ZFS with impermanence enabled by default
-- **WSL2** (ghost): Persistence disabled for compatibility
-- **Darwin** (darwin): Standard macOS filesystem behavior
-- Configurable per-machine via `dc-tec.persistence.enable`
-
-### ZFS Configuration
-
-ZFS is used on compatible systems with:
-
-- Encrypted datasets with passphrase unlock
-- Automatic snapshots and rollback to blank state on boot
-- Optimized compression settings
-- Separate pools for ephemeral and persistent data
-
-### Cross-Platform Theming
-
-Catppuccin theme consistently applied across:
-
-- Terminal applications
-- Desktop environments
-- Development tools
-- Both NixOS and Darwin systems
-
-### Development Environment
-
-Comprehensive development setup including:
-
-- Docker and virtualization support
-- Custom NixVim configuration
-- Shell environment with ZSH and modern CLI tools
-- Direnv for project-specific environments
+- **lib/**: A collection of custom helper functions and utilities that are used throughout the flake.
+- **overlays/**: Overlays are used to modify or extend the `nixpkgs` package set with custom packages or versions.
+- **pkgs/**: Custom packages and derivations that are not available in other sources.
+- **secrets/**: Contains secret files encrypted with SOPS, which are securely decrypted at build time.
 
 ## System Configurations
 
+The flake produces several distinct system configurations, each tailored to a specific use case.
+
 ### NixOS with ZFS + Impermanence (chad, legion)
 
-Full desktop systems with ephemeral root filesystem, automated backups, and development tools.
+These are full-featured desktop and laptop configurations that boot from an encrypted ZFS filesystem. By default, they use an ephemeral root, meaning the system starts from a clean snapshot on every boot. Persistent data is stored on a separate ZFS pool, ensuring that user data is preserved while the system itself remains pristine. This setup is ideal for development and daily use, providing a reproducible and stable environment.
 
 ### WSL2 (ghost)
 
-Lightweight development environment for Windows hosts with persistence disabled for compatibility.
+This configuration provides a lightweight, stateless development environment for use with Windows Subsystem for Linux. It's designed for quick access to a Nix shell without affecting the underlying Windows system. All changes are discarded when the instance is shut down, making it perfect for testing and isolated tasks.
 
 ### Darwin (darwin)
 
-Native macOS configuration using nix-darwin with homebrew integration and shared module architecture.
+For macOS, this configuration uses `nix-darwin` to manage the system declaratively. It integrates with Homebrew for packages that are not available in `nixpkgs` and shares the same `home-manager` configuration as the NixOS hosts, ensuring a consistent development environment across platforms.
+
+## Documentation
+
+This repository is designed to be self-documenting. The module system itself serves as the primary source of truth, and detailed comments throughout the code explain the purpose of each option.
+
+In addition, this flake uses `nix-doc` to generate comprehensive HTML documentation from the module options and Markdown files in the `docs/` directory. This includes a full reference of all available configuration options, setup guides, and a deeper overview of the architecture.
+
+To build and view the documentation locally, run the following commands:
+
+```bash
+# Build the documentation
+nix build .#docs
+```
+
+The documentation is also automatically built and deployed to GitHub Pages on every push to the `main` branch.
 
 ## Quick Start
 
@@ -155,4 +122,4 @@ nix flake show
 
 #### Disclaimer
 
-This repository serves as a reference implementation but is not intended to run as-is on other systems. Feel free to use components and concepts for your own configuration. For questions or issues, please create a GitHub issue.
+I share this repo as inspiration – feel free to copy snippets or raise an issue if something piques your interest. Just keep in mind that some pieces are tailored to my hardware and workflow, so you'll likely need to adapt things for your own setup.

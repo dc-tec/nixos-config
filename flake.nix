@@ -46,6 +46,10 @@
     # Custom Flakes
     nixvim.url = "github:dc-tec/nixvim";
     niks-cli.url = "github:dc-tec/niks-cli";
+    nur.url = "github:nix-community/NUR";
+
+    # Documentation
+    ndg.url = "github:feel-co/ndg";
   };
 
   outputs =
@@ -66,6 +70,7 @@
       nixos-wsl,
       firefox-addons,
       darwin,
+      ndg,
       ...
     }@inputs:
     let
@@ -75,7 +80,8 @@
         "aarch64-darwin"
       ];
 
-      lib = system:
+      lib =
+        system:
         nixpkgs.lib.recursiveUpdate (import ./lib {
           pkgs = nixpkgs.legacyPackages.${system};
           lib = nixpkgs.lib;
@@ -116,7 +122,7 @@
         ./modules/nixos
       ];
 
-      # Darwin-specific modules  
+      # Darwin-specific modules
       darwinModules = [
         home-manager.darwinModules.home-manager
         sops-nix.darwinModules.sops
@@ -129,8 +135,23 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          
+          # Collect every module tree you want documented
+          rawModules = [
+            ./modules/shared
+            ./modules/nixos         # linux-specific bits
+            ./modules/darwin        # macOS-specific bits
+          ];
         in
-        import ./pkgs { inherit pkgs; }
+        (import ./pkgs { inherit pkgs; }) // {
+          # Simple docs generation - just use the docs directory directly
+          docs = ndg.packages.${system}.ndg-builder.override {
+            title = "deCort.tech – Nix & Darwin systems";
+            inputDir = ./docs;
+            rawModules = rawModules;
+            optionsDepth = 3;
+          };
+        }
       );
 
       devShells = forAllSystems (
@@ -178,10 +199,10 @@
           specialArgs = {
             inherit inputs outputs;
             lib = lib "x86_64-linux";
-            catppuccin-lazygit = inputs.catppuccin-lazygit;
           };
           modules = sharedModules ++ nixosModules ++ [ ./machines/legion/default.nix ];
         };
+
         chad = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
@@ -189,6 +210,7 @@
           };
           modules = sharedModules ++ nixosModules ++ [ ./machines/chad/default.nix ];
         };
+
         ghost = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;

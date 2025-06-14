@@ -7,6 +7,7 @@
     ids.gids.nixbld = 350;
 
     system = {
+      stateVersion = 6;
       activationScripts.postActivation.text = ''
         # Following line should allow us to avoid a logout/login cycle
         /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u

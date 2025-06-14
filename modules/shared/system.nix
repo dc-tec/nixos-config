@@ -1,3 +1,7 @@
+# Shared System Configuration
+#
+# This module provides system-wide configuration that applies to both NixOS and Darwin systems.
+# It includes Nix configuration, fonts, environment variables, and shell setup.
 {
   config,
   lib,
@@ -6,21 +10,24 @@
 }:
 {
   config = {
-    system.stateVersion = 6;
-
+    # Allow unfree packages system-wide
     nixpkgs.config = {
       allowUnfree = true;
     };
 
+    # Set timezone from configuration
     time.timeZone = config.dc-tec.timeZone;
 
+    # Enable zsh system-wide
     programs.zsh.enable = true;
     environment.shells = with pkgs; [
       zsh
     ];
 
+    # Set default editor
     environment.variables.EDITOR = config.dc-tec.user.editor;
 
+    # System fonts for both platforms
     fonts = {
       packages = with pkgs; [
         material-design-icons
@@ -30,6 +37,7 @@
       ];
     };
 
+    # Nix configuration with flakes and garbage collection
     nix = {
       enable = true;
       package = pkgs.nix;
@@ -43,6 +51,7 @@
         auto-optimise-store = false;
       };
 
+      # Weekly garbage collection
       gc = {
         automatic = true;
         interval = {

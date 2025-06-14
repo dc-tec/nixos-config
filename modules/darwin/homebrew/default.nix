@@ -33,7 +33,6 @@ _: {
       "pinentry-mac"
       "container-structure-test"
       "npm"
-      "ollama"
     ];
 
     casks = [

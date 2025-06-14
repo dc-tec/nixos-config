@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 {
@@ -68,7 +69,7 @@
     # `dc-tec.core.*` options are accepted when running on platforms
     # that do not import the Linux-specific ZFS module.
     dc-tec.core = lib.mkOption {
-      type = lib.types.attrs;
+      type = lib.types.submodule {};
       default = {};
       description = "Namespace for Linux-only core settings. Empty on Darwin.";
     };
