@@ -1,4 +1,5 @@
-# Preparing disk for installation
+# Legion Machine Configuration
+
 ```shell
 diska=/dev/nvme0n1
 sudo parted "$diska" -- mklabel gpt
@@ -47,4 +48,3 @@ mount -t zfs rpool/local/cache /mnt/cache
 mkdir -p /mnt/data
 mount -t zfs rpool/safe/data /mnt/data
 ```
-

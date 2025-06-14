@@ -26,13 +26,12 @@ Welcome to the documentation for deCort.tech's NixOS and Darwin system configura
 
 - **[Darwin Overview](modules-darwin.html)** - macOS-specific configurations
 - **[Desktop Environment](modules-darwin-desktop.html)** - macOS desktop setup and customization
+- **[SHKD Key Bindings](modules-darwin-shkd.html)** - Keyboard shortcuts and window management
 
 ## System Management
 
 - **[Adding New Hosts](add-new-host.html)** - Guide for setting up new machines
 - **[Maintenance](maintenance.html)** - System maintenance procedures
-- **[Shared Configuration](shared.html)** - Common settings and practices
-- **[SKHD Key Bindings](skhd-key-binds.html)** - Keyboard shortcuts and window management
 
 ## Configuration Options
 

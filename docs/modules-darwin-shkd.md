@@ -1,6 +1,6 @@
-### Key Bindings Configuration
+# SHKD Key Bindings
 
-#### Open Applications
+## Open Applications
 
 | Key Combination      | Command                                    |
 | -------------------- | ------------------------------------------ |
@@ -14,7 +14,7 @@
 | ctrl + alt - m       | open -a "Mail"                             |
 | ctrl + alt - d       | open -a docker                             |
 
-#### Focus Window
+## Focus Window
 
 | Key Combination | Command                       |
 | --------------- | ----------------------------- |
@@ -23,7 +23,7 @@
 | alt - k         | yabai -m window --focus north |
 | alt - l         | yabai -m window --focus east  |
 
-#### Swap Window
+## Swap Window
 
 | Key Combination | Command                      |
 | --------------- | ---------------------------- |
@@ -32,7 +32,7 @@
 | shift + alt - k | yabai -m window --swap north |
 | shift + alt - l | yabai -m window --swap east  |
 
-#### Move Window
+## Move Window
 
 | Key Combination | Command                      |
 | --------------- | ---------------------------- |
@@ -41,7 +41,7 @@
 | shift + cmd - k | yabai -m window --warp north |
 | shift + cmd - l | yabai -m window --warp east  |
 
-#### Resize Window
+## Resize Window
 
 | Key Combination | Command                               |
 | --------------- | ------------------------------------- |
@@ -54,7 +54,7 @@
 | shift + cmd - w | yabai -m window --resize top:0:20     |
 | shift + cmd - d | yabai -m window --resize right:-20:0  |
 
-#### Balance and Grid
+## Balance and Grid
 
 | Key Combination     | Command                            |
 | ------------------- | ---------------------------------- |
@@ -63,7 +63,7 @@
 | shift + alt - left  | yabai -m window --grid 1:2:0:0:1:1 |
 | shift + alt - right | yabai -m window --grid 1:2:1:0:1:1 |
 
-#### Desktop Management
+## Desktop Management
 
 | Key Combination | Command                       |
 | --------------- | ----------------------------- |
@@ -82,7 +82,7 @@
 | cmd + alt - 9   | yabai -m space --focus 9      |
 | cmd + alt - 0   | yabai -m space --focus 10     |
 
-#### Send Window to Desktop
+## Send Window to Desktop
 
 | Key Combination | Command                        |
 | --------------- | ------------------------------ |
@@ -100,7 +100,7 @@
 | shift + alt - 9 | yabai -m window --space 9      |
 | shift + alt - 0 | yabai -m window --space 10     |
 
-#### Send Window to Desktop and Follow Focus
+## Send Window to Desktop and Follow Focus
 
 | Key Combination | Command                                                       |
 | --------------- | ------------------------------------------------------------- |
@@ -118,7 +118,7 @@
 | shift + cmd - 9 | yabai -m window --space 9; yabai -m space --focus 9           |
 | shift + cmd - 0 | yabai -m window --space 10; yabai -m space --focus 10         |
 
-#### Focus Monitor
+## Focus Monitor
 
 | Key Combination | Command                         |
 | --------------- | ------------------------------- |
@@ -129,7 +129,7 @@
 | ctrl + alt - 2  | yabai -m display --focus 2      |
 | ctrl + alt - 3  | yabai -m display --focus 3      |
 
-#### Send Window to Monitor and Follow Focus
+## Send Window to Monitor and Follow Focus
 
 | Key Combination | Command                                                           |
 | --------------- | ----------------------------------------------------------------- |
@@ -140,7 +140,7 @@
 | ctrl + cmd - 2  | yabai -m window --display 2; yabai -m display --focus 2           |
 | ctrl + cmd - 3  | yabai -m window --display 3; yabai -m display --focus 3           |
 
-#### Window Management
+## Window Management
 
 | Key Combination | Command                                                                                                                          |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -162,7 +162,7 @@
 | alt - o         | yabai -m window --toggle topmost                                                                                                 |
 | alt - p         | yabai -m window --toggle sticky; yabai -m window --toggle topmost; yabai -m window --toggle border; yabai -m window --toggle pip |
 
-#### Change Layout of Desktop
+## Change Layout of Desktop
 
 | Key Combination  | Command                       |
 | ---------------- | ----------------------------- |

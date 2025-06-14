@@ -1,4 +1,4 @@
-# Preparing disk for installation
+# Chad Machine Configuration
 
 ```shell
 diska=/dev/sda
