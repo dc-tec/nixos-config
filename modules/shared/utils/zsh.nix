@@ -151,6 +151,10 @@
             vi = "nvim";
             v = "nvim";
 
+            # Nix aliases
+            nhds = "nh darwin switch --hostname";
+            nhos = "nh os switch --hostname";
+
             # Kubernetes aliases
             k = "kubectl";
             ka = "kubectl apply -f";
