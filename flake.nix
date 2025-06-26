@@ -110,7 +110,6 @@
         ./modules/shared
       ];
 
-      # NixOS-specific modules
       nixosModules = [
         sops-nix.nixosModules.sops
         impermanence.nixosModule
@@ -122,7 +121,6 @@
         ./modules/nixos
       ];
 
-      # Darwin-specific modules
       darwinModules = [
         home-manager.darwinModules.home-manager
         sops-nix.darwinModules.sops
@@ -136,7 +134,6 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           
-          # Collect every module tree you want documented
           rawModules = [
             ./modules/shared
             ./modules/nixos         # linux-specific bits
@@ -144,7 +141,6 @@
           ];
         in
         (import ./pkgs { inherit pkgs; }) // {
-          # Simple docs generation - just use the docs directory directly
           docs = ndg.packages.${system}.ndg-builder.override {
             title = "deCort.tech – Nix & Darwin systems";
             inputDir = ./docs;
