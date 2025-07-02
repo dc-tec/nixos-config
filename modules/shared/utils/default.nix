@@ -1,7 +1,9 @@
-{ ... }: {
+{ ... }:
+{
   imports = [
     ./packages.nix
     ./bat.nix
+    ./bitwarden.nix
     ./bottom.nix
     ./direnv.nix
     ./eza.nix
@@ -18,3 +20,4 @@
     ./zsh.nix
   ];
 }
+
