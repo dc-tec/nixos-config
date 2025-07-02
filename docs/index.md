@@ -32,6 +32,8 @@ Welcome to the documentation for deCort.tech's NixOS and Darwin system configura
 
 - **[Adding New Hosts](add-new-host.html)** - Guide for setting up new machines
 - **[Maintenance](maintenance.html)** - System maintenance procedures
+- **[Overlays](overlays.html)** - Package overlays and stable package usage
+- **[Troubleshooting](troubleshooting.html)** - Common issues and solutions
 
 ## Configuration Options
 
