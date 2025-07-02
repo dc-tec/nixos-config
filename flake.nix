@@ -2,8 +2,10 @@
   description = "deCort.tech  NixOS Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    #nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -101,6 +103,7 @@
           {
             nixpkgs = {
               overlays = [
+                (import ./overlays { inherit inputs; }).additions
                 (import ./overlays { inherit inputs; }).stable-packages
               ];
             };

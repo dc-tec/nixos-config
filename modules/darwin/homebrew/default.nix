@@ -49,7 +49,6 @@ _: {
       "font-0xproto"
       "font-0xproto-nerd-font"
       "mac-mouse-fix"
-      "docker"
       "font-sf-mono"
       "sf-symbols"
       "font-material-symbols"
@@ -65,6 +64,7 @@ _: {
       "openvpn-connect"
       "zoom"
       "lm-studio"
+      "orbstack"
     ];
   };
 }
