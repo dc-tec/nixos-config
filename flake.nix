@@ -2,9 +2,10 @@
   description = "deCort.tech  NixOS Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
-    #nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
+    nixpkgs-master.url = "github:nixos/nixpkgs";
 
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
@@ -12,21 +13,46 @@
     };
 
     # Flakes
-    home-manager.url = "github:nix-community/home-manager";
-    impermanence.url = "github:nix-community/impermanence";
-    sops-nix.url = "github:Mic92/sops-nix";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Hyperland / Wayland related flakes
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    hyprpaper.url = "github:hyprwm/hyprpaper";
-    hyprlock.url = "github:hyprwm/hyprlock";
+    hyprland = {
+      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprpaper = {
+      url = "github:hyprwm/hyprpaper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprlock = {
+      url = "github:hyprwm/hyprlock";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Catppuccin theming
-    nix-colors.url = "github:misterio77/nix-colors";
-    catppuccin.url = "github:catppuccin/nix";
+    nix-colors = {
+      url = "github:misterio77/nix-colors";
+    };
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # WSL2 flake
-    nixos-wsl.url = "github:nix-community/NixOS-WSL";
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # MacOS flakes
     darwin = {
@@ -34,7 +60,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew = {
+      url = "github:zhaofengli-wip/nix-homebrew";
+    };
 
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -46,7 +74,10 @@
     };
 
     # Custom Flakes
-    nixvim.url = "github:dc-tec/nixvim";
+    nixvim = {
+      url = "github:dc-tec/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     niks-cli.url = "github:dc-tec/niks-cli";
     nur.url = "github:nix-community/NUR";
 
@@ -105,6 +136,7 @@
               overlays = [
                 (import ./overlays { inherit inputs; }).additions
                 (import ./overlays { inherit inputs; }).stable-packages
+                (import ./overlays { inherit inputs; }).force-latest
               ];
             };
           }
