@@ -14,13 +14,12 @@
         else
           "/home/${config.dc-tec.user.name}/.config/sops/age/keys.txt";
       
+      # Only use SSH keys on Linux systems, Darwin relies solely on age keys
       sshKeyPaths = lib.optionals config.dc-tec.isLinux [
         (if config.dc-tec.persistence.enable then
           "${config.dc-tec.persistence.dataPrefix}/etc/ssh/ssh_host_ed25519_key"
         else
           "/etc/ssh/ssh_host_ed25519_key")
-      ] ++ lib.optionals config.dc-tec.isDarwin [
-        "/etc/ssh/ssh_host_ed25519_key"
       ];
       
       generateKey = true;
@@ -47,16 +46,52 @@
           path = "${config.dc-tec.user.homeDirectory}/.ssh/authorized_keys";
           owner = config.dc-tec.user.name;
         };
+
+        # GPG keys for Linux
+        "gpg/private_key" = {
+          path = "${config.dc-tec.user.homeDirectory}/.gnupg/private-key.asc";
+          owner = config.dc-tec.user.name;
+          mode = "0600";
+        };
+
+        "gpg/public_key" = {
+          path = "${config.dc-tec.user.homeDirectory}/.gnupg/public-key.asc";
+          owner = config.dc-tec.user.name;
+          mode = "0644";
+        };
+
+        "gpg/trust_db" = {
+          path = "${config.dc-tec.user.homeDirectory}/.gnupg/trust-db.txt";
+          owner = config.dc-tec.user.name;
+          mode = "0600";
+        };
       })
       
-      # Darwin-specific secrets (if any)
+      # Darwin-specific secrets
       (lib.mkIf config.dc-tec.isDarwin {
         "authorized_keys/roelc" = {
           path = "${config.dc-tec.user.homeDirectory}/.ssh/authorized_keys";
           owner = config.dc-tec.user.name;
         };
-        
-        # Add other macOS-specific secrets here
+
+        # GPG keys for Darwin
+        "gpg/private_key" = {
+          path = "${config.dc-tec.user.homeDirectory}/.gnupg/private-key.asc";
+          owner = config.dc-tec.user.name;
+          mode = "0600";
+        };
+
+        "gpg/public_key" = {
+          path = "${config.dc-tec.user.homeDirectory}/.gnupg/public-key.asc";
+          owner = config.dc-tec.user.name;
+          mode = "0644";
+        };
+
+        "gpg/trust_db" = {
+          path = "${config.dc-tec.user.homeDirectory}/.gnupg/trust-db.txt";
+          owner = config.dc-tec.user.name;
+          mode = "0600";
+        };
       })
     ];
   };
