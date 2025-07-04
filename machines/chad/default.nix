@@ -35,6 +35,7 @@
 
   dc-tec = {
     stateVersion = "24.05";
+    gpg.enable = true;
     persistence.enable = true;
     core = {
       zfs = {

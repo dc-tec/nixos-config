@@ -32,7 +32,7 @@
 
     gpgKey = lib.mkOption {
       type = lib.types.str;
-      default = "F95CABF0B7D54D8087FF9B3E321EAD1FC3C51961";
+      default = "52BFF6CCB1DA1915821F741BF29959D9BAB9798F";
       description = "User GPG key";
     };
 
@@ -66,7 +66,8 @@
       # Add mutableUsers only on NixOS; nix-darwin does not have this option.
       (lib.optionalAttrs config.dc-tec.isLinux {
         mutableUsers = config.dc-tec.persistence.enable;
-      }) // {
+      })
+      // {
         users.${config.dc-tec.user.name} = lib.mkMerge [
           # Base user configuration
           {
@@ -77,12 +78,11 @@
             isNormalUser = true;
             group = config.dc-tec.user.name;
             hashedPasswordFile = config.sops.secrets."users/${config.dc-tec.user.name}".path;
-            extraGroups = lib.mkIf config.dc-tec.isLinux ["systemd-journal"];
+            extraGroups = lib.mkIf config.dc-tec.isLinux [ "systemd-journal" ];
           })
           # Darwin-specific user configuration (no extra fields needed)
         ];
-        groups.${config.dc-tec.user.name} = {};
+        groups.${config.dc-tec.user.name} = { };
       };
   };
 }
-

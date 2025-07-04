@@ -8,9 +8,11 @@
     ./direnv.nix
     ./eza.nix
     ./fzf.nix
+    ./gpg.nix
     ./k9s.nix
     ./kitty.nix
     ./nh.nix
+    ./packages.nix
     ./ripgrep.nix
     ./sops.nix
     ./ssh.nix

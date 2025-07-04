@@ -6,8 +6,10 @@
   imports = [
     ./connectivity
     ./desktop
+    ./services
     ./storage
-    ./virtualization
     ./system.nix
+    ./utils
+    ./virtualization
   ];
 }

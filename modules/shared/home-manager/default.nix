@@ -48,6 +48,9 @@ in
                 stateVersion = config.dc-tec.stateVersion;
                 username = config.dc-tec.user.name;
                 homeDirectory = config.dc-tec.user.homeDirectory;
+                sessionVariables = {
+                  SOPS_AGE_KEY_FILE = config.dc-tec.user.homeDirectory + "/.config/sops/age/keys.txt";
+                };
               };
 
               programs.home-manager.enable = true;
