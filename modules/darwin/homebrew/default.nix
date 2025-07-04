@@ -32,6 +32,7 @@ _: {
       "pinentry-mac"
       "container-structure-test"
       "npm"
+      "bitwarden-cli"
     ];
 
     casks = [
