@@ -43,6 +43,8 @@
           ollama
           inputs.nixvim.packages.${pkgs.system}.default
           claude-code
+          bitwarden-cli
+          bitwarden-desktop
         ];
       };
     };
