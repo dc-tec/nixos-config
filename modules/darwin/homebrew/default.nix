@@ -15,7 +15,6 @@ _: {
     };
 
     taps = [
-      "homebrew/services"
       "FelixKratz/formulae"
     ];
 
