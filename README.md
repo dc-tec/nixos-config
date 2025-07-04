@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-    This flake is the single source of truth for <em>all</em> of my machines – from a beefy desktop to a MacBook (and even a WSL2 shell on Windows).
+    This flake is the single source of truth for <em>all</em> of my machines, from my beefy desktop to a MacBook (and even a WSL2 shell on Windows).
     With Nix, Home Manager and a handful of extras I can go from a blank disk to a fully-configured, themed and encrypted system in one command.
 </p>
 
@@ -84,7 +84,7 @@ For macOS, this configuration uses `nix-darwin` to manage the system declarative
 
 This repository is designed to be self-documenting. The module system itself serves as the primary source of truth, and detailed comments throughout the code explain the purpose of each option.
 
-In addition, this flake uses `nix-doc` to generate comprehensive HTML documentation from the module options and Markdown files in the `docs/` directory. This includes a full reference of all available configuration options, setup guides, and a deeper overview of the architecture.
+In addition, this flake uses `ndg` to generate comprehensive HTML documentation from the module options and Markdown files in the `docs/` directory. This includes a full reference of all available configuration options, setup guides, and a deeper overview of the architecture.
 
 To build and view the documentation locally, run the following commands:
 
@@ -136,4 +136,4 @@ nix flake show
 
 #### Disclaimer
 
-I share this repo as inspiration – feel free to copy snippets or raise an issue if something piques your interest. Just keep in mind that some pieces are tailored to my hardware and workflow, so you'll likely need to adapt things for your own setup.
+I share this repo as inspiration, feel free to copy snippets or raise an issue if something piques your interest. Just keep in mind that some pieces are tailored to my hardware and workflow, so you'll likely need to adapt things for your own setup.
