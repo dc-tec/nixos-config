@@ -15,6 +15,7 @@
 
   dc-tec = {
     stateVersion = "24.05";
+    gpg.enable = true;
     development-packages.enable = true;
     development-packages.tools.go = true;
     development-packages.tools.python = true;
