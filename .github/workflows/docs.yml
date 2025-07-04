@@ -3,8 +3,10 @@ name: Build and Deploy Documentation
 on:
   push:
     branches: [main]
+    paths: ["docs/**"]
   pull_request:
     branches: [main]
+    paths: ["docs/**"]
 
 permissions:
   contents: read
