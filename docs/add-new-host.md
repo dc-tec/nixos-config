@@ -168,7 +168,54 @@ sudo nixos-rebuild switch --flake .#your-machine
 darwin-rebuild switch --flake .#your-machine
 ```
 
-### 8. Document Your Machine
+### 8. Configure SOPS Secrets
+
+Set up SOPS for secrets management on your new machine:
+
+#### Generate Age Keys
+
+```bash
+# Age keys are automatically generated, but you can create them manually
+mkdir -p ~/.config/sops/age
+age-keygen -o ~/.config/sops/age/keys.txt
+
+# Get the public key for adding to .sops.yaml
+age-keygen -y ~/.config/sops/age/keys.txt
+```
+
+#### Add Public Key to Configuration
+
+Add your machine's public key to the `.sops.yaml` file in the repository root:
+
+```yaml
+keys:
+  - &your_machine_key age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+creation_rules:
+  - path_regex: secrets/secrets.yaml$
+    key_groups:
+      - age:
+          - *your_machine_key
+```
+
+#### Update Secrets File
+
+Re-encrypt secrets to include your new key:
+
+```bash
+sops updatekeys secrets/secrets.yaml
+```
+
+#### Machine-Specific Secrets
+
+If your machine needs specific secrets, add them to the secrets file:
+
+```bash
+sops secrets/secrets.yaml
+```
+
+For detailed SOPS management instructions, see the [SOPS Documentation](sops.html).
+
+### 9. Document Your Machine
 
 Create documentation for your new machine in `docs/machines/your-machine.md` following the format of existing machine documentation.
 

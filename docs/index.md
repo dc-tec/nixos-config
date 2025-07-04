@@ -31,6 +31,7 @@ Welcome to the documentation for deCort.tech's NixOS and Darwin system configura
 ## System Management
 
 - **[Adding New Hosts](add-new-host.html)** - Guide for setting up new machines
+- **[SOPS Secrets Management](sops.html)** - Secure secrets management with SOPS and age encryption
 - **[Maintenance](maintenance.html)** - System maintenance procedures
 - **[Overlays](overlays.html)** - Package overlays and stable package usage
 - **[Troubleshooting](troubleshooting.html)** - Common issues and solutions
