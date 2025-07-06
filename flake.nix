@@ -79,7 +79,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niks-cli.url = "github:dc-tec/niks-cli";
+
+    # Others
     nur.url = "github:nix-community/NUR";
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Documentation
     ndg.url = "github:feel-co/ndg";
@@ -104,6 +110,7 @@
       firefox-addons,
       darwin,
       ndg,
+      pre-commit-hooks,
       ...
     }@inputs:
     let
@@ -168,14 +175,15 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          
+
           rawModules = [
             ./modules/shared
-            ./modules/nixos         # linux-specific bits
-            ./modules/darwin        # macOS-specific bits
+            ./modules/nixos # linux-specific bits
+            ./modules/darwin # macOS-specific bits
           ];
         in
-        (import ./pkgs { inherit pkgs; }) // {
+        (import ./pkgs { inherit pkgs; })
+        // {
           docs = ndg.packages.${system}.ndg-builder.override {
             title = "deCort.tech – Nix & Darwin systems";
             inputDir = ./docs;
@@ -210,7 +218,20 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
         in
-        pkgs.nixpkgs-fmt
+        pkgs.nixfmt-rfc-style
+      );
+
+      checks = forAllSystems (
+        system:
+        {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              statix.enable = true;
+              nixfmt-rfc-style.enable = true;
+            };
+          };
+        }
       );
 
       overlays = import ./overlays { inherit inputs; };
