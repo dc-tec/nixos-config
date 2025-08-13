@@ -26,7 +26,7 @@ Welcome to the documentation for deCort.tech's NixOS and Darwin system configura
 
 - **[Darwin Overview](modules-darwin.html)** - macOS-specific configurations
 - **[Desktop Environment](modules-darwin-desktop.html)** - macOS desktop setup and customization
-- **[SHKD Key Bindings](modules-darwin-shkd.html)** - Keyboard shortcuts and window management
+- **[SHKD Key Bindings](modules-darwin-skhd.html)** - Keyboard shortcuts and window management
 
 ## System Management
 
@@ -42,4 +42,4 @@ For detailed configuration options available in these modules, see the [Module O
 
 ---
 
-_This documentation is generated using [NDG (Not a Docs Generator)](https://github.com/feel-co/ndg) and is automatically updated when the system configurations change._
+_This documentation is generated using [NDG (Not a Docs Generator)](https://github.com/feel-co/ndg)_
