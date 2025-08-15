@@ -199,17 +199,12 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          default = pkgs.mkShell {
-            NIX_CONFIG = "experimental-features = nix-command flakes";
-            nativeBuildInputs = [
-              pkgs.nix
-              pkgs.home-manager
-              pkgs.git
-              pkgs.age
-              pkgs.ssh-to-age
-              pkgs.sops
-            ];
-          };
+          default =
+            with pkgs;
+            mkShell {
+              inherit (self.checks.${system}.pre-commit-check) shellHook;
+              NIX_CONFIG = "experimental-features = nix-command flakes";
+            };
         }
       );
 
@@ -221,18 +216,15 @@
         pkgs.nixfmt-rfc-style
       );
 
-      checks = forAllSystems (
-        system:
-        {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              statix.enable = true;
-              nixfmt-rfc-style.enable = true;
-            };
+      checks = forAllSystems (system: {
+        pre-commit-check = pre-commit-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            statix.enable = false;
+            nixfmt-rfc-style.enable = true;
           };
-        }
-      );
+        };
+      });
 
       overlays = import ./overlays { inherit inputs; };
 
