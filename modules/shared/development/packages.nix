@@ -11,6 +11,7 @@
       tools = {
         go = lib.mkEnableOption "Go development";
         python = lib.mkEnableOption "Python development";
+        rust = lib.mkEnableOption "Rust development";
         iac = lib.mkEnableOption "IaC tools";
         k8s = lib.mkEnableOption "Kubernetes tools";
         cloud = lib.mkEnableOption "Cloud tools";
@@ -42,6 +43,14 @@
             python3Packages.python-lsp-server
             python3Packages.python-lsp-ruff
             uv
+          ])
+          # Rust Tools
+          (lib.optionals config.dc-tec.development-packages.tools.rust [
+            cargo
+            rustc
+            clippy
+            rustfmt
+            rust-analyzer
           ])
           # IaC Tools
           (lib.optionals config.dc-tec.development-packages.tools.iac [
@@ -86,6 +95,10 @@
             bats
             yaml-language-server
             powershell
+            act
+            bun
+            jujutsu
+            jjui
           ])
           # Infrastructure Tools
           (lib.optionals config.dc-tec.development-packages.tools.infra [

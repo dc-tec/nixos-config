@@ -2,30 +2,41 @@
   config,
   lib,
   ...
-}: {
+}:
+{
   sops = {
     defaultSopsFile = ../../../secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
 
     age = {
-      keyFile = 
+      keyFile =
         if config.dc-tec.isDarwin then
           "/Users/${config.dc-tec.user.name}/.config/sops/age/keys.txt"
         else
           "/home/${config.dc-tec.user.name}/.config/sops/age/keys.txt";
-      
+
       # Only use SSH keys on Linux systems, Darwin relies solely on age keys
       sshKeyPaths = lib.optionals config.dc-tec.isLinux [
-        (if config.dc-tec.persistence.enable then
-          "${config.dc-tec.persistence.dataPrefix}/etc/ssh/ssh_host_ed25519_key"
-        else
-          "/etc/ssh/ssh_host_ed25519_key")
+        (
+          if config.dc-tec.persistence.enable then
+            "${config.dc-tec.persistence.dataPrefix}/etc/ssh/ssh_host_ed25519_key"
+          else
+            "/etc/ssh/ssh_host_ed25519_key"
+        )
       ];
-      
+
       generateKey = true;
     };
 
     secrets = lib.mkMerge [
+      # Shared secrets (available on both Linux and Darwin)
+      {
+        openrouter_api_key = {
+          owner = config.dc-tec.user.name;
+          mode = "0600";
+        };
+      }
+
       # Linux-specific secrets
       (lib.mkIf config.dc-tec.isLinux {
         "users/roelc" = {
@@ -36,7 +47,7 @@
           neededForUsers = true;
         };
 
-        wireless = {};
+        wireless = { };
 
         "authorized_keys/root" = {
           path = "/root/.ssh/authorized_keys";
@@ -66,7 +77,7 @@
           mode = "0600";
         };
       })
-      
+
       # Darwin-specific secrets
       (lib.mkIf config.dc-tec.isDarwin {
         "authorized_keys/roelc" = {

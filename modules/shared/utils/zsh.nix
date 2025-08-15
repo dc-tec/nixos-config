@@ -121,6 +121,13 @@
                 "$PATH";
             GPG_TTY = ''$(tty)'';
           };
+
+          initExtra = ''
+            # Export OpenRouter API key from SOPS secret file
+            if [ -f "${config.sops.secrets.openrouter_api_key.path}" ]; then
+              export OPENROUTER_API_KEY="$(cat ${config.sops.secrets.openrouter_api_key.path})"
+            fi
+          '';
           shellAliases = {
             home = "cd ~/";
             config = "cd ~/projects/personal/nixos-config";
@@ -198,4 +205,3 @@
     }
   ];
 }
-

@@ -61,6 +61,17 @@ in
                 flavor = flavor;
                 accent = accent;
               };
+
+              # Create activation script to set OpenRouter API key environment variable
+              home.activation.setOpenRouterApiKey = ''
+                if [ -f "${config.sops.secrets.openrouter_api_key.path}" ]; then
+                  # Create a shell script that exports the API key
+                  mkdir -p ${config.dc-tec.user.homeDirectory}/.config/environment.d
+                  echo "OPENROUTER_API_KEY=$(cat ${config.sops.secrets.openrouter_api_key.path})" > ${config.dc-tec.user.homeDirectory}/.config/environment.d/openrouter.conf
+                else
+                  echo "OpenRouter API key file not found, skipping environment variable setup"
+                fi
+              '';
             };
         };
       };

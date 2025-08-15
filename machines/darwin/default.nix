@@ -2,7 +2,8 @@
   inputs,
   lib,
   ...
-}: {
+}:
+{
   imports = [
   ];
 
@@ -26,5 +27,6 @@
     development-packages.tools.iac = true;
     development-packages.tools.k8s = true;
     development-packages.tools.cloud = true;
+    development-packages.tools.rust = true;
   };
 }
