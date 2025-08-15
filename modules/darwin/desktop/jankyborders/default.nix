@@ -1,4 +1,4 @@
-{...}: {
+_: {
   home-manager.users.roelc = {
     home.file."./.config/borders" = {
       source = ./.;

@@ -1,5 +1,5 @@
 #https://github.com/ryan4yin/nix-darwin-kickstarter/blob/main/rich-demo/modules/system.nix
-{ pkgs, config,... }:
+{ pkgs, config, ... }:
 {
   config = {
     security.pam.services.sudo_local.touchIdAuth = true;
