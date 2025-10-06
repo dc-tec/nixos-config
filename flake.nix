@@ -87,6 +87,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Upstream sources
+    llama-cpp-src = {
+      url = "github:ggml-org/llama.cpp";
+      flake = false;
+    };
+
     # Documentation
     ndg.url = "github:feel-co/ndg";
   };
@@ -144,6 +150,7 @@
                 (import ./overlays { inherit inputs; }).additions
                 (import ./overlays { inherit inputs; }).stable-packages
                 (import ./overlays { inherit inputs; }).force-latest
+                (import ./overlays { inherit inputs; }).llama-cpp-latest
               ];
             };
           }

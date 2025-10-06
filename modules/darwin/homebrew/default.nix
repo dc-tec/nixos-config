@@ -33,13 +33,11 @@ _: {
       "container-structure-test"
       "npm"
       "bitwarden-cli"
+      "sst/tap/opencode"
     ];
 
     casks = [
-      "firefox"
-      "arc"
       "thunderbird"
-      "microsoft-edge"
       "whatsapp"
       "mattermost"
       "obsidian"
