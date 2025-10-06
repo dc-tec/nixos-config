@@ -61,6 +61,7 @@
             ansible
             ansible-builder
             ansible-lint
+            ansible-navigator
           ])
           # K8s Tools
           (lib.optionals config.dc-tec.development-packages.tools.k8s [

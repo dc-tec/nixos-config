@@ -25,6 +25,7 @@
       ssh-to-age
       tcpdump
       nvd
+      tree
     ];
 
     # User Packages
@@ -40,11 +41,13 @@
           atac
           comma
           autojump
-          ollama
+          llama-cpp
           inputs.nixvim.packages.${pkgs.system}.default
           claude-code
           bitwarden-desktop
-          zed-editor
+          brave
+          cloudflared
+          ffmpeg
         ];
       };
     };
