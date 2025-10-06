@@ -192,6 +192,7 @@
             dps = "docker ps";
             dpsa = "docker ps -a";
             di = "docker images";
+            dexec = "docker exec";
             ds = "docker stop";
             drm = "docker rm";
 
