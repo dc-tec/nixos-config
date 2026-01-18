@@ -44,6 +44,8 @@
           llama-cpp
           inputs.nixvim.packages.${pkgs.system}.default
           claude-code
+          gemini-cli
+          codex
           bitwarden-desktop
           brave
           cloudflared
