@@ -25,20 +25,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Hyperland / Wayland related flakes
-    hyprland = {
-      url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprpaper = {
-      url = "github:hyprwm/hyprpaper";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprlock = {
-      url = "github:hyprwm/hyprlock";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Catppuccin theming
     nix-colors = {
       url = "github:misterio77/nix-colors";
@@ -58,19 +44,6 @@
     darwin = {
       url = "github:lnl7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-homebrew = {
-      url = "github:zhaofengli-wip/nix-homebrew";
-    };
-
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
     };
 
     # Custom Flakes
@@ -103,12 +76,8 @@
       nixpkgs,
       home-manager,
       impermanence,
-      hyprland,
-      hyprpaper,
-      hyprlock,
       nixvim,
       nur,
-      niks-cli,
       nix-colors,
       catppuccin,
       sops-nix,
@@ -125,11 +94,24 @@
         "x86_64-linux"
         "aarch64-darwin"
       ];
+      overlaySet = import ./overlays { inherit inputs; };
+      sharedOverlays = [
+        overlaySet.additions
+        overlaySet.stable-packages
+        overlaySet.force-latest
+        overlaySet.llama-cpp-latest
+      ];
+      mkPkgs =
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = sharedOverlays;
+        };
 
       lib =
         system:
         nixpkgs.lib.recursiveUpdate (import ./lib {
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = mkPkgs system;
           lib = nixpkgs.lib;
         }) nixpkgs.lib;
 
@@ -146,12 +128,7 @@
           }:
           {
             nixpkgs = {
-              overlays = [
-                (import ./overlays { inherit inputs; }).additions
-                (import ./overlays { inherit inputs; }).stable-packages
-                (import ./overlays { inherit inputs; }).force-latest
-                (import ./overlays { inherit inputs; }).llama-cpp-latest
-              ];
+              overlays = sharedOverlays;
             };
           }
         )
@@ -164,7 +141,6 @@
         impermanence.nixosModule
         home-manager.nixosModules.home-manager
         catppuccin.nixosModules.catppuccin
-        nixos-wsl.nixosModules.default
         nur.modules.nixos.default
 
         ./modules/nixos
@@ -181,7 +157,7 @@
       packages = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = mkPkgs system;
 
           rawModules = [
             ./modules/shared
@@ -189,7 +165,9 @@
             ./modules/darwin # macOS-specific bits
           ];
         in
-        (import ./pkgs { inherit pkgs; })
+        (import ./pkgs {
+          inherit pkgs inputs;
+        })
         // {
           docs = ndg.packages.${system}.ndg-builder.override {
             title = "deCort.tech – Nix & Darwin systems";
@@ -203,7 +181,7 @@
       devShells = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = mkPkgs system;
         in
         {
           default =
@@ -218,7 +196,7 @@
       formatter = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = mkPkgs system;
         in
         pkgs.nixfmt-rfc-style
       );
@@ -233,7 +211,7 @@
         };
       });
 
-      overlays = import ./overlays { inherit inputs; };
+      overlays = overlaySet;
 
       darwinConfigurations = {
         darwin = darwin.lib.darwinSystem {

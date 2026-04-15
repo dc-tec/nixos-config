@@ -29,7 +29,7 @@
               "dom.security.https_only_mode" = true;
               "dom.security.https_only_mode_ever_enabled" = true;
             };
-            extensions = with inputs.firefox-addons.packages.${pkgs.system}; [
+            extensions = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
               ublock-origin
               firefox-color
               canvasblocker
