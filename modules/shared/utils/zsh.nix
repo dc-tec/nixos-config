@@ -119,10 +119,10 @@
                 "/opt/homebrew/bin:/Users/${config.dc-tec.user.name}/Library/Python/3.9/bin:$PATH"
               else
                 "$PATH";
-            GPG_TTY = ''$(tty)'';
+            GPG_TTY = "$(tty)";
           };
 
-          initExtra = ''
+          initContent = ''
             # Export OpenRouter API key from SOPS secret file
             if [ -f "${config.sops.secrets.openrouter_api_key.path}" ]; then
               export OPENROUTER_API_KEY="$(cat ${config.sops.secrets.openrouter_api_key.path})"

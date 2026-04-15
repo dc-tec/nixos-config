@@ -1,3 +1,8 @@
-{pkgs, ...}: {
-  niks-cli = pkgs.callPackage ./niks {};
+{
+  pkgs,
+  inputs,
+  ...
+}:
+{
+  niks-cli = pkgs.callPackage ./niks { inherit inputs; };
 }

@@ -1,18 +1,12 @@
 {
-  fetchFromGitHub,
   buildGoModule,
+  inputs,
   ...
 }:
 buildGoModule {
   pname = "niks";
-  version = "0.0.1";
-
-  src = fetchFromGitHub {
-    owner = "dc-tec";
-    repo = "niks-cli";
-    rev = "main";
-    sha256 = "sha256-rS99ZYBE6TtznKKRFjfzHI+pNzM8zXlcLvHUqfletz8=";
-  };
+  version = inputs.niks-cli.shortRev or "unstable";
+  src = inputs.niks-cli;
 
   vendorHash = null;
 }

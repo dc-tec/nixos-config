@@ -29,26 +29,34 @@
         {
           programs.ssh = {
             enable = true;
-            hashKnownHosts = true;
-            userKnownHostsFile =
-              if config.dc-tec.persistence.enable && config.dc-tec.isLinux then
-                "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/known_hosts"
-              else
-                "${config.dc-tec.user.homeDirectory}/.ssh/known_hosts";
-            extraOptionOverrides = {
-              AddKeysToAgent = "yes";
-              IdentityFile =
-                if config.dc-tec.persistence.enable && config.dc-tec.isLinux then
-                  "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/id_ed25519"
-                else
-                  "${config.dc-tec.user.homeDirectory}/.ssh/id_ed25519";
-            };
+            enableDefaultConfig = false;
             extraConfig = lib.mkIf config.dc-tec.isDarwin ''
               UseKeychain yes
               IdentityFile ~/.ssh/roelc_gh
             '';
 
             matchBlocks = {
+              "*" = {
+                forwardAgent = false;
+                addKeysToAgent = "yes";
+                compression = false;
+                serverAliveInterval = 0;
+                serverAliveCountMax = 3;
+                hashKnownHosts = true;
+                identityFile =
+                  if config.dc-tec.persistence.enable && config.dc-tec.isLinux then
+                    "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/id_ed25519"
+                  else
+                    "${config.dc-tec.user.homeDirectory}/.ssh/id_ed25519";
+                userKnownHostsFile =
+                  if config.dc-tec.persistence.enable && config.dc-tec.isLinux then
+                    "${config.dc-tec.persistence.dataPrefix}/home/${config.dc-tec.user.name}/.ssh/known_hosts"
+                  else
+                    "${config.dc-tec.user.homeDirectory}/.ssh/known_hosts";
+                controlMaster = "no";
+                controlPath = "~/.ssh/master-%r@%n:%p";
+                controlPersist = "no";
+              };
               "adfinis-gitlab" = {
                 hostname = "git.adfinis.com";
                 user = "git";

@@ -11,7 +11,6 @@
     ./k9s.nix
     ./kitty.nix
     ./nh.nix
-    ./packages.nix
     ./ripgrep.nix
     ./sops.nix
     ./ssh.nix
@@ -21,4 +20,3 @@
     ./zsh.nix
   ];
 }
-

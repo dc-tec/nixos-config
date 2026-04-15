@@ -42,7 +42,7 @@
           comma
           autojump
           llama-cpp
-          inputs.nixvim.packages.${pkgs.system}.default
+          inputs.nixvim.packages.${pkgs.stdenv.hostPlatform.system}.default
           claude-code
           gemini-cli
           codex

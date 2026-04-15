@@ -10,11 +10,7 @@
       programs = {
         git = {
           enable = true;
-
-          # Primary email: work on Darwin, personal on Linux
-          userEmail =
-            if config.dc-tec.isDarwin then config.dc-tec.user.workEmail else config.dc-tec.user.email;
-          userName = config.dc-tec.user.fullName;
+          signing.format = "openpgp";
 
           includes = lib.flatten [
             # Always include secretz configuration on both platforms
@@ -69,16 +65,18 @@
           ];
 
           # Primary configuration (work on Darwin, personal on Linux)
-          extraConfig = {
+          settings = {
+            user = {
+              email = if config.dc-tec.isDarwin then config.dc-tec.user.workEmail else config.dc-tec.user.email;
+              name = config.dc-tec.user.fullName;
+              signingkey = config.dc-tec.user.gpgKey;
+            };
             init.defaultBranch = "main";
             push.autoSetupRemote = true;
             pull.rebase = true;
             core.sshCommand =
               if config.dc-tec.isLinux then "ssh -i ~/.ssh/id_ed25519" else "ssh -i ~/.ssh/roelc_gh";
-
             safe.directory = "${config.dc-tec.user.homeDirectory}/projects/personal/nixos-config";
-
-            user.signingkey = config.dc-tec.user.gpgKey;
             commit.gpgsign = true;
             gpg.program = if config.dc-tec.isLinux then "${pkgs.gnupg}/bin/gpg2" else "/opt/homebrew/bin/gpg";
           };
