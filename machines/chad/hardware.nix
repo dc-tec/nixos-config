@@ -3,8 +3,9 @@
   lib,
   modulesPath,
   ...
-}: {
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+}:
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   boot = {
     loader = {
@@ -12,10 +13,16 @@
       efi.canTouchEfiVariables = true;
     };
     initrd = {
-      availableKernelModules = ["xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
-      kernelModules = ["virtio"];
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "usb_storage"
+        "usbhid"
+        "sd_mod"
+      ];
+      kernelModules = [ "virtio" ];
     };
-    kernelParams = ["mitigations=off"];
+    kernelParams = [ "mitigations=off" ];
     kernelModules = [
       "kvm-amd"
       "xt_socket"
@@ -23,7 +30,7 @@
       "bridge"
       "br_netfilter"
     ];
-    extraModulePackages = [];
+    extraModulePackages = [ ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
     kernel = {
       sysctl."net.ipv4.ip_forward" = 1;
@@ -62,7 +69,7 @@
     };
   };
 
-  swapDevices = [{device = "/dev/disk/by-label/swap";}];
+  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -84,7 +91,8 @@
     blueman.enable = true;
   };
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (lib.getName pkg) [
       "nvidia-x11"
       "nvidia"

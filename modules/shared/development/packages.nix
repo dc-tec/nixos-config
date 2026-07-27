@@ -90,16 +90,18 @@
           (lib.optionals config.dc-tec.development-packages.tools.dev [
             devenv
             httpie
-            nodejs
             pre-commit
             just
             bats
             yaml-language-server
             powershell
             act
-            bun
             jujutsu
             jjui
+            (lib.optionals config.dc-tec.isLinux [
+              nodejs
+              bun
+            ])
           ])
           # Infrastructure Tools
           (lib.optionals config.dc-tec.development-packages.tools.infra [

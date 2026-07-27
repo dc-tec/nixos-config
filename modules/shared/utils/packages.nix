@@ -31,26 +31,31 @@
     # User Packages
     home-manager.users.${config.dc-tec.user.name} = {
       home = {
-        packages = with pkgs; [
-          tlrc
-          fontconfig
-          fd
-          jq
-          yq
-          direnv
-          atac
-          comma
-          autojump
-          llama-cpp
-          inputs.nixvim.packages.${pkgs.stdenv.hostPlatform.system}.default
-          claude-code
-          gemini-cli
-          codex
-          bitwarden-desktop
-          brave
-          cloudflared
-          ffmpeg
-        ];
+        packages =
+          with pkgs;
+          [
+            tlrc
+            fontconfig
+            fd
+            jq
+            yq
+            direnv
+            atac
+            comma
+            autojump
+            inputs.nixvim.packages.${pkgs.stdenv.hostPlatform.system}.default
+            gemini-cli
+            bitwarden-desktop
+            brave
+            cloudflared
+            ffmpeg
+          ]
+          # Codex and Claude Code use their faster npm update channel on Darwin.
+          # Keep the Nix-managed packages on Linux.
+          ++ lib.optionals config.dc-tec.isLinux [
+            claude-code
+            codex
+          ];
       };
     };
   };

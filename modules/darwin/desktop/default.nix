@@ -1,6 +1,6 @@
-_:
-{
+_: {
   imports = [
+    ./cmux.nix
     ./sketchybar
     ./jankyborders
     ./gpg

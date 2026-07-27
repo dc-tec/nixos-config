@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   options.dc-tec.graphical.key_management = {
     enable = lib.mkEnableOption "key management";
   };
