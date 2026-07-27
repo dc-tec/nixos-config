@@ -42,7 +42,9 @@ in
         "$schema" = "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux.schema.json";
         schemaVersion = 1;
 
-        activePaneBorderColor = color "base0D";
+        # cmux draws the active outline inside the terminal surface, where it
+        # overlaps edge cells. Keep pane dividers, but disable that outline.
+        activePaneBorderColor = null;
         paneBorderColor = color "base02";
 
         app = {
