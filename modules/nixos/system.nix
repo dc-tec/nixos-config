@@ -1,12 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   config = {
     dc-tec.core.zfs = lib.mkMerge [
-      (
-        lib.mkIf (config.dc-tec.persistence.enable && config.dc-tec.isLinux) {
-          systemDataLinks = [ "/var/lib/nixos" ];
-        }
-      )
+      (lib.mkIf (config.dc-tec.persistence.enable && config.dc-tec.isLinux) {
+        systemDataLinks = [ "/var/lib/nixos" ];
+      })
       (lib.mkIf (!config.dc-tec.persistence.enable && config.dc-tec.isLinux) { })
     ];
 

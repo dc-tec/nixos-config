@@ -3,8 +3,9 @@
   lib,
   modulesPath,
   ...
-}: {
-  imports = [(modulesPath + "/installer/scan/not-detected.nix")];
+}:
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
   boot = {
     loader = {
@@ -12,12 +13,18 @@
       efi.canTouchEfiVariables = true;
     };
     initrd = {
-      availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod"];
-      kernelModules = [];
+      availableKernelModules = [
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usb_storage"
+        "sd_mod"
+      ];
+      kernelModules = [ ];
     };
-    kernelParams = ["mitigations=off"];
-    kernelModules = ["kvm-intel"];
-    extraModulePackages = [];
+    kernelParams = [ "mitigations=off" ];
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   };
 
@@ -53,7 +60,7 @@
     };
   };
 
-  swapDevices = [{device = "/dev/disk/by-label/swap";}];
+  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -74,7 +81,8 @@
   };
   services.fstrim.enable = true;
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (lib.getName pkg) [
       "nvidia-x11"
       "nvidia"

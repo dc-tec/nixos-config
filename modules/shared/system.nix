@@ -54,12 +54,17 @@
       # Weekly garbage collection
       gc = {
         automatic = true;
+        options = "--delete-older-than 7d";
+      }
+      // lib.optionalAttrs config.dc-tec.isDarwin {
         interval = {
           Hour = 1;
           Minute = 0;
           Weekday = 7;
         };
-        options = "--delete-older-than 7d";
+      }
+      // lib.optionalAttrs config.dc-tec.isLinux {
+        dates = "Sun 01:00";
       };
     };
   };

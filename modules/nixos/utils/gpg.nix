@@ -17,4 +17,4 @@
       "d /home/${config.dc-tec.user.name}/.gnupg 0700 ${config.dc-tec.user.name} ${config.dc-tec.user.name}"
     ];
   };
-} 
+}

@@ -5,7 +5,7 @@ _: {
     onActivation = {
       upgrade = true;
       autoUpdate = true;
-      cleanup = "zap";
+      cleanup = "check";
     };
 
     global = {
@@ -14,7 +14,9 @@ _: {
     };
 
     taps = [
+      "anomalyco/tap"
       "FelixKratz/formulae"
+      "manaflow-ai/cmux"
     ];
 
     brews = [
@@ -27,12 +29,26 @@ _: {
         name = "borders";
         start_service = true;
       }
-      "gpg"
+      "actionlint"
+      "aws-vault"
+      "checkov"
+      "glab"
+      "gnupg"
       "pinentry-mac"
       "container-structure-test"
-      "npm"
+      # Node owns the mutable npm-global AI CLI installations on Darwin.
+      "node"
+      "opam"
       "bitwarden-cli"
-      "sst/tap/opencode"
+      "caddy"
+      "cloc"
+      "pnpm"
+      "semgrep"
+      "anomalyco/tap/opencode"
+      "swtpm"
+      "trivy"
+      "unbound"
+      "qemu"
     ];
 
     casks = [
@@ -53,6 +69,7 @@ _: {
       "betterdisplay"
       "spotify"
       "cursor"
+      "cmux"
       "notion"
       "shottr"
       "powershell"
@@ -62,6 +79,7 @@ _: {
       "zoom"
       "lm-studio"
       "orbstack"
+      "session-manager-plugin"
     ];
   };
 }

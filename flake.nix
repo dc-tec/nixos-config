@@ -60,12 +60,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Upstream sources
-    llama-cpp-src = {
-      url = "github:ggml-org/llama.cpp";
-      flake = false;
-    };
-
     # Documentation
     ndg.url = "github:feel-co/ndg";
   };
@@ -99,7 +93,7 @@
         overlaySet.additions
         overlaySet.stable-packages
         overlaySet.force-latest
-        overlaySet.llama-cpp-latest
+        overlaySet.yabai-preserve-signature
       ];
       mkPkgs =
         system:
@@ -168,7 +162,7 @@
         (import ./pkgs {
           inherit pkgs inputs;
         })
-        // {
+        // nixpkgs.lib.optionalAttrs (builtins.hasAttr system ndg.packages) {
           docs = ndg.packages.${system}.ndg-builder.override {
             title = "deCort.tech – Nix & Darwin systems";
             inputDir = ./docs;
@@ -198,7 +192,7 @@
         let
           pkgs = mkPkgs system;
         in
-        pkgs.nixfmt-rfc-style
+        pkgs.nixfmt
       );
 
       checks = forAllSystems (system: {
@@ -206,7 +200,7 @@
           src = ./.;
           hooks = {
             statix.enable = false;
-            nixfmt-rfc-style.enable = true;
+            nixfmt.enable = true;
           };
         };
       });

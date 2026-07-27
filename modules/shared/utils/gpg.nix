@@ -45,18 +45,20 @@
       services.gpg-agent = {
         enable = true;
         enableZshIntegration = true;
-        pinentry.package = 
-          if config.dc-tec.isDarwin then 
-            null 
-          else if config.dc-tec.graphical.enable or false then 
-            pkgs.pinentry-gtk2 
-          else 
+        pinentry.package =
+          if config.dc-tec.isDarwin then
+            null
+          else if config.dc-tec.graphical.enable or false then
+            pkgs.pinentry-gtk2
+          else
             pkgs.pinentry-curses;
-        extraConfig = lib.optionalString config.dc-tec.isDarwin ''
-          pinentry-program /opt/homebrew/bin/pinentry-mac
-        '' + lib.optionalString (config.dc-tec.isLinux && !(config.dc-tec.graphical.enable or false)) ''
-          pinentry-program ${pkgs.pinentry-curses}/bin/pinentry-curses
-        '';
+        extraConfig =
+          lib.optionalString config.dc-tec.isDarwin ''
+            pinentry-program /opt/homebrew/bin/pinentry-mac
+          ''
+          + lib.optionalString (config.dc-tec.isLinux && !(config.dc-tec.graphical.enable or false)) ''
+            pinentry-program ${pkgs.pinentry-curses}/bin/pinentry-curses
+          '';
       };
 
       # Create activation script to import GPG keys
@@ -84,7 +86,9 @@
             echo "${config.dc-tec.user.gpgKey}:6:" | $GPG_CMD --import-ownertrust 2>/dev/null || true
             
             # Start GPG agent if not running (use appropriate path)
-            GPG_AGENT_CMD="${if config.dc-tec.isDarwin then "/opt/homebrew/bin/gpg-agent" else "${pkgs.gnupg}/bin/gpg-agent"}"
+            GPG_AGENT_CMD="${
+              if config.dc-tec.isDarwin then "/opt/homebrew/bin/gpg-agent" else "${pkgs.gnupg}/bin/gpg-agent"
+            }"
             $GPG_AGENT_CMD --daemon 2>/dev/null || true
             
             echo "GPG keys imported successfully"
@@ -97,4 +101,4 @@
       '';
     };
   };
-} 
+}

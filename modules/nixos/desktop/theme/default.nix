@@ -39,10 +39,15 @@
       { pkgs, ... }:
       {
         catppuccin = {
-          pointerCursor = {
+          cursors = {
             enable = true;
             accent = "dark";
             flavor = config.dc-tec.colorScheme.flavor;
+          };
+          gtk.icon = {
+            enable = true;
+            flavor = config.dc-tec.colorScheme.flavor;
+            accent = config.dc-tec.colorScheme.accent;
           };
         };
 
@@ -54,12 +59,6 @@
           font = {
             name = config.dc-tec.font;
             size = 10;
-          };
-
-          catppuccin = {
-            flavor = config.dc-tec.colorScheme.flavor;
-            accent = config.dc-tec.colorScheme.accent;
-            size = "compact";
           };
         };
 

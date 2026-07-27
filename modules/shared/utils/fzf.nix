@@ -1,4 +1,4 @@
-{ config, pkgs,... }:
+{ config, pkgs, ... }:
 {
   config = {
     home-manager.users.${config.dc-tec.user.name} = {
