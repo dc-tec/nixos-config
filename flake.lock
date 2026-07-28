@@ -509,11 +509,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1785186883,
-        "narHash": "sha256-PGltqwpvO8UIMLyyKp7VWw87+kI+rdnnB70qqojWo14=",
+        "lastModified": 1785276534,
+        "narHash": "sha256-HWwYAxM4IKIHEPqH3yyBnT3YSMPRNPumHCI0wM377Fk=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5f0dc9a0153be4a724176e0b436e06a7e1bfe4fe",
+        "rev": "109963f4a91ade842ab240e1fa8cf911fcac2e0d",
         "type": "github"
       },
       "original": {
@@ -657,11 +657,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1785231009,
-        "narHash": "sha256-btLZRitK7g0Ong5+7zahHgPe7m111OP/Esl8S6p+peU=",
+        "lastModified": 1785251575,
+        "narHash": "sha256-lQQdmXhdPWfxsYRxX1q8u5Cd7WZfw+4JnLEvdiBD6OQ=",
         "owner": "dc-tec",
         "repo": "nixvim",
-        "rev": "36684324139656aeeb66bd1896e194a50a2fd18b",
+        "rev": "1ef6a3474d05a81b1d1d8137b9be38f35e0e329b",
         "type": "github"
       },
       "original": {

@@ -22,6 +22,7 @@
       nix-init = master.nix-init;
       nurl = master.nurl;
       nix = master.nix;
+      secretspec = master.secretspec;
     };
 
   yabai-preserve-signature =
