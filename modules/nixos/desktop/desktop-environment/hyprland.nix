@@ -278,7 +278,7 @@
               "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
               "hash dbus-update-activation-environment 2>/dev/null"
               "export SSH_AUTH_SOCK"
-              "${pkgs.plasma5Packages.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
+              "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1"
             ];
           };
           systemd = {
