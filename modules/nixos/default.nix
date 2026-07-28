@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}:
-{
+_: {
   imports = [
     ./connectivity
     ./desktop

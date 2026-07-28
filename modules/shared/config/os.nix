@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 {
@@ -35,11 +34,10 @@
       default = "peach";
     };
 
-    # System version option
     dc-tec.stateVersion = lib.mkOption {
       type = lib.types.str;
-      example = "23.11";
-      description = "NixOS state version";
+      example = "24.05";
+      description = "Compatibility version shared by NixOS and Home Manager. Do not change during routine upgrades.";
     };
 
     dc-tec.timeZone = lib.mkOption {
@@ -80,8 +78,6 @@
     dc-tec.isDarwin = lib.dc-tec.isDarwin;
     dc-tec.font = if lib.dc-tec.isDarwin then "0xProto" else "0xProto Nerd Font";
 
-    # Enable persistence by default only on Linux systems
-    # This can be overridden per-machine as needed
     dc-tec.persistence.enable = lib.mkDefault config.dc-tec.isLinux;
   };
 }

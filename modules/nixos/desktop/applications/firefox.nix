@@ -9,9 +9,9 @@
   options.dc-tec.graphical.applications.firefox.enable = lib.mkEnableOption "firefox";
 
   config = lib.mkIf config.dc-tec.graphical.applications.firefox.enable {
-    dc-tec.core.zfs.homeCacheLinks = [ ".mozilla" ];
+    dc-tec.core.zfs.homeDataLinks = [ ".mozilla" ];
 
-    home-manager.users.roelc =
+    home-manager.users.${config.dc-tec.user.name} =
       { ... }:
       {
         programs.firefox = {

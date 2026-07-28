@@ -70,13 +70,9 @@
       nixpkgs,
       home-manager,
       impermanence,
-      nixvim,
       nur,
-      nix-colors,
       catppuccin,
       sops-nix,
-      nixos-wsl,
-      firefox-addons,
       darwin,
       ndg,
       pre-commit-hooks,
@@ -111,21 +107,7 @@
 
       # Truly shared modules between NixOS and Darwin
       sharedModules = [
-        (
-          {
-            inputs,
-            outputs,
-            lib,
-            config,
-            pkgs,
-            ...
-          }:
-          {
-            nixpkgs = {
-              overlays = sharedOverlays;
-            };
-          }
-        )
+        { nixpkgs.overlays = sharedOverlays; }
 
         ./modules/shared
       ];
@@ -146,6 +128,22 @@
 
         ./modules/darwin
       ];
+
+      nixosHostModules = {
+        legion = ./machines/legion/default.nix;
+        chad = ./machines/chad/default.nix;
+        ghost = ./machines/ghost/default.nix;
+      };
+
+      mkNixosConfiguration =
+        hostModule:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+            lib = lib "x86_64-linux";
+          };
+          modules = sharedModules ++ nixosModules ++ [ hostModule ];
+        };
     in
     {
       packages = forAllSystems (
@@ -195,15 +193,24 @@
         pkgs.nixfmt
       );
 
-      checks = forAllSystems (system: {
-        pre-commit-check = pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            statix.enable = false;
-            nixfmt.enable = true;
+      checks = forAllSystems (
+        system:
+        {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              deadnix.enable = true;
+              statix.enable = false;
+              nixfmt.enable = true;
+            };
           };
-        };
-      });
+        }
+        // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
+          nixos-legion = self.nixosConfigurations.legion.config.system.build.toplevel;
+          nixos-chad = self.nixosConfigurations.chad.config.system.build.toplevel;
+          nixos-ghost = self.nixosConfigurations.ghost.config.system.build.toplevel;
+        }
+      );
 
       overlays = overlaySet;
 
@@ -217,30 +224,8 @@
         };
       };
 
-      nixosConfigurations = {
-        legion = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-            lib = lib "x86_64-linux";
-          };
-          modules = sharedModules ++ nixosModules ++ [ ./machines/legion/default.nix ];
-        };
-
-        chad = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-            lib = lib "x86_64-linux";
-          };
-          modules = sharedModules ++ nixosModules ++ [ ./machines/chad/default.nix ];
-        };
-
-        ghost = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-            lib = lib "x86_64-linux";
-          };
-          modules = sharedModules ++ nixosModules ++ [ ./machines/ghost/default.nix ];
-        };
-      };
+      nixosConfigurations = nixpkgs.lib.mapAttrs (
+        _: hostModule: mkNixosConfiguration hostModule
+      ) nixosHostModules;
     };
 }

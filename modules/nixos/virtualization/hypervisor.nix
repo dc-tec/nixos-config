@@ -12,7 +12,7 @@
   };
 
   config = lib.mkIf config.dc-tec.development.virtualisation.hypervisor.enable {
-    dc-tec.core.zfs.systemCacheLinks = [ "/var/lib/libvirt" ];
+    dc-tec.core.zfs.systemDataLinks = [ "/var/lib/libvirt" ];
 
     virtualisation.libvirtd = {
       enable = true;
@@ -29,13 +29,13 @@
       onShutdown = "shutdown";
     };
 
-    home-manager.users.roelc = {
+    home-manager.users.${config.dc-tec.user.name} = {
       home.packages = with pkgs; [
         virt-manager
       ];
     };
 
-    users.users.roelc = {
+    users.users.${config.dc-tec.user.name} = {
       extraGroups = [ "libvirtd" ];
     };
   };

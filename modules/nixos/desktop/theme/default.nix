@@ -35,38 +35,36 @@
 
     programs.dconf.enable = true;
 
-    home-manager.users.${config.dc-tec.user.name} =
-      { pkgs, ... }:
-      {
-        catppuccin = {
-          cursors = {
-            enable = true;
-            accent = "dark";
-            flavor = config.dc-tec.colorScheme.flavor;
-          };
-          gtk.icon = {
-            enable = true;
-            flavor = config.dc-tec.colorScheme.flavor;
-            accent = config.dc-tec.colorScheme.accent;
-          };
-        };
-
-        gtk = {
+    home-manager.users.${config.dc-tec.user.name} = _: {
+      catppuccin = {
+        cursors = {
           enable = true;
-          gtk2.extraConfig = "gtk-application-prefer-dark-theme = true;";
-          gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
-
-          font = {
-            name = config.dc-tec.font;
-            size = 10;
-          };
+          accent = "dark";
+          flavor = config.dc-tec.colorScheme.flavor;
         };
-
-        qt = {
+        gtk.icon = {
           enable = true;
-          platformTheme.name = "kvantum";
-          style.name = "kvantum";
+          flavor = config.dc-tec.colorScheme.flavor;
+          accent = config.dc-tec.colorScheme.accent;
         };
       };
+
+      gtk = {
+        enable = true;
+        gtk2.extraConfig = "gtk-application-prefer-dark-theme = true;";
+        gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+
+        font = {
+          name = config.dc-tec.font;
+          size = 10;
+        };
+      };
+
+      qt = {
+        enable = true;
+        platformTheme.name = "kvantum";
+        style.name = "kvantum";
+      };
+    };
   };
 }

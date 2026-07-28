@@ -1,0 +1,71 @@
+name: Nix configurations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/nix.yml"
+      - ".sops.yaml"
+      - "flake.nix"
+      - "flake.lock"
+      - "lib/**"
+      - "machines/**"
+      - "modules/**"
+      - "overlays/**"
+      - "pkgs/**"
+      - "secrets/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/nix.yml"
+      - ".sops.yaml"
+      - "flake.nix"
+      - "flake.lock"
+      - "lib/**"
+      - "machines/**"
+      - "modules/**"
+      - "overlays/**"
+      - "pkgs/**"
+      - "secrets/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "nix-configurations-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Nix quality checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+
+      - name: Run repository checks
+        run: nix build .#checks.x86_64-linux.pre-commit-check --print-build-logs
+
+  hosts:
+    name: Build ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - legion
+          - chad
+          - ghost
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+
+      - name: Build NixOS configuration
+        run: nix build ".#checks.x86_64-linux.nixos-${{ matrix.host }}" --print-build-logs

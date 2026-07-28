@@ -4,6 +4,12 @@
   pkgs,
   ...
 }:
+let
+  persistenceDirectory = lib.types.either lib.types.str lib.types.attrs;
+  user = config.dc-tec.user.name;
+  userHome = config.dc-tec.user.homeDirectory;
+  rootSnapshot = "${config.dc-tec.core.zfs.rootDataset}@blank";
+in
 {
   options.dc-tec.core = {
     zfs = {
@@ -14,36 +20,43 @@
 
       # Clear our symbolic links
       systemCacheLinks = lib.mkOption {
+        type = lib.types.listOf persistenceDirectory;
         default = [ ];
-        description = "List of system cache directories to persist";
+        description = "System cache directory specifications to persist below the configured cache prefix.";
       };
       systemDataLinks = lib.mkOption {
+        type = lib.types.listOf persistenceDirectory;
         default = [ ];
-        description = "List of system data directories to persist";
+        description = "System data directory specifications to persist below the configured data prefix.";
       };
       homeCacheLinks = lib.mkOption {
+        type = lib.types.listOf persistenceDirectory;
         default = [ ];
-        description = "List of home cache directories to persist";
+        description = "Home-relative cache directory specifications to persist below the configured cache prefix.";
       };
       homeDataLinks = lib.mkOption {
+        type = lib.types.listOf persistenceDirectory;
         default = [ ];
-        description = "List of home data directories to persist";
+        description = "Home-relative data directory specifications to persist below the configured data prefix.";
       };
 
       ensureSystemExists = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         example = [ "/data/etc/ssh" ];
-        description = "List of system directories to ensure exist on boot";
+        description = "System directories to create during activation.";
       };
       ensureHomeExists = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         example = [ ".ssh" ];
-        description = "List of home directories to ensure exist on boot";
+        description = "Home-relative directories to create during activation.";
       };
       rootDataset = lib.mkOption {
+        type = lib.types.str;
         default = "";
         example = "rpool/local/root";
-        description = "ZFS root dataset for rollback functionality";
+        description = "ZFS root dataset to roll back to its blank snapshot during early boot.";
       };
     };
   };
@@ -62,7 +75,7 @@
         {
           hideMounts = true;
           directories = config.dc-tec.core.zfs.systemCacheLinks;
-          users.roelc.directories = config.dc-tec.core.zfs.homeCacheLinks;
+          users.${user}.directories = config.dc-tec.core.zfs.homeCacheLinks;
         };
 
     environment.persistence."${config.dc-tec.persistence.dataPrefix}" =
@@ -70,7 +83,7 @@
         {
           hideMounts = true;
           directories = config.dc-tec.core.zfs.systemDataLinks;
-          users.roelc.directories = config.dc-tec.core.zfs.homeDataLinks;
+          users.${user}.directories = config.dc-tec.core.zfs.homeDataLinks;
         };
 
     boot = lib.mkIf config.dc-tec.core.zfs.enable {
@@ -83,7 +96,7 @@
         lib.mkIf (config.dc-tec.persistence.enable && config.dc-tec.core.zfs.rootDataset != "")
           (
             lib.mkAfter ''
-              zfs rollback -r ${config.dc-tec.core.zfs.rootDataset}@blank
+              zfs rollback -r ${lib.escapeShellArg rootSnapshot}
             ''
           );
     };
@@ -104,18 +117,19 @@
         )
         [
           (pkgs.writeScriptBin "zfsdiff" ''
-            doas zfs diff ${config.dc-tec.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/roelc/"
+            doas zfs diff ${lib.escapeShellArg rootSnapshot} -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query ${lib.escapeShellArg "${userHome}/"}
           '')
         ];
 
     system.activationScripts = lib.mkIf config.dc-tec.persistence.enable (
       let
         ensureSystemExistsScript = lib.concatStringsSep "\n" (
-          map (path: ''mkdir -p "${path}"'') config.dc-tec.core.zfs.ensureSystemExists
+          map (path: "mkdir -p ${lib.escapeShellArg path}") config.dc-tec.core.zfs.ensureSystemExists
         );
         ensureHomeExistsScript = lib.concatStringsSep "\n" (
           map (path: ''
-            mkdir -p "/home/roelc/${path}"; chown roelc:users /home/roelc/${path}
+            mkdir -p ${lib.escapeShellArg "${userHome}/${path}"}
+            chown ${lib.escapeShellArg "${user}:${user}"} ${lib.escapeShellArg "${userHome}/${path}"}
           '') config.dc-tec.core.zfs.ensureHomeExists
         );
       in
@@ -126,7 +140,7 @@
         };
         ensureHomePathsExist = {
           text = ''
-            mkdir -p /home/roelc/
+            mkdir -p ${lib.escapeShellArg userHome}
             ${ensureHomeExistsScript}
           '';
           deps = [

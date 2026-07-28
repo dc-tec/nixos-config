@@ -41,15 +41,10 @@
     stateVersion = "24.05";
     gpg.enable = true;
     persistence.enable = true;
-    core = {
-      zfs = {
-        enable = true;
-        encrypted = true;
-        rootDataset = "rpool/local/root";
-      };
-      wireless = {
-        enable = false;
-      };
+    core.zfs = {
+      enable = true;
+      encrypted = true;
+      rootDataset = "rpool/local/root";
     };
     development = {
       virtualisation = {
@@ -60,12 +55,6 @@
     graphical = {
       enable = true;
       laptop = false;
-      hyprland = {
-        enable = true;
-      };
-      xdg = {
-        enable = true;
-      };
     };
   };
 }

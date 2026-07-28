@@ -39,7 +39,7 @@
 
       # Linux-specific secrets
       (lib.mkIf config.dc-tec.isLinux {
-        "users/roelc" = {
+        "users/${config.dc-tec.user.name}" = {
           neededForUsers = true;
         };
 

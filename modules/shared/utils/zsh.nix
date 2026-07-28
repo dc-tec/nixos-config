@@ -1,7 +1,5 @@
 {
   config,
-  options,
-  inputs,
   lib,
   ...
 }:
