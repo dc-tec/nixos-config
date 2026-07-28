@@ -79,7 +79,8 @@ jobs:
 
   darwin:
     name: Build darwin
-    runs-on: macos-26
+    # Keep the required gate on an explicit, stable Apple Silicon image.
+    runs-on: macos-15
     timeout-minutes: 40
     steps:
       - name: Checkout
