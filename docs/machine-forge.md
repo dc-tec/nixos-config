@@ -8,17 +8,21 @@ becoming a general-purpose homelab or a customer-data platform.
 
 The host has a buildable server baseline and a Disko storage definition based
 on inventory collected from the temporary Debian installation. The Disko
-definition is destructive and has not been applied yet.
+definition has been applied to the host and remains destructive when rerun.
 
 Do not run Disko or `nixos-anywhere` before reviewing the disk identities and
-storage plan below. Applying it erases all three SSDs, including the temporary
-Debian installation.
+storage plan below. Applying it erases all three SSDs.
 
 ## Configuration Boundary
 
 The server uses the stable NixOS 26.05 package set and a dedicated minimal
 module stack. It does not inherit workstation Home Manager configuration,
 desktop theming, impermanence, personal SOPS material, or automatic upgrades.
+The host selects `linuxPackages_latest` because current `nixos-anywhere` kexec
+images create mdraid metadata that requires Linux 6.19 or newer. An assertion
+prevents accidentally selecting an incompatible older kernel. Do not lower
+that boundary without also using a compatible custom kexec image and
+recreating the arrays.
 
 The initial baseline provides:
 
