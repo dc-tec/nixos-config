@@ -4,6 +4,7 @@
     (modulesPath + "/profiles/minimal.nix")
     ./disko.nix
     ./hardware.nix
+    ./wireguard.nix
   ];
 
   networking = {

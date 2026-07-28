@@ -30,7 +30,7 @@
   networking = {
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 ];
+      allowedTCPPorts = lib.mkDefault [ 22 ];
     };
 
     # Bootstrap default only. The physical interface and provider network
@@ -71,6 +71,7 @@
     htop
     jq
     ripgrep
+    smartmontools
     tmux
     vim
   ];
