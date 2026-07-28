@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -63,9 +62,10 @@
     );
 
     users =
-      # Add mutableUsers only on NixOS; nix-darwin does not have this option.
       (lib.optionalAttrs config.dc-tec.isLinux {
-        mutableUsers = config.dc-tec.persistence.enable;
+        # Keep SOPS password hashes authoritative on every activation. This is
+        # especially important when the root filesystem is rolled back at boot.
+        mutableUsers = false;
       })
       // {
         users.${config.dc-tec.user.name} = lib.mkMerge [
@@ -82,6 +82,9 @@
           })
           # Darwin-specific user configuration (no extra fields needed)
         ];
+        users.root = lib.mkIf config.dc-tec.isLinux {
+          hashedPasswordFile = config.sops.secrets."users/root".path;
+        };
         groups.${config.dc-tec.user.name} = { };
       };
   };

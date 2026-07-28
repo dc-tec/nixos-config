@@ -1,6 +1,5 @@
 {
   config,
-  options,
   inputs,
   lib,
   pkgs,
@@ -16,12 +15,12 @@ in
     (lib.mkIf config.dc-tec.isLinux {
       dc-tec.core.zfs = lib.mkMerge [
         (lib.mkIf config.dc-tec.persistence.enable {
-          homeCacheLinks = [
+          homeDataLinks = [
             ".config"
-            ".cache"
             ".local"
             ".cloudflared"
           ];
+          homeCacheLinks = [ ".cache" ];
         })
       ];
 
@@ -62,12 +61,12 @@ in
                 accent = accent;
               };
 
-              # Create activation script to set OpenRouter API key environment variable
               home.activation.setOpenRouterApiKey = ''
                 if [ -f "${config.sops.secrets.openrouter_api_key.path}" ]; then
-                  # Create a shell script that exports the API key
-                  mkdir -p ${config.dc-tec.user.homeDirectory}/.config/environment.d
-                  echo "OPENROUTER_API_KEY=$(cat ${config.sops.secrets.openrouter_api_key.path})" > ${config.dc-tec.user.homeDirectory}/.config/environment.d/openrouter.conf
+                  target="${config.dc-tec.user.homeDirectory}/.config/environment.d/openrouter.conf"
+                  ${pkgs.coreutils}/bin/install -d -m 0700 "$(${pkgs.coreutils}/bin/dirname "$target")"
+                  ${pkgs.coreutils}/bin/install -m 0600 /dev/null "$target"
+                  printf 'OPENROUTER_API_KEY=%s\n' "$(<${config.sops.secrets.openrouter_api_key.path})" > "$target"
                 else
                   echo "OpenRouter API key file not found, skipping environment variable setup"
                 fi

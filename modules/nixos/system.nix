@@ -14,6 +14,8 @@
     ];
 
     system = {
+      stateVersion = config.dc-tec.stateVersion;
+
       autoUpgrade = {
         enable = lib.mkDefault true;
         flake = "github:dc-tec/nixos-config";

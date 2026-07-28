@@ -9,15 +9,15 @@
 
   config = lib.mkIf config.dc-tec.graphical.xdg.enable {
     dc-tec.core.zfs.homeDataLinks = [
+      "desktop"
       "documents"
       "music"
       "pictures"
+      "projects"
+      "templates"
       "videos"
     ];
-    dc-tec.core.zfs.homeCacheLinks = [
-      "downloads"
-      "projects"
-    ];
+    dc-tec.core.zfs.homeCacheLinks = [ "downloads" ];
 
     xdg = {
       portal = {

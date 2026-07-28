@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   ...
@@ -11,7 +12,7 @@
   wsl = {
     enable = true;
 
-    defaultUser = "roelc";
+    defaultUser = config.dc-tec.user.name;
   };
 
   networking = {
@@ -20,25 +21,12 @@
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  system.autoUpgrade.enable = false;
 
   dc-tec = {
     stateVersion = "24.05";
     gpg.enable = true;
     persistence.enable = false;
-    core = {
-      zfs = {
-        enable = false;
-      };
-    };
-    development = {
-      virtualisation = {
-        hypervisor = {
-          enable = false;
-        };
-        docker = {
-          enable = false;
-        };
-      };
-    };
+    core.zfs.enable = false;
   };
 }

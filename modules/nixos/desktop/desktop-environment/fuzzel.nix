@@ -11,10 +11,6 @@
 
   config = lib.mkIf config.dc-tec.graphical.fuzzel.enable {
     home-manager.users.${config.dc-tec.user.name} = {
-      home.packages = with pkgs; [
-        papirus-icon-theme
-      ];
-
       programs.fuzzel = {
         enable = true;
         settings = {

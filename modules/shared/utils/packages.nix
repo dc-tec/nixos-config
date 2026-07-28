@@ -45,9 +45,12 @@
             autojump
             inputs.nixvim.packages.${pkgs.stdenv.hostPlatform.system}.default
             gemini-cli
+            cloudflared
+          ]
+          # Keep graphical applications off the deliberately minimal WSL host.
+          ++ lib.optionals (config.dc-tec.isDarwin || (config.dc-tec.graphical.enable or false)) [
             bitwarden-desktop
             brave
-            cloudflared
             ffmpeg
           ]
           # Codex and Claude Code use their faster npm update channel on Darwin.

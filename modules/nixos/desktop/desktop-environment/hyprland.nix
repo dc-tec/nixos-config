@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -15,15 +14,14 @@
       wl-clipboard
       slurp
       grim
-      catppuccin-sddm.override
-      {
+      (catppuccin-sddm.override {
         flavor = config.dc-tec.colorScheme.flavor;
         accent = config.dc-tec.colorScheme.accent;
         font = config.dc-tec.font;
         fontSize = "12";
         background = "${./_assets/lockscreen.png}";
         loginBackground = true;
-      }
+      })
     ];
 
     nix.settings = {
@@ -84,7 +82,7 @@
 
             monitor = [
               # "eDP-1, 1920x1080, 0x0, 1"
-              ",prefered,auto,1"
+              ",preferred,auto,1"
             ];
 
             xwayland = {
@@ -279,7 +277,7 @@
               "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
               "hash dbus-update-activation-environment 2>/dev/null"
               "export SSH_AUTH_SOCK"
-              "${pkgs.plasma5Packages.polkit-kde-agent}/libexec/polkit-kde-authentication-agent-1"
+              "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1"
             ];
           };
           systemd = {

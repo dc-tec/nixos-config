@@ -2,6 +2,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 {
@@ -22,7 +23,6 @@
       ];
       kernelModules = [ "virtio" ];
     };
-    kernelParams = [ "mitigations=off" ];
     kernelModules = [
       "kvm-amd"
       "xt_socket"
@@ -31,7 +31,8 @@
       "br_netfilter"
     ];
     extraModulePackages = [ ];
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    # Pin an LTS kernel that remains inside OpenZFS' supported window.
+    kernelPackages = pkgs.linuxPackages_6_12;
     kernel = {
       sysctl."net.ipv4.ip_forward" = 1;
     };

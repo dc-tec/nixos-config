@@ -2,6 +2,7 @@
   config,
   lib,
   modulesPath,
+  pkgs,
   ...
 }:
 {
@@ -22,10 +23,10 @@
       ];
       kernelModules = [ ];
     };
-    kernelParams = [ "mitigations=off" ];
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    # Pin an LTS kernel that remains inside OpenZFS' supported window.
+    kernelPackages = pkgs.linuxPackages_6_12;
   };
 
   fileSystems = {

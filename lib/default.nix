@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 {
   dc-tec = {
     isDarwin = pkgs.stdenv.isDarwin;

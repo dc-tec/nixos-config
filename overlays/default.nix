@@ -1,17 +1,17 @@
 { inputs, ... }:
 {
   additions =
-    final: prev:
+    final: _:
     import ../pkgs {
       pkgs = final;
       inherit inputs;
     };
-  stable-packages = final: prev: {
+  stable-packages = final: _: {
     stable = import inputs.nixpkgs-stable { system = final.stdenv.hostPlatform.system; };
   };
 
   force-latest =
-    final: prev:
+    final: _:
     let
       master = import inputs.nixpkgs-master {
         system = final.stdenv.hostPlatform.system;
@@ -25,7 +25,7 @@
     };
 
   yabai-preserve-signature =
-    final: prev:
+    _: prev:
     prev.lib.optionalAttrs prev.stdenv.hostPlatform.isAarch64 {
       # The upstream Apple Silicon release is signed; stripping it in fixup
       # invalidates that signature and breaks Dock injection for --load-sa.

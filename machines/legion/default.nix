@@ -21,19 +21,11 @@
         encrypted = true;
         rootDataset = "rpool/local/root";
       };
-      wireless = {
-        enable = true;
-      };
+      wireless.enable = true;
     };
     graphical = {
       enable = true;
       laptop = true;
-      hyprland = {
-        enable = true;
-      };
-      xdg = {
-        enable = true;
-      };
     };
   };
 }

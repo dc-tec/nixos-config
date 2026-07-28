@@ -9,9 +9,9 @@
   options.dc-tec.graphical.applications.firefox.enable = lib.mkEnableOption "firefox";
 
   config = lib.mkIf config.dc-tec.graphical.applications.firefox.enable {
-    dc-tec.core.zfs.homeCacheLinks = [ ".mozilla" ];
+    dc-tec.core.zfs.homeDataLinks = [ ".mozilla" ];
 
-    home-manager.users.roelc =
+    home-manager.users.${config.dc-tec.user.name} =
       { ... }:
       {
         programs.firefox = {
@@ -29,13 +29,16 @@
               "dom.security.https_only_mode" = true;
               "dom.security.https_only_mode_ever_enabled" = true;
             };
-            extensions.packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
-              ublock-origin
-              firefox-color
-              canvasblocker
-              bitwarden
-              #bypass-paywalls-clean
-            ];
+            extensions = {
+              force = true;
+              packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
+                ublock-origin
+                firefox-color
+                canvasblocker
+                bitwarden
+                #bypass-paywalls-clean
+              ];
+            };
 
             ## https://github.com/yokoffing/Betterfox/blob/main/user.js
             extraConfig = ''
