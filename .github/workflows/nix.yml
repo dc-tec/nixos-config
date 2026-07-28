@@ -14,19 +14,10 @@ on:
       - "overlays/**"
       - "pkgs/**"
       - "secrets/**"
+  # Required workflows must run for every PR; path-filtered workflows remain pending.
   pull_request:
     branches: [main]
-    paths:
-      - ".github/workflows/nix.yml"
-      - ".sops.yaml"
-      - "flake.nix"
-      - "flake.lock"
-      - "lib/**"
-      - "machines/**"
-      - "modules/**"
-      - "overlays/**"
-      - "pkgs/**"
-      - "secrets/**"
+  merge_group:
   workflow_dispatch:
 
 permissions:
@@ -39,7 +30,8 @@ concurrency:
 jobs:
   quality:
     name: Nix quality checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -52,7 +44,8 @@ jobs:
 
   hosts:
     name: Build ${{ matrix.host }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -69,3 +62,39 @@ jobs:
 
       - name: Build NixOS configuration
         run: nix build ".#checks.x86_64-linux.nixos-${{ matrix.host }}" --print-build-logs
+
+  darwin:
+    name: Build darwin
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825a76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+
+      - name: Build nix-darwin configuration
+        run: nix build .#checks.aarch64-darwin.darwin-system --print-build-logs
+
+  # Stable branch-protection target for every platform and matrix entry above.
+  gate:
+    name: Nix configurations
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    if: always()
+    needs:
+      - quality
+      - hosts
+      - darwin
+    steps:
+      - name: Require successful checks
+        env:
+          QUALITY_RESULT: ${{ needs.quality.result }}
+          HOSTS_RESULT: ${{ needs.hosts.result }}
+          DARWIN_RESULT: ${{ needs.darwin.result }}
+        run: |
+          if [[ "$QUALITY_RESULT" != success || "$HOSTS_RESULT" != success || "$DARWIN_RESULT" != success ]]; then
+            echo "Required checks failed: quality=$QUALITY_RESULT hosts=$HOSTS_RESULT darwin=$DARWIN_RESULT"
+            exit 1
+          fi

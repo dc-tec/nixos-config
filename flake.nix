@@ -199,6 +199,7 @@
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
+              actionlint.enable = true;
               deadnix.enable = true;
               statix.enable = false;
               nixfmt.enable = true;
@@ -209,6 +210,9 @@
           nixos-legion = self.nixosConfigurations.legion.config.system.build.toplevel;
           nixos-chad = self.nixosConfigurations.chad.config.system.build.toplevel;
           nixos-ghost = self.nixosConfigurations.ghost.config.system.build.toplevel;
+        }
+        // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
+          darwin-system = self.darwinConfigurations.darwin.system;
         }
       );
 
