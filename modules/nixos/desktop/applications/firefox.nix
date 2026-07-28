@@ -29,13 +29,16 @@
               "dom.security.https_only_mode" = true;
               "dom.security.https_only_mode_ever_enabled" = true;
             };
-            extensions.packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
-              ublock-origin
-              firefox-color
-              canvasblocker
-              bitwarden
-              #bypass-paywalls-clean
-            ];
+            extensions = {
+              force = true;
+              packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
+                ublock-origin
+                firefox-color
+                canvasblocker
+                bitwarden
+                #bypass-paywalls-clean
+              ];
+            };
 
             ## https://github.com/yokoffing/Betterfox/blob/main/user.js
             extraConfig = ''

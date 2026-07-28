@@ -82,6 +82,9 @@
           })
           # Darwin-specific user configuration (no extra fields needed)
         ];
+        users.root = lib.mkIf config.dc-tec.isLinux {
+          hashedPasswordFile = config.sops.secrets."users/root".path;
+        };
         groups.${config.dc-tec.user.name} = { };
       };
   };

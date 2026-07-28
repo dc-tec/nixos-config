@@ -9,6 +9,8 @@ let
   user = config.dc-tec.user.name;
   userHome = config.dc-tec.user.homeDirectory;
   rootSnapshot = "${config.dc-tec.core.zfs.rootDataset}@blank";
+  rootPool = builtins.head (lib.splitString "/" config.dc-tec.core.zfs.rootDataset);
+  rollbackEnabled = config.dc-tec.persistence.enable && config.dc-tec.core.zfs.rootDataset != "";
 in
 {
   options.dc-tec.core = {
@@ -92,13 +94,18 @@ in
         devNodes = "/dev/";
         requestEncryptionCredentials = config.dc-tec.core.zfs.encrypted;
       };
-      initrd.postDeviceCommands =
-        lib.mkIf (config.dc-tec.persistence.enable && config.dc-tec.core.zfs.rootDataset != "")
-          (
-            lib.mkAfter ''
-              zfs rollback -r ${lib.escapeShellArg rootSnapshot}
-            ''
-          );
+      initrd.systemd.services.rollback-root = lib.mkIf rollbackEnabled {
+        description = "Roll back the ZFS root dataset to its blank snapshot";
+        after = [ "zfs-import-${rootPool}.service" ];
+        before = [ "sysroot.mount" ];
+        requiredBy = [ "sysroot.mount" ];
+        path = [ config.boot.zfs.package ];
+        unitConfig.DefaultDependencies = "no";
+        serviceConfig.Type = "oneshot";
+        script = ''
+          zfs rollback -r ${lib.escapeShellArg rootSnapshot}
+        '';
+      };
     };
 
     services = lib.mkIf config.dc-tec.core.zfs.enable {
