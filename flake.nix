@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
     nixpkgs-master.url = "github:nixos/nixpkgs";
 
@@ -23,6 +23,15 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+    nixos-anywhere = {
+      url = "github:nix-community/nixos-anywhere";
+      inputs.disko.follows = "disko";
+      inputs.nixos-stable.follows = "nixpkgs-stable";
     };
 
     # Catppuccin theming
@@ -144,6 +153,22 @@
           };
           modules = sharedModules ++ nixosModules ++ [ hostModule ];
         };
+
+      # Public servers deliberately do not inherit workstation-oriented modules
+      # such as Home Manager, desktop theming, impermanence, or personal SOPS
+      # material.
+      mkNixosServerConfiguration =
+        hostModule:
+        inputs.nixpkgs-stable.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            inputs.disko.nixosModules.disko
+            ./modules/server
+            hostModule
+          ];
+        };
     in
     {
       packages = forAllSystems (
@@ -160,6 +185,9 @@
         (import ./pkgs {
           inherit pkgs inputs;
         })
+        // {
+          inherit (inputs.nixos-anywhere.packages.${system}) nixos-anywhere;
+        }
         // nixpkgs.lib.optionalAttrs (builtins.hasAttr system ndg.packages) {
           docs = ndg.packages.${system}.ndg-builder.override {
             title = "deCort.tech – Nix & Darwin systems";
@@ -210,6 +238,8 @@
           nixos-legion = self.nixosConfigurations.legion.config.system.build.toplevel;
           nixos-chad = self.nixosConfigurations.chad.config.system.build.toplevel;
           nixos-ghost = self.nixosConfigurations.ghost.config.system.build.toplevel;
+          nixos-forge = self.nixosConfigurations.forge.config.system.build.toplevel;
+          forge-disko = self.nixosConfigurations.forge.config.system.build.diskoScript;
         }
         // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
           darwin-system = self.darwinConfigurations.darwin.system;
@@ -228,8 +258,10 @@
         };
       };
 
-      nixosConfigurations = nixpkgs.lib.mapAttrs (
-        _: hostModule: mkNixosConfiguration hostModule
-      ) nixosHostModules;
+      nixosConfigurations =
+        nixpkgs.lib.mapAttrs (_: hostModule: mkNixosConfiguration hostModule) nixosHostModules
+        // {
+          forge = mkNixosServerConfiguration ./machines/forge/default.nix;
+        };
     };
 }

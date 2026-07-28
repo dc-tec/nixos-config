@@ -60,6 +60,7 @@ jobs:
           - legion
           - chad
           - ghost
+          - forge
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -76,6 +77,10 @@ jobs:
 
       - name: Build NixOS configuration
         run: nix build ".#checks.x86_64-linux.nixos-${{ matrix.host }}" --print-build-logs
+
+      - name: Validate forge disk layout
+        if: matrix.host == 'forge'
+        run: nix build .#checks.x86_64-linux.forge-disko --print-build-logs
 
   darwin:
     name: Build darwin
