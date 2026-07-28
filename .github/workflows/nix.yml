@@ -79,12 +79,12 @@ jobs:
 
   darwin:
     name: Build darwin
-    # Keep the required gate on an explicit, stable Apple Silicon image.
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 40
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825a76410c181273ba90b1 # v7.0.1
+        # GitHub's macOS runner currently rejects the full SHA; track restoration in #85.
+        uses: actions/checkout@v7
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
