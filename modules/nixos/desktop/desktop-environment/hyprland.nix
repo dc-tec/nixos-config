@@ -14,15 +14,14 @@
       wl-clipboard
       slurp
       grim
-      catppuccin-sddm.override
-      {
+      (catppuccin-sddm.override {
         flavor = config.dc-tec.colorScheme.flavor;
         accent = config.dc-tec.colorScheme.accent;
         font = config.dc-tec.font;
         fontSize = "12";
         background = "${./_assets/lockscreen.png}";
         loginBackground = true;
-      }
+      })
     ];
 
     nix.settings = {
