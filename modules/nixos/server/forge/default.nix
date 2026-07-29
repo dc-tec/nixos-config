@@ -5,5 +5,6 @@ _: {
     ./cache.nix
     ./monitoring.nix
     ./radicle.nix
+    ./tangled.nix
   ];
 }

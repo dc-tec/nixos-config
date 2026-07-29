@@ -397,3 +397,74 @@ tests:
       - eval_time: 30m
         alertname: ForgeBackupObjectLimitWarning
         exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_tangled_knot_database_present{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeTangledKnotDatabaseMissing
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: tangled
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Tangled Knot database is missing"
+              description: "The Knot SQLite database has not been created or is no longer present."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_tangled_knot_database_present{instance="forge",job="node"}'
+        values: "1x15"
+      - series: 'forge_tangled_knot_service_active{instance="forge",job="node"}'
+        values: "1x15"
+      - series: 'forge_tangled_knot_http_listener_ready{instance="forge",job="node"}'
+        values: "1x15"
+      - series: 'forge_tangled_knot_internal_listener_ready{instance="forge",job="node"}'
+        values: "1x15"
+      - series: 'forge_tangled_knot_public_http_ready{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeTangledKnotUnavailable
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: tangled
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Tangled Knot is unavailable"
+              description: "The Knot has state, but its service, local listeners, or public TLS endpoint is unavailable."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_tangled_knot_owner_matches{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeTangledKnotOwnerMismatch
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: tangled
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Tangled Knot owner does not match"
+              description: "The public Knot owner endpoint does not return the configured operator DID."
+
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeTangledKnotMetricsStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: tangled
+            exp_annotations:
+              summary: "Forge Tangled Knot metrics are stale"
+              description: "No successful Tangled Knot metrics scan has been recorded within the last 15 minutes."

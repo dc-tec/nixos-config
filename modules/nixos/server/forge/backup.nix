@@ -28,6 +28,8 @@ in
 {
   services.restic.backups = {
     forge-state = dedibackup // {
+      paths = [ "/var/lib/tangled-knot" ];
+
       dynamicFilesFrom = ''
         printf '%s\n' /var/lib/wireguard/forge.key
         if [ -f /var/lib/forge-secrets/nix-cache-private-key ]; then
@@ -41,6 +43,28 @@ in
           -type f \
           -name 'ssh_host_*' \
           -print
+      '';
+
+      # The Knot combines mutable bare repositories with a WAL-mode SQLite
+      # database. Quiescing it keeps both parts in one consistent Restic
+      # snapshot. The post-stop hook runs even when Restic fails.
+      backupPrepareCommand = ''
+        #!${pkgs.runtimeShell}
+        set -euo pipefail
+        marker="$RUNTIME_DIRECTORY/tangled-knot-was-active"
+        if ${lib.getExe' pkgs.systemd "systemctl"} is-active --quiet knot.service; then
+          ${lib.getExe' pkgs.coreutils "touch"} "$marker"
+          ${lib.getExe' pkgs.systemd "systemctl"} stop knot.service
+        fi
+      '';
+      backupCleanupCommand = ''
+        #!${pkgs.runtimeShell}
+        set -euo pipefail
+        marker="$RUNTIME_DIRECTORY/tangled-knot-was-active"
+        if [ -e "$marker" ]; then
+          ${lib.getExe' pkgs.coreutils "rm"} -f -- "$marker"
+          ${lib.getExe' pkgs.systemd "systemctl"} start knot.service
+        fi
       '';
 
       initialize = false;

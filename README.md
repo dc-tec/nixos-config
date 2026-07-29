@@ -74,7 +74,8 @@ workstation modules. This separation is explicit in `flake.nix`.
   Grafana on Forge;
 - a signed, read-only native Nix binary cache for managed systems;
 - a selectively replicating public Radicle node with a dedicated host
-  identity; and
+  identity;
+- a hardened Tangled Knot for self-hosted public Git repositories; and
 - repository-local packages for repeatable Forge provisioning and cache
   publication.
 

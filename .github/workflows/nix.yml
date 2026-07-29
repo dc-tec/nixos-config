@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/nix.yml"
+      - ".github/scripts/**"
       - ".sops.yaml"
       - "flake.nix"
       - "flake.lock"
@@ -13,6 +14,7 @@ on:
       - "modules/**"
       - "overlays/**"
       - "pkgs/**"
+      - "public-keys.nix"
       - "secrets/**"
   # Required workflows must run for every PR; path-filtered workflows remain pending.
   pull_request:
@@ -28,6 +30,80 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Select affected systems
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      hosts: ${{ steps.selection.outputs.hosts }}
+      darwin: ${{ steps.selection.outputs.darwin }}
+      base_sha: ${{ steps.selection.outputs.base_sha }}
+      head_sha: ${{ steps.selection.outputs.head_sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+
+      - name: Configure Cachix
+        uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
+        with:
+          name: dc-tec-nixos-config
+          skipPush: true
+
+      - name: Compare system derivations
+        id: selection
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.sha }}
+          MERGE_GROUP_BASE_SHA: ${{ github.event.merge_group.base_sha }}
+          PULL_REQUEST_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BASE_SHA: ${{ github.event.before }}
+        run: |
+          case "$EVENT_NAME" in
+            pull_request)
+              base_sha="$PULL_REQUEST_BASE_SHA"
+              ;;
+            merge_group)
+              base_sha="$MERGE_GROUP_BASE_SHA"
+              ;;
+            push)
+              base_sha="$PUSH_BASE_SHA"
+              ;;
+            *)
+              base_sha=""
+              ;;
+          esac
+
+          if [[ -z "$base_sha" || "$base_sha" =~ ^0+$ ]]; then
+            selection="$(.github/scripts/select-nix-builds.sh --all)"
+          else
+            changed_files="$(mktemp)"
+            trap 'rm -f -- "$changed_files"' EXIT
+            git diff --name-only "$base_sha" "$HEAD_SHA" > "$changed_files"
+
+            repository="git+file://$GITHUB_WORKSPACE"
+            selection="$(.github/scripts/select-nix-builds.sh \
+              "$repository?rev=$base_sha" \
+              "$repository?rev=$HEAD_SHA" \
+              "$changed_files")"
+          fi
+
+          hosts="$(jq --compact-output '.hosts' <<< "$selection")"
+          darwin="$(jq --raw-output '.darwin' <<< "$selection")"
+
+          printf 'Selected Linux hosts: %s\n' "$hosts"
+          printf 'Darwin comparison required: %s\n' "$darwin"
+          {
+            printf 'hosts=%s\n' "$hosts"
+            printf 'darwin=%s\n' "$darwin"
+            printf 'base_sha=%s\n' "$base_sha"
+            printf 'head_sha=%s\n' "$HEAD_SHA"
+          } >> "$GITHUB_OUTPUT"
+
   quality:
     name: Nix quality checks
     runs-on: ubuntu-24.04
@@ -47,20 +123,22 @@ jobs:
           skipPush: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
 
       - name: Run repository checks
-        run: nix build .#checks.x86_64-linux.pre-commit-check --print-build-logs
+        run: >-
+          nix build
+          .#checks.x86_64-linux.pre-commit-check
+          .#checks.x86_64-linux.ci-build-selection
+          --print-build-logs
 
   hosts:
     name: Build ${{ matrix.host }}
+    needs: changes
+    if: ${{ needs.changes.outputs.hosts != '[]' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        host:
-          - legion
-          - chad
-          - ghost
-          - forge
+        host: ${{ fromJSON(needs.changes.outputs.hosts) }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -88,12 +166,16 @@ jobs:
 
   darwin:
     name: Build darwin
+    needs: changes
+    if: ${{ needs.changes.outputs.darwin == 'true' }}
     runs-on: macos-26
     timeout-minutes: 40
     steps:
       - name: Checkout
         # GitHub's macOS runner currently rejects the full SHA; track restoration in #85.
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
@@ -105,8 +187,35 @@ jobs:
           authToken: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.CACHIX_AUTH_TOKEN || '' }}
           skipPush: ${{ github.event_name != 'push' || github.ref != 'refs/heads/main' }}
 
+      - name: Compare nix-darwin derivation
+        id: comparison
+        env:
+          BASE_SHA: ${{ needs.changes.outputs.base_sha }}
+          HEAD_SHA: ${{ needs.changes.outputs.head_sha }}
+        run: |
+          changed=true
+          if [[ -n "$BASE_SHA" && ! "$BASE_SHA" =~ ^0+$ ]]; then
+            repository="git+file://$GITHUB_WORKSPACE"
+            if base_drv="$(nix eval --raw \
+              "$repository?rev=$BASE_SHA#checks.aarch64-darwin.darwin-system.drvPath")" \
+              && head_drv="$(nix eval --raw \
+                "$repository?rev=$HEAD_SHA#checks.aarch64-darwin.darwin-system.drvPath")"; then
+              if [[ "$base_drv" == "$head_drv" ]]; then
+                changed=false
+              fi
+            else
+              echo "Darwin comparison failed; falling back to a full build" >&2
+            fi
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
       - name: Build nix-darwin configuration
+        if: steps.comparison.outputs.changed == 'true'
         run: nix build .#checks.aarch64-darwin.darwin-system --print-build-logs
+
+      - name: Report unchanged nix-darwin configuration
+        if: steps.comparison.outputs.changed == 'false'
+        run: echo "The nix-darwin derivation is unchanged; skipping its build."
 
   # Stable branch-protection target for every platform and matrix entry above.
   gate:
@@ -115,17 +224,26 @@ jobs:
     timeout-minutes: 5
     if: always()
     needs:
+      - changes
       - quality
       - hosts
       - darwin
     steps:
       - name: Require successful checks
         env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
           QUALITY_RESULT: ${{ needs.quality.result }}
           HOSTS_RESULT: ${{ needs.hosts.result }}
           DARWIN_RESULT: ${{ needs.darwin.result }}
         run: |
-          if [[ "$QUALITY_RESULT" != success || "$HOSTS_RESULT" != success || "$DARWIN_RESULT" != success ]]; then
-            echo "Required checks failed: quality=$QUALITY_RESULT hosts=$HOSTS_RESULT darwin=$DARWIN_RESULT"
+          if [[ "$CHANGES_RESULT" != success || "$QUALITY_RESULT" != success ]]; then
+            echo "Required checks failed: changes=$CHANGES_RESULT quality=$QUALITY_RESULT"
             exit 1
           fi
+
+          for result in "$HOSTS_RESULT" "$DARWIN_RESULT"; do
+            if [[ "$result" != success && "$result" != skipped ]]; then
+              echo "Required system build failed: hosts=$HOSTS_RESULT darwin=$DARWIN_RESULT"
+              exit 1
+            fi
+          done
