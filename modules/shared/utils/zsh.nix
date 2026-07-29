@@ -158,6 +158,7 @@
 
             # Nix aliases
             nhds = "nh darwin switch --hostname";
+            nhdsp = "${config.dc-tec.user.homeDirectory}/projects/personal/nixos-config/scripts/nh-darwin-switch-publish";
             nhos = "nh os switch --hostname";
 
             # Kubernetes aliases

@@ -274,6 +274,12 @@ store_path="$(nix build --no-link --print-out-paths .#PACKAGE)"
 ./scripts/publish-forge-cache "$store_path"
 ```
 
+For deliberate Darwin milestones, the `nhdsp` Zsh alias runs the
+`nh-darwin-switch-publish` wrapper. It asks `nh` to retain the activated system
+as a temporary output link and publishes that exact closure only after the
+switch succeeds. The existing `nhds` alias remains the switch-only path for
+routine, experimental, and offline rebuilds.
+
 The Mac, Chad, Forge, and the other shared configurations use the cache as an
 additional substituter with priority 30. Exact cache hits remain platform
 specific: Forge and Chad can share `x86_64-linux` outputs, while the Apple
