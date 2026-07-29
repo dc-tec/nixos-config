@@ -1,0 +1,327 @@
+rule_files:
+  - prometheus-rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'node_md_degraded{device="md126",instance="forge",job="node"}'
+        values: "1x10"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: ForgeRaidDegraded
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: storage
+              device: md126
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "RAID array md126 is degraded"
+              description: "RAID array md126 has one or more degraded members."
+
+  - interval: 1m
+    input_series:
+      - series: 'smartctl_device_smart_status{device="sda",instance="forge",job="smartctl"}'
+        values: "0x10"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: ForgeSmartStatusFailed
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: storage
+              device: sda
+              instance: forge
+              job: smartctl
+            exp_annotations:
+              summary: "SMART status failed for sda"
+              description: "The drive reports a failed SMART health status."
+
+  - interval: 1m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{device="/dev/md127",fstype="ext4",instance="forge",job="node",mountpoint="/"}'
+        values: "15x15"
+      - series: 'node_filesystem_size_bytes{device="/dev/md127",fstype="ext4",instance="forge",job="node",mountpoint="/"}'
+        values: "100x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeRootSpaceWarning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: storage
+              device: /dev/md127
+              fstype: ext4
+              instance: forge
+              job: node
+              mountpoint: /
+            exp_annotations:
+              summary: "Forge root filesystem is running low on space"
+              description: "The root filesystem has less than 20 percent free space."
+      - eval_time: 10m
+        alertname: ForgeRootSpaceCritical
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{device="/dev/md127",fstype="ext4",instance="forge",job="node",mountpoint="/"}'
+        values: "5x10"
+      - series: 'node_filesystem_size_bytes{device="/dev/md127",fstype="ext4",instance="forge",job="node",mountpoint="/"}'
+        values: "100x10"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: ForgeRootSpaceCritical
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: storage
+              device: /dev/md127
+              fstype: ext4
+              instance: forge
+              job: node
+              mountpoint: /
+            exp_annotations:
+              summary: "Forge root filesystem is critically low on space"
+              description: "The root filesystem has less than 10 percent free space."
+      - eval_time: 5m
+        alertname: ForgeRootSpaceWarning
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: forge_backup_backend_objects
+        values: "850x35"
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ForgeBackupObjectLimitWarning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: backup
+            exp_annotations:
+              summary: "Forge backup repository is approaching its object limit"
+              description: "The Dedibackup repository contains at least 800 of the permitted 1000 objects."
+      - eval_time: 30m
+        alertname: ForgeBackupObjectLimitCritical
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_backup_last_success_timestamp_seconds{backup_job="state",instance="forge",job="node"}'
+        values: "0x2250"
+    alert_rule_test:
+      - eval_time: 37h30m
+        alertname: ForgeStateBackupStale
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: backup
+              backup_job: state
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge state backup is stale"
+              description: "No successful state backup has been recorded within the last 36 hours."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_nix_cache_http_up{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeNixCacheUnavailable
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: cache
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Nix cache is unavailable"
+              description: "The public binary-cache metadata endpoint has been unreachable for ten minutes."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_nix_cache_signing_key_present{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeNixCacheSigningKeyMissing
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: cache
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Nix cache signing key is missing"
+              description: "The private cache signing key has not been provisioned on forge."
+
+  - interval: 1m
+    input_series:
+      - series: 'up{instance="forge",job="node"}'
+        values: "0x10"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: ForgeExporterDown
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: availability
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge node exporter is unavailable"
+              description: "Prometheus has been unable to scrape the node exporter for five minutes."
+
+  - interval: 1m
+    input_series:
+      - series: 'node_systemd_unit_state{instance="forge",job="node",name="grafana.service",state="failed"}'
+        values: "1x10"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: ForgeServiceFailed
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: availability
+              instance: forge
+              job: node
+              name: grafana.service
+              state: failed
+            exp_annotations:
+              summary: "Forge service grafana.service failed"
+              description: "The systemd unit grafana.service has remained in the failed state for five minutes."
+
+  - interval: 1m
+    input_series:
+      - series: 'node_filesystem_files_free{device="/dev/md127",fstype="ext4",instance="forge",job="node",mountpoint="/"}'
+        values: "5x15"
+      - series: 'node_filesystem_files{device="/dev/md127",fstype="ext4",instance="forge",job="node",mountpoint="/"}'
+        values: "100x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeRootInodesLow
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: storage
+              device: /dev/md127
+              fstype: ext4
+              instance: forge
+              job: node
+              mountpoint: /
+            exp_annotations:
+              summary: "Forge root filesystem is running low on inodes"
+              description: "The root filesystem has less than 10 percent free inodes."
+
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeCacheFilesystemMissing
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: storage
+              instance: forge
+              mountpoint: /cache
+            exp_annotations:
+              summary: "Forge cache filesystem is not mounted"
+              description: "The reconstructible /cache filesystem has been absent from node exporter metrics for ten minutes."
+
+  - interval: 1m
+    input_series:
+      - series: 'node_filesystem_avail_bytes{device="/dev/sdc1",fstype="ext4",instance="forge",job="node",mountpoint="/cache"}'
+        values: "10x15"
+      - series: 'node_filesystem_size_bytes{device="/dev/sdc1",fstype="ext4",instance="forge",job="node",mountpoint="/cache"}'
+        values: "100x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeCacheSpaceLow
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: storage
+              device: /dev/sdc1
+              fstype: ext4
+              instance: forge
+              job: node
+              mountpoint: /cache
+            exp_annotations:
+              summary: "Forge cache filesystem is running low on space"
+              description: "The reconstructible /cache filesystem has less than 15 percent free space."
+
+  - interval: 1m
+    input_series:
+      - series: 'node_vmstat_oom_kill{instance="forge",job="node"}'
+        values: "0x5 1x15"
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: ForgeOomKillDetected
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: memory
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge killed a process because of memory pressure"
+              description: "The kernel recorded at least one OOM kill in the last 15 minutes."
+
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeNixCacheMetricsStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: cache
+            exp_annotations:
+              summary: "Forge Nix cache metrics are stale"
+              description: "No successful cache metrics scan has been recorded within the last 15 minutes."
+
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ForgeBackupMaintenanceStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: backup
+              backup_job: maintenance
+            exp_annotations:
+              summary: "Forge backup maintenance is stale"
+              description: "No successful repository maintenance has been recorded within the last eight days."
+
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ForgeBackupInventoryStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: backup
+            exp_annotations:
+              summary: "Forge backup inventory is stale"
+              description: "No successful Dedibackup inventory has been recorded within the last 48 hours."
+
+  - interval: 1m
+    input_series:
+      - series: forge_backup_backend_objects
+        values: "950x35"
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ForgeBackupObjectLimitCritical
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: backup
+            exp_annotations:
+              summary: "Forge backup repository is close to its object limit"
+              description: "The Dedibackup repository contains at least 900 of the permitted 1000 objects."
+      - eval_time: 30m
+        alertname: ForgeBackupObjectLimitWarning
+        exp_alerts: []

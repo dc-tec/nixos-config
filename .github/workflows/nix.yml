@@ -82,6 +82,10 @@ jobs:
         if: matrix.host == 'forge'
         run: nix build .#checks.x86_64-linux.forge-disko --print-build-logs
 
+      - name: Validate forge alert rules
+        if: matrix.host == 'forge'
+        run: nix build .#checks.x86_64-linux.forge-alert-rules --print-build-logs
+
   darwin:
     name: Build darwin
     runs-on: macos-26

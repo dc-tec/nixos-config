@@ -89,11 +89,12 @@
     }@inputs:
     let
       inherit (self) outputs;
+      publicKeys = import ./public-keys.nix;
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
         "aarch64-darwin"
       ];
-      overlaySet = import ./overlays { inherit inputs; };
+      overlaySet = import ./overlays { inherit inputs publicKeys; };
       sharedOverlays = [
         overlaySet.additions
         overlaySet.stable-packages
@@ -148,7 +149,7 @@
         hostModule:
         nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs outputs;
+            inherit inputs outputs publicKeys;
             lib = lib "x86_64-linux";
           };
           modules = sharedModules ++ nixosModules ++ [ hostModule ];
@@ -161,11 +162,11 @@
         hostModule:
         inputs.nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
-            inherit inputs outputs;
+            inherit inputs outputs publicKeys;
           };
           modules = [
             inputs.disko.nixosModules.disko
-            ./modules/server
+            ./modules/nixos/server
             hostModule
           ];
         };
@@ -183,7 +184,7 @@
           ];
         in
         (import ./pkgs {
-          inherit pkgs inputs;
+          inherit pkgs inputs publicKeys;
         })
         // {
           inherit (inputs.nixos-anywhere.packages.${system}) nixos-anywhere;
@@ -235,6 +236,19 @@
           };
         }
         // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
+          forge-alert-rules =
+            let
+              forgePkgs = self.nixosConfigurations.forge.pkgs;
+            in
+            forgePkgs.runCommand "forge-alert-rules"
+              {
+                nativeBuildInputs = [ forgePkgs.prometheus.cli ];
+              }
+              ''
+                cd ${./modules/nixos/server/forge}
+                promtool test rules prometheus-rules.test.yml
+                touch "$out"
+              '';
           nixos-legion = self.nixosConfigurations.legion.config.system.build.toplevel;
           nixos-chad = self.nixosConfigurations.chad.config.system.build.toplevel;
           nixos-ghost = self.nixosConfigurations.ghost.config.system.build.toplevel;
@@ -251,7 +265,7 @@
       darwinConfigurations = {
         darwin = darwin.lib.darwinSystem {
           specialArgs = {
-            inherit inputs outputs;
+            inherit inputs outputs publicKeys;
             lib = lib "aarch64-darwin";
           };
           modules = sharedModules ++ darwinModules ++ [ ./machines/darwin/default.nix ];

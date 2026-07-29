@@ -1,0 +1,211 @@
+groups:
+  - name: forge-availability
+    rules:
+      - alert: ForgeExporterDown
+        expr: up{instance="forge",job=~"node|smartctl"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: "Forge {{ $labels.job }} exporter is unavailable"
+          description: "Prometheus has been unable to scrape the {{ $labels.job }} exporter for five minutes."
+
+      - alert: ForgeServiceFailed
+        expr: >-
+          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|nginx|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics|forge-cache-.*)\\.service"} == 1
+        for: 5m
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: "Forge service {{ $labels.name }} failed"
+          description: "The systemd unit {{ $labels.name }} has remained in the failed state for five minutes."
+
+  - name: forge-storage
+    rules:
+      - alert: ForgeRaidDegraded
+        expr: node_md_degraded{instance="forge"} > 0
+        for: 5m
+        labels:
+          severity: critical
+          category: storage
+        annotations:
+          summary: "RAID array {{ $labels.device }} is degraded"
+          description: "RAID array {{ $labels.device }} has one or more degraded members."
+
+      - alert: ForgeSmartStatusFailed
+        expr: smartctl_device_smart_status{instance="forge"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          category: storage
+        annotations:
+          summary: "SMART status failed for {{ $labels.device }}"
+          description: "The drive reports a failed SMART health status."
+
+      - alert: ForgeRootSpaceWarning
+        expr: >-
+          (100 * node_filesystem_avail_bytes{instance="forge",mountpoint="/",fstype!="rootfs"} / node_filesystem_size_bytes{instance="forge",mountpoint="/",fstype!="rootfs"} < 20)
+          and
+          (100 * node_filesystem_avail_bytes{instance="forge",mountpoint="/",fstype!="rootfs"} / node_filesystem_size_bytes{instance="forge",mountpoint="/",fstype!="rootfs"} >= 10)
+        for: 10m
+        labels:
+          severity: warning
+          category: storage
+        annotations:
+          summary: "Forge root filesystem is running low on space"
+          description: "The root filesystem has less than 20 percent free space."
+
+      - alert: ForgeRootSpaceCritical
+        expr: >-
+          100 * node_filesystem_avail_bytes{instance="forge",mountpoint="/",fstype!="rootfs"} / node_filesystem_size_bytes{instance="forge",mountpoint="/",fstype!="rootfs"} < 10
+        for: 5m
+        labels:
+          severity: critical
+          category: storage
+        annotations:
+          summary: "Forge root filesystem is critically low on space"
+          description: "The root filesystem has less than 10 percent free space."
+
+      - alert: ForgeRootInodesLow
+        expr: >-
+          100 * node_filesystem_files_free{instance="forge",mountpoint="/",fstype!="rootfs"} / node_filesystem_files{instance="forge",mountpoint="/",fstype!="rootfs"} < 10
+        for: 10m
+        labels:
+          severity: warning
+          category: storage
+        annotations:
+          summary: "Forge root filesystem is running low on inodes"
+          description: "The root filesystem has less than 10 percent free inodes."
+
+      - alert: ForgeCacheFilesystemMissing
+        expr: absent(node_filesystem_size_bytes{instance="forge",mountpoint="/cache",fstype!="rootfs"})
+        for: 10m
+        labels:
+          severity: warning
+          category: storage
+        annotations:
+          summary: "Forge cache filesystem is not mounted"
+          description: "The reconstructible /cache filesystem has been absent from node exporter metrics for ten minutes."
+
+      - alert: ForgeCacheSpaceLow
+        expr: >-
+          100 * node_filesystem_avail_bytes{instance="forge",mountpoint="/cache",fstype!="rootfs"} / node_filesystem_size_bytes{instance="forge",mountpoint="/cache",fstype!="rootfs"} < 15
+        for: 10m
+        labels:
+          severity: warning
+          category: storage
+        annotations:
+          summary: "Forge cache filesystem is running low on space"
+          description: "The reconstructible /cache filesystem has less than 15 percent free space."
+
+  - name: forge-memory
+    rules:
+      - alert: ForgeOomKillDetected
+        expr: increase(node_vmstat_oom_kill{instance="forge"}[15m]) > 0
+        labels:
+          severity: warning
+          category: memory
+        annotations:
+          summary: "Forge killed a process because of memory pressure"
+          description: "The kernel recorded at least one OOM kill in the last 15 minutes."
+
+  - name: forge-nix-cache
+    rules:
+      - alert: ForgeNixCacheUnavailable
+        expr: forge_nix_cache_http_up == 0
+        for: 10m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "Forge Nix cache is unavailable"
+          description: "The public binary-cache metadata endpoint has been unreachable for ten minutes."
+
+      - alert: ForgeNixCacheSigningKeyMissing
+        expr: forge_nix_cache_signing_key_present == 0
+        for: 10m
+        labels:
+          severity: critical
+          category: cache
+        annotations:
+          summary: "Forge Nix cache signing key is missing"
+          description: "The private cache signing key has not been provisioned on forge."
+
+      - alert: ForgeNixCacheMetricsStale
+        expr: >-
+          (time() - forge_nix_cache_last_scan_timestamp_seconds > 900)
+          or
+          absent(forge_nix_cache_last_scan_timestamp_seconds)
+        for: 10m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "Forge Nix cache metrics are stale"
+          description: "No successful cache metrics scan has been recorded within the last 15 minutes."
+
+  - name: forge-backup
+    rules:
+      - alert: ForgeStateBackupStale
+        expr: >-
+          (time() - forge_backup_last_success_timestamp_seconds{backup_job="state"} > 129600)
+          or
+          absent(forge_backup_last_success_timestamp_seconds{backup_job="state"})
+        for: 30m
+        labels:
+          severity: critical
+          category: backup
+        annotations:
+          summary: "Forge state backup is stale"
+          description: "No successful state backup has been recorded within the last 36 hours."
+
+      - alert: ForgeBackupMaintenanceStale
+        expr: >-
+          (time() - forge_backup_last_success_timestamp_seconds{backup_job="maintenance"} > 691200)
+          or
+          absent(forge_backup_last_success_timestamp_seconds{backup_job="maintenance"})
+        for: 30m
+        labels:
+          severity: warning
+          category: backup
+        annotations:
+          summary: "Forge backup maintenance is stale"
+          description: "No successful repository maintenance has been recorded within the last eight days."
+
+      - alert: ForgeBackupInventoryStale
+        expr: >-
+          (time() - forge_backup_inventory_last_success_timestamp_seconds > 172800)
+          or
+          absent(forge_backup_inventory_last_success_timestamp_seconds)
+        for: 30m
+        labels:
+          severity: warning
+          category: backup
+        annotations:
+          summary: "Forge backup inventory is stale"
+          description: "No successful Dedibackup inventory has been recorded within the last 48 hours."
+
+      - alert: ForgeBackupObjectLimitWarning
+        expr: >-
+          (forge_backup_backend_objects >= 800)
+          and
+          (forge_backup_backend_objects < 900)
+        for: 30m
+        labels:
+          severity: warning
+          category: backup
+        annotations:
+          summary: "Forge backup repository is approaching its object limit"
+          description: "The Dedibackup repository contains at least 800 of the permitted 1000 objects."
+
+      - alert: ForgeBackupObjectLimitCritical
+        expr: forge_backup_backend_objects >= 900
+        for: 30m
+        labels:
+          severity: critical
+          category: backup
+        annotations:
+          summary: "Forge backup repository is close to its object limit"
+          description: "The Dedibackup repository contains at least 900 of the permitted 1000 objects."

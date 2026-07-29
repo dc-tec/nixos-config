@@ -1,0 +1,25 @@
+if [[ "$#" -eq 0 ]]; then
+  echo "usage: publish-forge-cache STORE_PATH..." >&2
+  exit 2
+fi
+
+target="${FORGE_SSH_TARGET:-roelc@10.77.0.1}"
+paths=()
+while IFS= read -r store_path; do
+  paths+=("$store_path")
+done < <(nix path-info -- "$@")
+
+if [[ "${#paths[@]}" -eq 0 ]]; then
+  echo "no realized Nix store paths were supplied" >&2
+  exit 2
+fi
+
+nix copy --substitute-on-destination --to "ssh-ng://${target}" -- "${paths[@]}"
+
+remote_command="sudo forge-cache-publish --"
+for store_path in "${paths[@]}"; do
+  printf -v quoted_path '%q' "$store_path"
+  remote_command+=" $quoted_path"
+done
+
+ssh -T "$target" "$remote_command"

@@ -1,9 +1,15 @@
-{ modulesPath, ... }:
+{
+  modulesPath,
+  publicKeys,
+  ...
+}:
 {
   imports = [
     (modulesPath + "/profiles/minimal.nix")
+    ../../modules/nixos/server/forge
     ./disko.nix
     ./hardware.nix
+    ./wireguard.nix
   ];
 
   networking = {
@@ -18,7 +24,7 @@
     description = "Roel de Cort";
     extraGroups = [ "wheel" ];
     hashedPassword = "!";
-    openssh.authorizedKeys.keyFiles = [ ../../keys/roelc.pub ];
+    openssh.authorizedKeys.keys = [ publicKeys.ssh.roelc ];
   };
 
   time.timeZone = "Europe/Amsterdam";

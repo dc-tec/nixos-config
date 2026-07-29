@@ -1,10 +1,14 @@
-{ inputs, ... }:
+{
+  inputs,
+  publicKeys,
+  ...
+}:
 {
   additions =
     final: _:
     import ../pkgs {
       pkgs = final;
-      inherit inputs;
+      inherit inputs publicKeys;
     };
   stable-packages = final: _: {
     stable = import inputs.nixpkgs-stable { system = final.stdenv.hostPlatform.system; };
@@ -22,6 +26,7 @@
       nix-init = master.nix-init;
       nurl = master.nurl;
       nix = master.nix;
+      secretspec = master.secretspec;
     };
 
   yabai-preserve-signature =

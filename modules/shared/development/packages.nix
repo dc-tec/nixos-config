@@ -112,8 +112,13 @@
           ])
           # Security Tools
           (lib.optionals config.dc-tec.development-packages.tools.security [
-            vault
             openbao
+            secretspec
+            vault
+          ])
+          # Networking Tools
+          (lib.optionals config.dc-tec.development-packages.tools.networking [
+            wireguard-tools
           ])
           # Database Tools
           (lib.optionals config.dc-tec.development-packages.tools.database [

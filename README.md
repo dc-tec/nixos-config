@@ -1,139 +1,166 @@
-<h1 align="center">deCort.tech – Nix & Darwin System Configuration</h1>
+# NixOS and nix-darwin configuration
 
-<p align="center">
-    <img src="https://img.shields.io/badge/Built%20with-Nix-blue?logo=nixos" alt="Built with Nix">
-    <img src="https://img.shields.io/badge/Flake-ready-green" alt="Nix flake ready">
-</p>
+This repository contains the declarative configuration for the systems I
+actively manage: NixOS workstations, a WSL development environment, a macOS
+workstation and a dedicated engineering server.
 
-<p align="center">
-    This flake is the single source of truth for <em>all</em> of my machines, from my beefy desktop to a MacBook (and even a WSL2 shell on Windows).
-    With Nix, Home Manager and a handful of extras I can go from a blank disk to a fully-configured, themed and encrypted system in one command.
-</p>
+The workstation configurations share development tools and user-level defaults
+where that is useful. The Forge server follows a separate, smaller composition
+path so public infrastructure does not inherit desktop settings, personal
+secrets or workstation state.
 
-#### NixOS
+## Systems
 
-![desktop](./docs/images/desktop.png)
+| Host     | Platform              | Purpose                                                                             |
+| -------- | --------------------- | ----------------------------------------------------------------------------------- |
+| `chad`   | NixOS, x86-64         | Desktop workstation with encrypted ZFS, impermanence and virtualization             |
+| `legion` | NixOS, x86-64         | Laptop with encrypted ZFS, impermanence and wireless networking                     |
+| `ghost`  | NixOS on WSL2, x86-64 | Lightweight Windows development environment                                         |
+| `darwin` | macOS, Apple Silicon  | Daily workstation managed with nix-darwin, Home Manager and Homebrew                |
+| `forge`  | NixOS, x86-64         | Engineering server for forge services, monitoring, backups and the native Nix cache |
 
-#### MacOS
+Forge is not a general-purpose homelab or a platform for customer data. Its
+architecture and operating procedures are documented in the
+[Forge guide](./docs/machine-forge.md).
 
-![macbook](./docs/images/macbook.png)
+## Screenshots
 
-## Highlights
+### NixOS
 
-This flake bundles everything I rely on day-to-day: encrypted ZFS roots with impermanence, secret management through SOPS-age, a custom NixVim setup and a Hyprland-powered desktop – all wrapped in Catppuccin colours. It runs the same on NixOS, macOS (via nix-darwin) and even inside WSL2, providing a flexible foundation whether the machine is fully persistent or stateless.
+![NixOS desktop](./docs/images/desktop.png)
 
-## Flake Overview
+### macOS
 
-This repository is a Nix _flake_, a self-contained unit that bundles all the dependencies and code needed to build the systems it describes. This includes not just packages from `nixpkgs` (both `unstable` and `25.05` channels) but also essential community flakes like `home-manager` for user-level configuration, `impermanence` for ephemeral systems, and `sops-nix` for secure secret management.
+![macOS desktop](./docs/images/macbook.png)
 
-The flake also pulls in specialized inputs for hardware and platform support, such as `nix-darwin` and `nix-homebrew` for macOS, `nixos-wsl` for Windows Subsystem for Linux, and specific `hyprland` components for the Wayland desktop. For a complete list of dependencies, see the [`flake.nix`](./flake.nix) file. You can inspect the flake's outputs by running:
+## Configuration structure
 
-```bash
+The flake composes each host from platform modules and a machine-specific
+definition:
+
+```text
+chad, legion, ghost = shared modules + NixOS modules + machine definition
+darwin               = shared modules + Darwin modules + machine definition
+forge                = stable NixOS + Disko + server modules + machine definition
+```
+
+- `machines/` contains host identity, hardware and host-specific settings.
+- `modules/shared/` contains the Home Manager environment and configuration
+  shared by workstation-class NixOS and Darwin systems.
+- `modules/nixos/` contains Linux desktop, storage, connectivity,
+  virtualization and server modules.
+- `modules/nixos/server/` contains the reusable server baseline and the Forge
+  service composition.
+- `modules/darwin/` contains macOS system, desktop and Homebrew configuration.
+- `lib/` contains helper functions used by the module system.
+- `overlays/` defines local packages, selected stable packages and a small set
+  of packages taken from the current Nixpkgs master branch.
+- `pkgs/` contains local packages and Forge operator commands.
+- `secrets/` contains SOPS-encrypted workstation secrets; `public-keys.nix`
+  contains public identity material that is safe to commit.
+
+The workstation configurations use NixOS unstable as their primary package
+set. Forge uses the stable NixOS package set and does not inherit the shared
+workstation modules. This separation is explicit in `flake.nix`.
+
+## Included configuration
+
+- encrypted ZFS roots and ephemeral system state on `chad` and `legion`;
+- Home Manager configuration shared across Linux and macOS workstations;
+- a separate NixVim flake for the editor configuration;
+- Hyprland on graphical NixOS hosts and declarative macOS desktop settings;
+- SOPS with age-backed secret decryption for workstation configuration;
+- WireGuard-only administration, Restic backups, Prometheus, Alertmanager and
+  Grafana on Forge;
+- a signed, read-only native Nix binary cache for managed systems; and
+- repository-local packages for repeatable Forge provisioning and cache
+  publication.
+
+## Working with the repository
+
+Enter the development shell and run the repository checks with:
+
+```console
+nix develop
+nix fmt
+pre-commit run --all-files
+```
+
+Inspect the available packages, checks and host outputs with:
+
+```console
 nix flake show
 ```
 
-## Architecture
+On an already configured host, `nh` uses this repository as its default flake:
 
-The configuration is structured into a three-tiered modular architecture that cleanly separates hardware-specific, OS-specific, and shared concerns. This design makes it easy to reuse code, override settings for a particular machine, and understand the flow of the build.
+```console
+# NixOS workstation
+nh os switch --hostname chad
 
-### Machines
+# macOS workstation
+nh darwin switch --hostname darwin
+```
 
-At the top level, the `machines/` directory defines the individual hosts. Each machine has a dedicated file (e.g., `machines/chad/default.nix`) that specifies its hardware configuration, network settings, and which modules to import. This is where you would define things like disk layouts, graphics drivers, and other host-specific parameters.
+Equivalent direct commands are:
 
-The flake includes four reference machines:
+```console
+# NixOS workstation
+doas nixos-rebuild switch --flake .#chad
 
-- **chad**: A powerful desktop workstation running NixOS with ZFS, impermanence, and virtualization enabled.
-- **legion**: A NixOS laptop with a similar ZFS and impermanence setup, but tailored for a mobile environment.
-- **ghost**: A minimal WSL2 instance on Windows, configured to be stateless.
-- **darwin**: A macOS environment managed with `nix-darwin`.
+# macOS workstation
+darwin-rebuild switch --flake .#darwin
+```
 
-### Modules
+Forge is built remotely from the Apple Silicon workstation and follows a
+test-before-switch workflow. See the
+[Forge build and deployment procedure](./docs/machine-forge.md#build-and-deployment)
+instead of applying the workstation commands to that host.
 
-The core logic is organized in the `modules/` directory, which is split into three categories:
+## Secrets and cache boundaries
 
-- **Shared Modules** (`modules/shared`): This is the foundation for all systems, regardless of the operating system. It includes common configurations for `home-manager`, development tools (`development/`), base system settings (`config/`), and essential utilities like ZSH, Git, and SSH (`utils/`). These modules ensure a consistent user experience across every machine.
+SOPS-encrypted files support the personal workstation configurations. Forge
+does not receive that material. Its small set of bootstrap secrets is resolved
+from the operator workstation with SecretSpec and provisioned over WireGuard;
+private values are not stored in the repository or the Nix store.
 
-- **NixOS Modules** (`modules/nixos`): These modules are specific to Linux hosts. They handle system-level concerns like network connectivity (`connectivity/`), the desktop environment (Hyprland, applications, theming in `desktop/`), storage with ZFS (`storage/`), and virtualization with Docker and KVM (`virtualization/`).
-
-- **Darwin Modules** (`modules/darwin`): These modules target macOS. They configure macOS-specific desktop customizations (`desktop/`) and manage packages through Homebrew (`homebrew/`), integrating them cleanly into the Nix environment.
-
-### Additional Components
-
-- **lib/**: A collection of custom helper functions and utilities that are used throughout the flake.
-- **overlays/**: Overlays are used to modify or extend the `nixpkgs` package set with custom packages or versions.
-- **pkgs/**: Custom packages and derivations that are not available in other sources.
-- **secrets/**: Contains secret files encrypted with SOPS, which are securely decrypted at build time.
-
-## System Configurations
-
-The flake produces several distinct system configurations, each tailored to a specific use case.
-
-### NixOS with ZFS + Impermanence (chad, legion)
-
-These are full-featured desktop and laptop configurations that boot from an encrypted ZFS filesystem. By default, they use an ephemeral root, meaning the system starts from a clean snapshot on every boot. Persistent data is stored on a separate ZFS pool, ensuring that user data is preserved while the system itself remains pristine. This setup is ideal for development and daily use, providing a reproducible and stable environment.
-
-### WSL2 (ghost)
-
-This configuration provides a lightweight, NixOS-based development environment for use with Windows Subsystem for Linux.
-
-### Darwin (darwin)
-
-For macOS, this configuration uses `nix-darwin` to manage the system declaratively. It integrates with Homebrew for packages that are not available in `nixpkgs` and shares the same `home-manager` configuration as the NixOS hosts, ensuring a consistent development environment across platforms.
+Managed systems trust the public Forge cache key in `public-keys.nix` and
+can read from `https://cache.decort.tech`. Publishing requires WireGuard SSH
+access and a root-only command on Forge. GitHub Actions continues to use
+Cachix and does not receive Forge cache publication authority.
 
 ## Documentation
 
-This repository is designed to be self-documenting. The module system itself serves as the primary source of truth, and detailed comments throughout the code explain the purpose of each option.
+The `docs/` directory contains host guides, module explanations, maintenance
+procedures and troubleshooting notes. NDG combines those files with generated
+module-option documentation:
 
-In addition, this flake uses `ndg` to generate comprehensive HTML documentation from the module options and Markdown files in the `docs/` directory. This includes a full reference of all available configuration options, setup guides, and a deeper overview of the architecture.
-
-To build and view the documentation locally, run the following commands:
-
-```bash
-# Build the documentation
+```console
 nix build .#docs
 ```
 
-The documentation is also automatically built and deployed to GitHub Pages on every push to the `main` branch.
+Documentation changes merged to `main` are built and deployed to GitHub Pages.
 
-## Quick Start
+## Continuous integration
 
-Build and switch to a configuration:
+GitHub Actions runs formatting and static checks, builds every NixOS host, and
+builds the Apple Silicon nix-darwin configuration on a macOS runner. Forge also
+has dedicated checks for its Disko layout and Prometheus alert rules. Successful
+pushes to `main` may publish build results to Cachix; pull requests are
+read-only cache consumers.
 
-```bash
-# Using nh to build and switch to a configuration
-# NixOS
-nh os switch --hostname <hostname>
+## Reuse
 
-# Darwin
-nh darwin switch --hostname <hostname>
-```
+This is a personal configuration rather than a general-purpose NixOS
+distribution. The module structure and individual snippets may be useful
+elsewhere, but hardware identifiers, usernames, network addresses and secret
+recipients need to be adapted before reuse.
 
-or use the following commands:
-
-```bash
-# NixOS
-nixos-rebuild switch --flake .#<hostname>
-
-# Darwin
-darwin-rebuild switch --flake .#<hostname>
-```
-
-Check available configurations:
-
-```bash
-nix flake show
-```
-
-## References
+Related references:
 
 - [Erase Your Darlings](https://grahamc.com/blog/erase-your-darlings/)
 - [NixOS Impermanence](https://github.com/nix-community/impermanence)
 - [nix-darwin](https://github.com/LnL7/nix-darwin)
 
-#### Wallpapers
-
-- [Orxngc](https://github.com/orxngc/walls-catppuccin-mocha)
-
-#### Disclaimer
-
-I share this repo as inspiration, feel free to copy snippets or raise an issue if something piques your interest. Just keep in mind that some pieces are tailored to my hardware and workflow, so you'll likely need to adapt things for your own setup.
+The desktop wallpapers are from
+[orxngc/walls-catppuccin-mocha](https://github.com/orxngc/walls-catppuccin-mocha).

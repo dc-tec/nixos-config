@@ -1,104 +1,259 @@
-# Forge Machine Configuration
+# Forge
 
-`forge` is the dedicated personal engineering server. It is intended to host
-the public forge stack and supporting engineering infrastructure without
-becoming a general-purpose homelab or a customer-data platform.
+`forge` is the dedicated personal engineering server. It hosts public forge
+services and supporting infrastructure. It is not a general-purpose homelab or
+a platform for customer data.
 
-## Status
+## Configuration
 
-The host has a buildable server baseline and a Disko storage definition based
-on inventory collected from the temporary Debian installation. The Disko
-definition has been applied to the host and remains destructive when rerun.
+Forge uses the stable NixOS package set and is assembled from three layers:
 
-Do not run Disko or `nixos-anywhere` before reviewing the disk identities and
-storage plan below. Applying it erases all three SSDs.
+- `modules/nixos/server` provides the reusable server baseline;
+- `modules/nixos/server/forge` provides the engineering services; and
+- `machines/forge` contains host identity, hardware, storage and networking.
 
-## Configuration Boundary
+The server does not inherit workstation Home Manager configuration, desktop
+theming, impermanence or personal SOPS material. Automatic upgrades are
+disabled so package-set changes remain explicit.
 
-The server uses the stable NixOS 26.05 package set and a dedicated minimal
-module stack. It does not inherit workstation Home Manager configuration,
-desktop theming, impermanence, personal SOPS material, or automatic upgrades.
-The host selects `linuxPackages_latest` because current `nixos-anywhere` kexec
-images create mdraid metadata that requires Linux 6.19 or newer. An assertion
-prevents accidentally selecting an incompatible older kernel. Do not lower
-that boundary without also using a compatible custom kexec image and
-recreating the arrays.
+The baseline provides:
 
-The initial baseline provides:
-
-- the `forge` hostname;
-- a locked `roelc` account with key-only SSH access and passwordless `sudo`;
+- key-only SSH for the `roelc` administrator account;
 - a locked root account and disabled root SSH login;
-- a default-deny firewall with public SSH as the only open port;
-- fail2ban, SMART monitoring, SSD trimming, and compressed swap;
-- a small set of operational tools; and
+- a default-deny firewall;
+- SSH access only through WireGuard, with forwarding disabled;
+- fail2ban, SMART monitoring, SSD trimming and compressed swap; and
 - scheduled Nix garbage collection and store optimisation.
 
-The public interface is `enp1s0f0` and receives its IPv4 configuration through
-DHCP. The second Intel I350 interface is not configured.
+The public interface, `enp1s0f0`, uses DHCP. The second network interface is
+not configured.
 
-## Intended Storage Shape
+## Storage
 
-The observed machine boots through legacy BIOS and contains three Micron 1100
-SATA SSDs. The Disko layout uses stable WWN device paths and creates:
+The server boots through legacy BIOS and contains three SATA SSDs. Disko
+defines:
 
-- a BIOS GRUB partition on each durable disk;
-- a 1 GiB ext4 `/boot` mdadm RAID1 array using metadata 1.0;
-- an ext4 `/` mdadm RAID1 array using the remaining space; and
+- a BIOS boot partition on each durable disk, with GRUB installed to both;
+- a 1 GiB ext4 `/boot` mdadm RAID1 array;
+- an ext4 `/` mdadm RAID1 array using the remaining durable capacity; and
 - an independent ext4 `/cache` filesystem on the third SSD.
 
-GRUB is installed to both durable SSDs. `/cache` uses `nofail`, because loss of
-reconstructible cache data must not prevent the server from booting.
+`/cache` contains reconstructible data and uses `nofail`; losing it must not
+prevent the server from booting. The root and boot arrays contain persistent
+state and must remain mirrored.
 
-## Captured Inventory
+Disko and `nixos-anywhere` are destructive. Before reinstalling, compare the
+stable device paths in `machines/forge/disko.nix` with the live
+`/dev/disk/by-id` inventory. The configured kernel compatibility assertion must
+also remain satisfied when recreating the mdraid arrays.
 
-The configuration was derived from this read-only inventory:
+## Administration Network
+
+WireGuard is the administration boundary:
+
+| Item | Value |
+| --- | --- |
+| Server address | `10.77.0.1/24` |
+| Workstation peer | `10.77.0.2/32` |
+| Public endpoint | `vpn.decort.tech:51820` |
+| Server private key | `/var/lib/wireguard/forge.key` |
+
+The VPN DNS record must remain DNS-only in Cloudflare because the standard
+proxy does not forward WireGuard. Administrative SSH is available at
+`roelc@10.77.0.1`; the provider KVM is the break-glass path.
+
+Inspect WireGuard and derive the server's public key with:
 
 ```console
-Firmware: BIOS
-Public NIC: enp1s0f0 (DHCP)
-Durable disk A: /dev/disk/by-id/wwn-0x500a07511756b6c8
-Durable disk B: /dev/disk/by-id/wwn-0x500a07511756abda
-Cache disk:     /dev/disk/by-id/wwn-0x500a075115a7a32f
+sudo wg show wg0
+sudo sh -c 'wg pubkey < /var/lib/wireguard/forge.key'
 ```
 
-Before installation, compare all three paths against a fresh `lsblk` and
-`/dev/disk/by-id` listing. Device names such as `/dev/sda` are not used as
-installation identities.
+The private key is generated on the host, kept outside the repository and Nix
+store, copied to the operator's password manager, and included in the encrypted
+host backup.
 
-## Installation Gate
+## Backup and Restore
 
-The temporary Debian image does not include `sudo`, and the `roelc` account has
-no administrative group membership. Before installation, use the temporary
-root password to install `sudo` and grant `roelc` passwordless `sudo`. This
-bootstrap state is erased with Debian; the resulting NixOS system retains
-key-only SSH, disables root SSH login, and grants passwordless `sudo` only to
-the configured `wheel` user.
+Restic writes encrypted backups to the 100 GB Scaleway Dedibackup allocation
+through rclone's FTP backend. The initial backup set contains state that cannot
+be reconstructed from this repository:
 
-Evaluate the system and generated Disko script without applying them. These
-commands work from the Apple Silicon workstation:
+- the WireGuard private key;
+- the Nix cache signing key; and
+- the SSH host keys.
+
+Nix store paths, cache contents, logs, metrics and public repositories are not
+included. New stateful services must add their authoritative state explicitly.
+The backend's 1000-object limit is monitored and constrains future expansion.
+
+SecretSpec resolves the Restic password from the operator's Apple Keychain and
+provisions it over WireGuard. It is not a runtime dependency of Forge:
+
+```console
+secretspec check --profile default --scope forge-backup \
+  --reason "Provision the forge backup repository password"
+secretspec run --profile default --scope forge-backup \
+  --reason "Provision the forge backup repository password" -- \
+  provision-forge-backup-secret
+```
+
+The resulting `/var/lib/forge-secrets/restic-password` file is owned by root
+with mode `0400`. The backup repository is initialized separately and is never
+initialized automatically by the service.
+
+The schedule and retention policy are:
+
+- daily snapshot at 03:00, with up to 30 minutes of randomized delay;
+- weekly maintenance on Sunday at 05:30;
+- 14 daily, 8 weekly and 6 monthly snapshots; and
+- weekly prune followed by a full repository data check.
+
+Inspect or run the jobs with:
+
+```console
+ssh roelc@10.77.0.1 systemctl list-timers --all \
+  restic-backups-forge-state.timer \
+  restic-backups-forge-maintenance.timer
+ssh roelc@10.77.0.1 sudo journalctl \
+  -u restic-backups-forge-state.service \
+  -u restic-backups-forge-maintenance.service
+ssh roelc@10.77.0.1 sudo systemctl start \
+  restic-backups-forge-state.service
+ssh roelc@10.77.0.1 sudo restic-forge-state snapshots
+ssh roelc@10.77.0.1 sudo restic-forge-state check --read-data
+```
+
+A restore test must compare the restored WireGuard identity and SSH host-key
+fingerprints with the live host. A successful snapshot alone is not sufficient
+restore evidence.
+
+## Monitoring and Alerting
+
+Prometheus retains 30 days of host metrics on the mirrored root filesystem.
+Prometheus, Alertmanager, the node exporter and the SMART exporter listen only
+on loopback. Grafana is available to WireGuard peers at:
+
+```text
+http://10.77.0.1:3000/d/forge-overview/forge-overview
+```
+
+Grafana provides an anonymous read-only view on the administration network.
+Its datasource and dashboard are declarative and contain no credentials. Its
+local database and encryption key remain disposable while that boundary holds.
+
+The alert rules cover:
+
+- exporter and systemd service availability;
+- RAID and SMART health;
+- root and cache capacity;
+- inode exhaustion and OOM kills;
+- backup and inventory freshness;
+- the Dedibackup object limit; and
+- public cache health and signing-key presence.
+
+CPU saturation is intentionally not an alert because Nix builds are expected
+to use the host fully. Warning and critical capacity thresholds do not overlap.
+The rule suite is validated with Prometheus's `promtool` in CI.
+
+Alertmanager uses a local receiver and has clustering disabled. External alert
+delivery remains deferred until its authentication and trust boundary is
+settled. Scaleway's independent server-ping notification covers whole-host and
+provider-network loss.
+
+Inspect the monitoring stack with:
+
+```console
+ssh roelc@10.77.0.1 systemctl status \
+  prometheus.service \
+  prometheus-node-exporter.service \
+  prometheus-smartctl-exporter.service \
+  alertmanager.service \
+  grafana.service
+ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9090/api/v1/alerts
+ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9090/api/v1/rules
+ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9093/api/v2/status
+```
+
+## Native Nix Cache
+
+`cache.decort.tech` exposes a signed native Nix binary cache over HTTPS. The
+endpoint permits only `GET` and `HEAD`; it has no HTTP upload API. Its
+Cloudflare record remains DNS-only so the host can terminate TLS and obtain its
+ACME certificate.
+
+Cache data lives under `/cache/nix` and is deliberately excluded from backup.
+The public signing key is committed in `public-keys.nix`. SecretSpec keeps
+the private key in the operator's Apple Keychain and provisions it only to:
+
+```text
+/var/lib/forge-secrets/nix-cache-private-key
+```
+
+Provision the key over WireGuard with:
+
+```console
+secretspec check --profile default --scope forge-cache \
+  --reason "Provision the forge binary-cache signing key"
+secretspec run --profile default --scope forge-cache \
+  --reason "Provision the forge binary-cache signing key" -- \
+  provision-forge-cache-key
+```
+
+`publish-forge-cache` copies an already realized closure to Forge over SSH and
+invokes the root-only signing command on the server:
+
+```console
+store_path="$(nix build --no-link --print-out-paths .#PACKAGE)"
+publish-forge-cache "$store_path"
+```
+
+The `nhdsp` Zsh alias switches the Darwin configuration and publishes the
+activated closure. The existing `nhds` alias remains the switch-only path.
+Clients use the Forge cache as an additional substituter; cache hits remain
+platform-specific.
+
+Verify a published closure from a client with:
+
+```console
+hello="$(nix build --no-link --print-out-paths nixpkgs#hello)"
+publish-forge-cache "$hello"
+narinfo="$(basename "$hello" | cut -d- -f1)"
+curl -fsSI "https://cache.decort.tech/$narinfo.narinfo"
+nix path-info --store https://cache.decort.tech "$hello"
+nix store verify --no-contents --recursive "$hello"
+```
+
+GitHub Actions continues to use Cachix. External runners do not receive Forge
+publication authority. Cache eviction remains an explicit operator action.
+
+## Build and Deployment
+
+Evaluate the Forge system and Disko derivations from any supported client:
 
 ```console
 nix eval --raw .#nixosConfigurations.forge.config.system.build.toplevel.drvPath
 nix eval --raw .#nixosConfigurations.forge.config.system.build.diskoScript.drvPath
 ```
 
-Build both derivations on an x86-64 Linux builder or in CI:
+The Apple Silicon workstation delegates the x86-64 build to Forge. Use `test`
+before making a generation persistent:
 
 ```console
-nix build .#checks.x86_64-linux.nixos-forge
-nix build .#checks.x86_64-linux.forge-disko
+nix run nixpkgs#nixos-rebuild -- test \
+  --flake .#forge \
+  --build-host roelc@10.77.0.1 \
+  --target-host roelc@10.77.0.1 \
+  --elevate sudo \
+  --use-substitutes \
+  --print-build-logs
 ```
 
-An x86-64 Linux host can additionally exercise the Disko layout inside a VM:
+After the acceptance checks pass, replace `test` with `switch`. CI separately
+builds the Forge system, Disko script and Prometheus rule suite.
 
-```console
-nix run .#nixos-anywhere -- --flake .#forge --vm-test
-```
-
-After those checks and a final disk-identity review, run the pinned installer
-from this repository. This command is intentionally documented with a
-placeholder target and must not be copied blindly:
+For disaster recovery, review the live disk identities and backup material
+before invoking `nixos-anywhere`:
 
 ```console
 nix run .#nixos-anywhere -- \
@@ -107,17 +262,14 @@ nix run .#nixos-anywhere -- \
   --target-host roelc@FORGE_ADDRESS
 ```
 
-The explicit remote build is required when invoking the installer from the
-Apple Silicon workstation because the target closure is x86-64 Linux.
+## Planned Services
 
-## Deferred Service Slices
+Stateful applications are added as independent, reversible slices:
 
-Application services are intentionally outside this first host slice. Add them
-independently after the base system has booted and remote recovery is proven:
+1. a Radicle node;
+2. a Tangled knot;
+3. OpenBao with identity integration; and
+4. an optional private Attic evaluation, separate from the native cache.
 
-1. WireGuard administration and backup transport;
-2. host secret bootstrap;
-3. monitoring;
-4. the Nix binary cache;
-5. Radicle and Tangled; and
-6. OpenBao and identity integration.
+Each service must define its network exposure, state ownership, backup and
+restore procedure, monitoring, acceptance checks and rollback path.
