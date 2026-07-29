@@ -78,6 +78,58 @@ An independently stored copy of the WireGuard private key has been verified by
 deriving and comparing its public key. Include this key in the broader host
 backup and restore procedure as that procedure is established.
 
+## Backup Bootstrap
+
+The first backup slice uses Restic through rclone's FTP backend and the 100 GB
+Scaleway Dedibackup allocation. It deliberately protects only the host identity
+material that cannot be reconstructed from this repository:
+
+- `/var/lib/wireguard/forge.key`; and
+- the SSH host key files under `/etc/ssh`.
+
+Nix store paths, `/cache`, logs, metrics, and public Git repositories remain
+outside this initial set. The allocation has a 1000-file limit, so repository
+growth must be monitored before broader service state is added.
+
+SecretSpec stores the Restic repository password in the workstation's Apple
+Keychain through its `keyring` provider. SecretSpec is an operator-side
+provisioning tool; it is not a runtime or boot dependency of `forge`. Create or
+resolve the generated password without printing it, then transfer it over the
+WireGuard-only SSH path:
+
+```console
+secretspec check --profile default --scope forge-backup \
+  --reason "Provision the forge backup repository password"
+secretspec run --profile default --scope forge-backup \
+  --reason "Provision the forge backup repository password" -- \
+  ./scripts/provision-forge-backup-secret
+```
+
+The script writes only `/var/lib/forge-secrets/restic-password` on the host. It
+is owned by root with mode `0400`. Dedibackup autologin is tied to the server's
+provider network and uses the non-secret `auto` account with an empty password;
+the Scaleway account password is not part of the configuration.
+
+The Restic service has no timer, automatic initialization, pruning, or
+automatic check yet. The initial repository, backup, full data check, and
+isolated restore were verified on 2026-07-29. The restore produced the same
+WireGuard public identity and the same Ed25519 and RSA SSH fingerprints as the
+live host; restored private keys retained mode `0600` and root ownership.
+
+The repository is already initialized. Only initialize it again when
+reconstructing a new, empty backend. Run and inspect backups manually with:
+
+```console
+ssh roelc@10.77.0.1 sudo systemctl start restic-backups-forge-state.service
+ssh roelc@10.77.0.1 sudo restic-forge-state snapshots
+ssh roelc@10.77.0.1 sudo restic-forge-state check --read-data
+```
+
+For subsequent restore tests, restore the latest snapshot into a temporary
+directory, derive the restored WireGuard public key, and compare the restored
+SSH host-key fingerprints. A successful backup alone is not the acceptance
+gate for enabling the timer.
+
 ## Captured Inventory
 
 The configuration was derived from this read-only inventory:
@@ -143,7 +195,7 @@ Apple Silicon workstation because the target closure is x86-64 Linux.
 Application services are intentionally outside this first host slice. Add them
 independently after the base system has booted and remote recovery is proven:
 
-1. host secret bootstrap and broader remote backups;
+1. verified backup restore, scheduling, and retention;
 2. monitoring;
 3. the Nix binary cache;
 4. Radicle and Tangled; and

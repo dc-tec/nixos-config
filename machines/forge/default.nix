@@ -2,6 +2,7 @@
 {
   imports = [
     (modulesPath + "/profiles/minimal.nix")
+    ./backup.nix
     ./disko.nix
     ./hardware.nix
     ./wireguard.nix
