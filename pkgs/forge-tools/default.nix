@@ -4,6 +4,7 @@
   nh,
   nix,
   openssh,
+  publicKeys,
   symlinkJoin,
   writeShellApplication,
 }:
@@ -55,7 +56,7 @@ let
       nix
       openssh
     ];
-    runtimeEnv.FORGE_CACHE_PUBLIC_KEY_FILE = ../../keys/forge-cache.pub;
+    runtimeEnv.FORGE_CACHE_PUBLIC_KEY = publicKeys.nixCache.forge;
     description = "Verify and provision the Forge binary-cache signing key";
   };
 

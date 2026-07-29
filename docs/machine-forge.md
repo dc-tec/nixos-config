@@ -183,7 +183,7 @@ Cloudflare record remains DNS-only so the host can terminate TLS and obtain its
 ACME certificate.
 
 Cache data lives under `/cache/nix` and is deliberately excluded from backup.
-The public signing key is committed at `keys/forge-cache.pub`. SecretSpec keeps
+The public signing key is committed in `public-keys.nix`. SecretSpec keeps
 the private key in the operator's Apple Keychain and provisions it only to:
 
 ```text

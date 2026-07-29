@@ -1,6 +1,10 @@
-{ lib, ... }:
+{
+  lib,
+  publicKeys,
+  ...
+}:
 let
-  cachePublicKey = lib.removeSuffix "\n" (builtins.readFile ../../keys/forge-cache.pub);
+  cachePublicKey = publicKeys.nixCache.forge;
 in
 {
   assertions = [

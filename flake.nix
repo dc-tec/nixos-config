@@ -89,11 +89,12 @@
     }@inputs:
     let
       inherit (self) outputs;
+      publicKeys = import ./public-keys.nix;
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
         "aarch64-darwin"
       ];
-      overlaySet = import ./overlays { inherit inputs; };
+      overlaySet = import ./overlays { inherit inputs publicKeys; };
       sharedOverlays = [
         overlaySet.additions
         overlaySet.stable-packages
@@ -148,7 +149,7 @@
         hostModule:
         nixpkgs.lib.nixosSystem {
           specialArgs = {
-            inherit inputs outputs;
+            inherit inputs outputs publicKeys;
             lib = lib "x86_64-linux";
           };
           modules = sharedModules ++ nixosModules ++ [ hostModule ];
@@ -161,7 +162,7 @@
         hostModule:
         inputs.nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
-            inherit inputs outputs;
+            inherit inputs outputs publicKeys;
           };
           modules = [
             inputs.disko.nixosModules.disko
@@ -183,7 +184,7 @@
           ];
         in
         (import ./pkgs {
-          inherit pkgs inputs;
+          inherit pkgs inputs publicKeys;
         })
         // {
           inherit (inputs.nixos-anywhere.packages.${system}) nixos-anywhere;
@@ -264,7 +265,7 @@
       darwinConfigurations = {
         darwin = darwin.lib.darwinSystem {
           specialArgs = {
-            inherit inputs outputs;
+            inherit inputs outputs publicKeys;
             lib = lib "aarch64-darwin";
           };
           modules = sharedModules ++ darwinModules ++ [ ./machines/darwin/default.nix ];

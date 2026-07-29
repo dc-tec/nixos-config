@@ -1,13 +1,14 @@
 {
   lib,
   pkgs,
+  publicKeys,
   ...
 }:
 let
   cacheRoot = "/cache/nix";
   cacheKeyFile = "/var/lib/forge-secrets/nix-cache-private-key";
   metricDirectory = "/var/lib/prometheus-node-exporter-text-files";
-  cachePublicKey = lib.removeSuffix "\n" (builtins.readFile ../../../../keys/forge-cache.pub);
+  cachePublicKey = publicKeys.nixCache.forge;
 
   cacheStore =
     "file://${cacheRoot}"

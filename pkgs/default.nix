@@ -1,10 +1,11 @@
 {
   pkgs,
   inputs,
+  publicKeys,
   ...
 }:
 let
-  forgeTools = pkgs.callPackage ./forge-tools { };
+  forgeTools = pkgs.callPackage ./forge-tools { inherit publicKeys; };
 in
 {
   forge-tools = forgeTools.bundle;

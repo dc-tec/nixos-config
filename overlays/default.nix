@@ -1,10 +1,14 @@
-{ inputs, ... }:
+{
+  inputs,
+  publicKeys,
+  ...
+}:
 {
   additions =
     final: _:
     import ../pkgs {
       pkgs = final;
-      inherit inputs;
+      inherit inputs publicKeys;
     };
   stable-packages = final: _: {
     stable = import inputs.nixpkgs-stable { system = final.stdenv.hostPlatform.system; };
