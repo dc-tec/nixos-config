@@ -106,7 +106,7 @@ secretspec check --profile default --scope forge-backup \
   --reason "Provision the forge backup repository password"
 secretspec run --profile default --scope forge-backup \
   --reason "Provision the forge backup repository password" -- \
-  ./scripts/provision-forge-backup-secret
+  provision-forge-backup-secret
 ```
 
 The script writes only `/var/lib/forge-secrets/restic-password` on the host. It
@@ -264,7 +264,7 @@ secretspec check --profile default --scope forge-cache \
   --reason "Provision the forge binary-cache signing key"
 secretspec run --profile default --scope forge-cache \
   --reason "Provision the forge binary-cache signing key" -- \
-  ./scripts/provision-forge-cache-key
+  provision-forge-cache-key
 ```
 
 Publishing is a two-stage operation. The workstation first copies an already
@@ -274,7 +274,7 @@ cache. The helper performs both steps without transferring the signing key:
 
 ```console
 store_path="$(nix build --no-link --print-out-paths .#PACKAGE)"
-./scripts/publish-forge-cache "$store_path"
+publish-forge-cache "$store_path"
 ```
 
 For deliberate Darwin milestones, the `nhdsp` Zsh alias runs the
@@ -301,7 +301,7 @@ signature from a client:
 
 ```console
 hello="$(nix build --no-link --print-out-paths nixpkgs#hello)"
-./scripts/publish-forge-cache "$hello"
+publish-forge-cache "$hello"
 narinfo="$(basename "$hello" | cut -d- -f1)"
 curl -fsSI "https://cache.decort.tech/$narinfo.narinfo"
 nix path-info --store https://cache.decort.tech "$hello"

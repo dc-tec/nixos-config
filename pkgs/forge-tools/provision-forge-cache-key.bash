@@ -1,13 +1,9 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
 : "${FORGE_NIX_CACHE_PRIVATE_KEY:?Run this script through SecretSpec with the forge-cache scope}"
+: "${FORGE_CACHE_PUBLIC_KEY_FILE:?The packaged public cache key path is missing}"
 
 target="${FORGE_SSH_TARGET:-roelc@10.77.0.1}"
 secret_file="/var/lib/forge-secrets/nix-cache-private-key"
-script_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-expected_public_key="$(<"${script_directory}/../keys/forge-cache.pub")"
+expected_public_key="$(<"$FORGE_CACHE_PUBLIC_KEY_FILE")"
 actual_public_key="$(
   printf '%s\n' "$FORGE_NIX_CACHE_PRIVATE_KEY" \
     | nix key convert-secret-to-public

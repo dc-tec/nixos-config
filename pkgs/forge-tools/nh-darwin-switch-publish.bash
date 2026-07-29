@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-script_directory="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-repository_directory="$(cd -- "${script_directory}/.." && pwd)"
+flake="${NH_DARWIN_FLAKE:-${NH_FLAKE:-}}"
 dry_run=false
+
+if [[ -z "$flake" ]]; then
+  echo "NH_DARWIN_FLAKE or NH_FLAKE must identify the configuration flake" >&2
+  exit 2
+fi
 
 for argument in "$@"; do
   case "$argument" in
@@ -28,7 +28,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-nh darwin switch "$repository_directory" \
+nh darwin switch "$flake" \
   --hostname darwin \
   --out-link "$result_link" \
   "$@"
@@ -53,4 +53,4 @@ case "$system_path" in
 esac
 
 printf 'Publishing activated Darwin system closure %s\n' "$system_path"
-"${script_directory}/publish-forge-cache" "$system_path"
+publish-forge-cache "$system_path"

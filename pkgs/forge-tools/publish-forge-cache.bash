@@ -1,7 +1,3 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
 if [[ "$#" -eq 0 ]]; then
   echo "usage: publish-forge-cache STORE_PATH..." >&2
   exit 2
