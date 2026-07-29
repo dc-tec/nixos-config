@@ -75,10 +75,10 @@ sudo sh -c 'wg pubkey < /var/lib/wireguard/forge.key'
 ```
 
 An independently stored copy of the WireGuard private key has been verified by
-deriving and comparing its public key. Include this key in the broader host
-backup and restore procedure as that procedure is established.
+deriving and comparing its public key. The key is also included in the host
+backup and restore procedure below.
 
-## Backup Bootstrap
+## Backup Policy
 
 The first backup slice uses Restic through rclone's FTP backend and the 100 GB
 Scaleway Dedibackup allocation. It deliberately protects only the host identity
@@ -110,25 +110,55 @@ is owned by root with mode `0400`. Dedibackup autologin is tied to the server's
 provider network and uses the non-secret `auto` account with an empty password;
 the Scaleway account password is not part of the configuration.
 
-The Restic service has no timer, automatic initialization, pruning, or
-automatic check yet. The initial repository, backup, full data check, and
-isolated restore were verified on 2026-07-29. The restore produced the same
-WireGuard public identity and the same Ed25519 and RSA SSH fingerprints as the
-live host; restored private keys retained mode `0600` and root ownership.
+The repository is already initialized; the service does not initialize it
+automatically. A persistent timer creates a snapshot daily at 03:00 local time
+with up to 30 minutes of randomized delay. A separate persistent maintenance
+timer runs on Sunday at 05:30 local time, also with up to 30 minutes of
+randomized delay. It applies the following retention policy and then reads and
+verifies all repository data:
 
-The repository is already initialized. Only initialize it again when
-reconstructing a new, empty backend. Run and inspect backups manually with:
+- 14 daily snapshots;
+- 8 weekly snapshots; and
+- 6 monthly snapshots.
+
+Backup and maintenance are separate jobs because adding prune and check options
+to the backup job would run them after every snapshot. The weekly maintenance
+job instead performs `unlock`, `forget --prune`, and `check --read-data` in that
+order.
+
+The initial repository, scheduled services, retention run, full data check, and
+isolated restore were verified on 2026-07-29. The restore contained the five
+expected files and produced the same WireGuard public identity and the same
+Ed25519 and RSA SSH fingerprints as the live host. The repository contained
+seven backend objects after this acceptance test, well below the provider's
+1000-file limit. The host had no failed systemd units.
+
+Only initialize the repository again when reconstructing a new, empty backend.
+Inspect the schedules and recent executions with:
+
+```console
+ssh roelc@10.77.0.1 systemctl list-timers --all \
+  restic-backups-forge-state.timer \
+  restic-backups-forge-maintenance.timer
+ssh roelc@10.77.0.1 sudo journalctl \
+  -u restic-backups-forge-state.service \
+  -u restic-backups-forge-maintenance.service
+```
+
+Run either job manually and inspect the repository with:
 
 ```console
 ssh roelc@10.77.0.1 sudo systemctl start restic-backups-forge-state.service
+ssh roelc@10.77.0.1 sudo systemctl start \
+  restic-backups-forge-maintenance.service
 ssh roelc@10.77.0.1 sudo restic-forge-state snapshots
 ssh roelc@10.77.0.1 sudo restic-forge-state check --read-data
 ```
 
 For subsequent restore tests, restore the latest snapshot into a temporary
 directory, derive the restored WireGuard public key, and compare the restored
-SSH host-key fingerprints. A successful backup alone is not the acceptance
-gate for enabling the timer.
+SSH host-key fingerprints. A successful backup alone is not sufficient restore
+evidence.
 
 ## Captured Inventory
 
@@ -195,8 +225,7 @@ Apple Silicon workstation because the target closure is x86-64 Linux.
 Application services are intentionally outside this first host slice. Add them
 independently after the base system has booted and remote recovery is proven:
 
-1. verified backup restore, scheduling, and retention;
-2. monitoring;
-3. the Nix binary cache;
-4. Radicle and Tangled; and
-5. OpenBao and identity integration.
+1. monitoring;
+2. the Nix binary cache;
+3. Radicle and Tangled; and
+4. OpenBao and identity integration.

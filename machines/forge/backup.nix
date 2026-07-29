@@ -3,8 +3,8 @@
   pkgs,
   ...
 }:
-{
-  services.restic.backups.forge-state = {
+let
+  dedibackup = {
     repository = "rclone:dedibackup:forge/restic";
     passwordFile = "/var/lib/forge-secrets/restic-password";
 
@@ -22,22 +22,44 @@
       disable_epsv = true;
     };
 
-    dynamicFilesFrom = ''
-      printf '%s\n' /var/lib/wireguard/forge.key
-      ${lib.getExe' pkgs.findutils "find"} /etc/ssh \
-        -maxdepth 1 \
-        -type f \
-        -name 'ssh_host_*' \
-        -print
-    '';
-
     extraOptions = [ "rclone.program=${lib.getExe pkgs.rclone}" ];
+  };
+in
+{
+  services.restic.backups = {
+    forge-state = dedibackup // {
+      dynamicFilesFrom = ''
+        printf '%s\n' /var/lib/wireguard/forge.key
+        ${lib.getExe' pkgs.findutils "find"} /etc/ssh \
+          -maxdepth 1 \
+          -type f \
+          -name 'ssh_host_*' \
+          -print
+      '';
 
-    # Keep scheduling and retention operator-driven for the next backup slice.
-    initialize = false;
-    timerConfig = null;
-    pruneOpts = [ ];
-    checkOpts = [ ];
+      initialize = false;
+      timerConfig = {
+        OnCalendar = "*-*-* 03:00:00";
+        RandomizedDelaySec = "30m";
+        Persistent = true;
+      };
+    };
+
+    forge-maintenance = dedibackup // {
+      paths = [ ];
+      createWrapper = false;
+      pruneOpts = [
+        "--keep-daily 14"
+        "--keep-weekly 8"
+        "--keep-monthly 6"
+      ];
+      checkOpts = [ "--read-data" ];
+      timerConfig = {
+        OnCalendar = "Sun *-*-* 05:30:00";
+        RandomizedDelaySec = "30m";
+        Persistent = true;
+      };
+    };
   };
 
   systemd.tmpfiles.rules = [ "d /var/lib/forge-secrets 0700 root root -" ];
