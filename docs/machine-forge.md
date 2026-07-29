@@ -34,7 +34,7 @@ The initial baseline provides:
 - a locked `roelc` account with key-only SSH access and passwordless `sudo`;
 - a locked root account and disabled root SSH login;
 - a default-deny firewall with the WireGuard listener exposed publicly and SSH
-  allowed only through `wg0`;
+  allowed only through `wg0`, with SSH forwarding disabled;
 - fail2ban, SMART monitoring, SSD trimming, and compressed swap;
 - a small set of operational tools; and
 - scheduled Nix garbage collection and store optimisation.
@@ -211,11 +211,12 @@ kills, backup and inventory freshness, and the Dedibackup object ceiling. CPU
 load is intentionally not an alert because Nix builds are expected to saturate
 the host. Warning and critical capacity expressions do not overlap.
 
-Alertmanager listens only on `127.0.0.1:9093`. Its `local-only` receiver has no
-email, webhook, or other outbound integration, so alerts remain inspectable on
-the host without leaving it. The Grafana dashboard shows the current firing
-alert count, backup ages, and backend object count. Inspect the rule and
-Alertmanager state with:
+Alertmanager listens only on `127.0.0.1:9093`. Its high-availability gossip
+listener is disabled because this is a single-node deployment. The
+`local-only` receiver has no email, webhook, or other outbound integration, so
+alerts remain inspectable on the host without leaving it. The Grafana
+dashboard shows the current firing alert count, backup ages, and backend object
+count. Inspect the rule and Alertmanager state with:
 
 ```console
 ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9090/api/v1/alerts
@@ -228,7 +229,7 @@ whole-host or provider-network loss. Exchange Online delivery to
 `roel@decort.tech` will be a later slice, after its connector and authentication
 boundary have been selected.
 
-The local alerting path was verified on 2026-07-29: all 15 rules passed syntax
+The local alerting path was verified on 2026-07-29: all 18 rules passed syntax
 and behavior checks, all four live rule groups reported healthy, Prometheus and
 Alertmanager were connected, and no real alerts were pending or firing. A
 short-lived acceptance alert was received and expired through the loopback-only
@@ -257,7 +258,9 @@ excluded from backup because they can be rebuilt. The signing key is included
 in the encrypted forge state backup after provisioning.
 
 Provision and verify the signing key over WireGuard before activating the
-cache configuration:
+cache configuration. These commands are installed by the `forge-tools` package
+in the Darwin configuration and are also available as individual flake
+packages:
 
 ```console
 secretspec check --profile default --scope forge-cache \

@@ -47,6 +47,7 @@
       enable = true;
       openFirewall = false;
       settings = {
+        DisableForwarding = true;
         KbdInteractiveAuthentication = false;
         PasswordAuthentication = false;
         PermitRootLogin = "no";

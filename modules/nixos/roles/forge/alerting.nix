@@ -12,6 +12,9 @@
     alertmanager = {
       enable = true;
       listenAddress = "127.0.0.1";
+      # This is a single-node deployment. An empty cluster listener disables
+      # the otherwise unnecessary Alertmanager gossip port.
+      extraFlags = [ "--cluster.listen-address=" ];
       configuration = {
         global.resolve_timeout = "5m";
         route = {
