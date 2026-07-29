@@ -3,6 +3,7 @@
   imports = [
     (modulesPath + "/profiles/minimal.nix")
     ./backup.nix
+    ./alerting.nix
     ./disko.nix
     ./hardware.nix
     ./monitoring.nix

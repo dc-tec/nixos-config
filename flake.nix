@@ -235,6 +235,19 @@
           };
         }
         // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
+          forge-alert-rules =
+            let
+              forgePkgs = self.nixosConfigurations.forge.pkgs;
+            in
+            forgePkgs.runCommand "forge-alert-rules"
+              {
+                nativeBuildInputs = [ forgePkgs.prometheus.cli ];
+              }
+              ''
+                cd ${./machines/forge}
+                promtool test rules prometheus-rules.test.yml
+                touch "$out"
+              '';
           nixos-legion = self.nixosConfigurations.legion.config.system.build.toplevel;
           nixos-chad = self.nixosConfigurations.chad.config.system.build.toplevel;
           nixos-ghost = self.nixosConfigurations.ghost.config.system.build.toplevel;

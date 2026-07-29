@@ -7,18 +7,18 @@ let
   metricDirectory = "/var/lib/prometheus-node-exporter-text-files";
 
   mkBackupSuccessMetric =
-    job:
-    pkgs.writeShellScript "forge-backup-${job}-metric" ''
+    backupJob:
+    pkgs.writeShellScript "forge-backup-${backupJob}-metric" ''
       set -euo pipefail
 
-      target="${metricDirectory}/forge_backup_${job}.prom"
+      target="${metricDirectory}/forge_backup_${backupJob}.prom"
       temporary="$target.$$"
       trap '${lib.getExe' pkgs.coreutils "rm"} -f -- "$temporary"' EXIT
 
       ${lib.getExe' pkgs.coreutils "printf"} '%s\n' \
         '# HELP forge_backup_last_success_timestamp_seconds Unix timestamp of the last successful forge backup job.' \
         '# TYPE forge_backup_last_success_timestamp_seconds gauge' \
-        "forge_backup_last_success_timestamp_seconds{job=\"${job}\"} $(${lib.getExe' pkgs.coreutils "date"} +%s)" \
+        "forge_backup_last_success_timestamp_seconds{backup_job=\"${backupJob}\"} $(${lib.getExe' pkgs.coreutils "date"} +%s)" \
         > "$temporary"
       ${lib.getExe' pkgs.coreutils "chmod"} 0644 "$temporary"
       ${lib.getExe' pkgs.coreutils "mv"} -f -- "$temporary" "$target"

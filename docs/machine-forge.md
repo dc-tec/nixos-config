@@ -160,7 +160,7 @@ directory, derive the restored WireGuard public key, and compare the restored
 SSH host-key fingerprints. A successful backup alone is not sufficient restore
 evidence.
 
-## Monitoring Foundation
+## Monitoring and Local Alerting
 
 Prometheus retains 30 days of host metrics on the mirrored root filesystem and
 listens only on `127.0.0.1:9090`. Its node and SMART exporters also listen only
@@ -200,6 +200,35 @@ healthy, both RAID arrays reporting no degraded members, all three SSDs
 reporting healthy SMART status, all four custom backup metrics present, and the
 provisioned dashboard reachable through WireGuard. Grafana was not reachable
 on the public interface.
+
+Prometheus evaluates declarative alerts for exporter and service availability,
+RAID and SMART health, root and cache capacity, root inode exhaustion, OOM
+kills, backup and inventory freshness, and the Dedibackup object ceiling. CPU
+load is intentionally not an alert because Nix builds are expected to saturate
+the host. Warning and critical capacity expressions do not overlap.
+
+Alertmanager listens only on `127.0.0.1:9093`. Its `local-only` receiver has no
+email, webhook, or other outbound integration, so alerts remain inspectable on
+the host without leaving it. The Grafana dashboard shows the current firing
+alert count, backup ages, and backend object count. Inspect the rule and
+Alertmanager state with:
+
+```console
+ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9090/api/v1/alerts
+ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9090/api/v1/rules
+ssh roelc@10.77.0.1 curl -fsS http://127.0.0.1:9093/api/v2/status
+```
+
+Scaleway's independent server-ping notification remains the external check for
+whole-host or provider-network loss. Exchange Online delivery to
+`roel@decort.tech` will be a later slice, after its connector and authentication
+boundary have been selected.
+
+The local alerting path was verified on 2026-07-29: all 15 rules passed syntax
+and behavior checks, all four live rule groups reported healthy, Prometheus and
+Alertmanager were connected, and no real alerts were pending or firing. A
+short-lived acceptance alert was received and expired through the loopback-only
+Alertmanager API. Alertmanager was not reachable on the public interface.
 
 ## Captured Inventory
 
@@ -266,7 +295,7 @@ Apple Silicon workstation because the target closure is x86-64 Linux.
 Application services are intentionally outside this first host slice. Add them
 independently after the base system has booted and remote recovery is proven:
 
-1. alert evaluation and external notification delivery;
+1. external alert delivery through Exchange Online;
 2. the Nix binary cache;
 3. Radicle and Tangled; and
 4. OpenBao and identity integration.
