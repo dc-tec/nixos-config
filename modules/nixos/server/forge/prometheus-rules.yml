@@ -13,7 +13,7 @@ groups:
 
       - alert: ForgeServiceFailed
         expr: >-
-          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|nginx|radicle-node|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics|forge-cache-.*|forge-radicle-.*)\\.service"} == 1
+          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|nginx|knot|radicle-node|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics|forge-cache-.*|forge-radicle-.*|forge-tangled-knot-.*)\\.service"} == 1
         for: 5m
         labels:
           severity: critical
@@ -198,6 +198,57 @@ groups:
         annotations:
           summary: "Forge Radicle metrics are stale"
           description: "No successful Radicle metrics scan has been recorded within the last 15 minutes."
+
+  - name: forge-tangled-knot
+    rules:
+      - alert: ForgeTangledKnotDatabaseMissing
+        expr: forge_tangled_knot_database_present == 0
+        for: 10m
+        labels:
+          severity: critical
+          category: tangled
+        annotations:
+          summary: "Forge Tangled Knot database is missing"
+          description: "The Knot SQLite database has not been created or is no longer present."
+
+      - alert: ForgeTangledKnotUnavailable
+        expr: >-
+          (forge_tangled_knot_database_present == 1)
+          and
+          ((forge_tangled_knot_service_active == 0)
+          or (forge_tangled_knot_http_listener_ready == 0)
+          or (forge_tangled_knot_internal_listener_ready == 0)
+          or (forge_tangled_knot_public_http_ready == 0))
+        for: 10m
+        labels:
+          severity: warning
+          category: tangled
+        annotations:
+          summary: "Forge Tangled Knot is unavailable"
+          description: "The Knot has state, but its service, local listeners, or public TLS endpoint is unavailable."
+
+      - alert: ForgeTangledKnotOwnerMismatch
+        expr: forge_tangled_knot_owner_matches == 0
+        for: 10m
+        labels:
+          severity: critical
+          category: tangled
+        annotations:
+          summary: "Forge Tangled Knot owner does not match"
+          description: "The public Knot owner endpoint does not return the configured operator DID."
+
+      - alert: ForgeTangledKnotMetricsStale
+        expr: >-
+          (time() - forge_tangled_knot_last_scan_timestamp_seconds > 900)
+          or
+          absent(forge_tangled_knot_last_scan_timestamp_seconds)
+        for: 10m
+        labels:
+          severity: warning
+          category: tangled
+        annotations:
+          summary: "Forge Tangled Knot metrics are stale"
+          description: "No successful Tangled Knot metrics scan has been recorded within the last 15 minutes."
 
   - name: forge-backup
     rules:

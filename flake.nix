@@ -61,6 +61,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niks-cli.url = "github:dc-tec/niks-cli";
+    flake-compat = {
+      url = "github:NixOS/flake-compat";
+      flake = false;
+    };
+    tangled = {
+      url = "git+https://tangled.org/tangled.org/core?ref=refs/tags/v1.16.1-alpha";
+      inputs.flake-compat.follows = "flake-compat";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
 
     # Others
     nur.url = "github:nix-community/NUR";
@@ -234,6 +243,22 @@
               nixfmt.enable = true;
             };
           };
+          ci-build-selection =
+            let
+              pkgs = mkPkgs system;
+            in
+            pkgs.runCommand "ci-build-selection"
+              {
+                nativeBuildInputs = [
+                  pkgs.bash
+                  pkgs.jq
+                ];
+              }
+              ''
+                CI_SELECTOR=${./.github/scripts/select-nix-builds.sh} \
+                  bash ${./.github/scripts/test-select-nix-builds.sh}
+                touch "$out"
+              '';
         }
         // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
           forge-alert-rules =

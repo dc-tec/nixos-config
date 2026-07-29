@@ -21,7 +21,7 @@ The baseline provides:
 - key-only SSH for the `roelc` administrator account;
 - a locked root account and disabled root SSH login;
 - a default-deny firewall;
-- SSH access only through WireGuard, with forwarding disabled;
+- administrative SSH only through WireGuard, with forwarding disabled;
 - fail2ban, SMART monitoring, SSD trimming and compressed swap; and
 - scheduled Nix garbage collection and store optimisation.
 
@@ -61,6 +61,9 @@ WireGuard is the administration boundary:
 The VPN DNS record must remain DNS-only in Cloudflare because the standard
 proxy does not forward WireGuard. Administrative SSH is available at
 `roelc@10.77.0.1`; the provider KVM is the break-glass path.
+The public SSH listener also serves Tangled Git traffic, but `AllowUsers`
+restricts `roelc` to the WireGuard workstation address and permits only the
+Knot's dynamic `git` account from other networks.
 
 Inspect WireGuard and derive the server's public key with:
 
@@ -82,11 +85,14 @@ be reconstructed from this repository:
 - the WireGuard private key;
 - the Nix cache signing key;
 - the Radicle node identity key; and
-- the SSH host keys.
+- the SSH host keys; and
+- the Tangled Knot database and hosted Git repositories.
 
-Nix store paths, cache contents, logs, metrics and public repositories are not
-included. New stateful services must add their authoritative state explicitly.
-The backend's 1000-object limit is monitored and constrains future expansion.
+Nix store paths, cache contents, logs, metrics and reconstructible Radicle
+replicas are not included. The Knot is authoritative for repositories assigned
+to it, so its state is included even though those repositories are public. New
+stateful services must add their authoritative state explicitly. The backend's
+1000-object limit is monitored and constrains future expansion.
 
 SecretSpec resolves the Restic password from the operator's Apple Keychain and
 provisions it over WireGuard. It is not a runtime dependency of Forge:
@@ -109,6 +115,11 @@ The schedule and retention policy are:
 - weekly maintenance on Sunday at 05:30;
 - 14 daily, 8 weekly and 6 monthly snapshots; and
 - weekly prune followed by a full repository data check.
+
+The state job stops the Knot before Restic reads its SQLite database and bare
+repositories, then restarts it in the cleanup hook even when the backup fails.
+This creates one consistent snapshot at the cost of pausing Git hosting for the
+duration of the nightly state backup.
 
 Inspect or run the jobs with:
 
@@ -151,7 +162,9 @@ The alert rules cover:
 - inode exhaustion and OOM kills;
 - backup and inventory freshness;
 - the Dedibackup object limit; and
-- public cache health and signing-key presence.
+- public cache health and signing-key presence;
+- Radicle replication health and declared repository policy; and
+- Tangled Knot state, listeners, public endpoint and owner identity.
 
 CPU saturation is intentionally not an alert because Nix builds are expected
 to use the host fully. Warning and critical capacity thresholds do not overlap.
@@ -310,6 +323,71 @@ To roll back the service, stop the node and remove the module from the Forge
 composition. Preserve the identity key until the old Node ID and address have
 been retired deliberately.
 
+## Tangled Knot
+
+Forge runs a single-operator Tangled Knot at `knot.decort.tech`. The Knot hosts
+Git data while the public `tangled.org` AppView and the operator's existing AT
+Protocol identity provide discovery and collaboration records. Forge does not
+run an AppView, PDS, PLC directory, search service or Spindle in this slice.
+
+The deployment pins Tangled `v1.16.1-alpha` and uses its upstream NixOS module.
+Its network boundaries are:
+
+| Surface | Exposure | Purpose |
+| --- | --- | --- |
+| HTTPS `443` | Public through Nginx and ACME | Knot HTTP, XRPC and event endpoints |
+| SSH `22` as `git` | Public | Git clone, fetch and push |
+| SSH `22` as `roelc` | WireGuard source `10.77.0.2` only | Host administration |
+| HTTP `127.0.0.1:5555` | Loopback | Nginx upstream |
+| HTTP `127.0.0.1:5444` | Loopback | Knot internal API and SSH key lookup |
+
+The Cloudflare record must remain DNS-only. TLS terminates on Forge and Git SSH
+does not traverse the Cloudflare proxy. Knot ownership is declared as:
+
+```text
+did:plc:wrl7x5yocird6ep6472fkm3a
+```
+
+Secure Mode is enabled. Git subprocesses are confined to their repository with
+Landlock and run under owner-specific virtual UIDs. Forge's kernel is newer
+than the upstream Linux 5.19 requirement for push-safe Landlock isolation. The
+service receives only the setuid, setgid and chown capabilities required by
+that mode and has explicit memory, task and systemd hardening limits. The
+upstream release emits debug-level logs unconditionally; a per-service burst
+limit prevents automated public scans from overwhelming journald.
+
+Authoritative state lives under `/var/lib/tangled-knot`:
+
+- `knotserver.db` contains the Knot database and access model;
+- `repos/` contains the hosted bare repositories; and
+- the system OpenSSH host key provides continuity for Git clients.
+
+This state is backed up consistently by the daily Forge state job. Restore the
+directory and SSH host keys before announcing a replacement Knot. The Knot has
+no additional bootstrap secret in this version; its owner and public service
+configuration are declarative.
+
+After the service passes its local and public checks, register
+`knot.decort.tech` from the Knot settings page on `tangled.org`. Registration
+publishes the Knot record through the operator's PDS and verifies the public
+owner endpoint. Do not register an incomplete or temporary deployment.
+
+Inspect the service with:
+
+```console
+ssh roelc@10.77.0.1 systemctl status knot.service
+ssh roelc@10.77.0.1 sudo journalctl -u knot.service
+curl -fsS https://knot.decort.tech/
+curl -fsS https://knot.decort.tech/xrpc/sh.tangled.owner | jq
+ssh -T git@knot.decort.tech
+```
+
+Monitoring checks both loopback listeners, the public TLS endpoint, the owner
+DID and the on-disk database. The dashboard also reports repository count and
+state size. To roll back, remove the Knot module and Nginx virtual host, then
+switch the Forge configuration. Preserve `/var/lib/tangled-knot` and the SSH
+host keys until the Knot registration has been retired or moved deliberately.
+
 ## Build and Deployment
 
 Evaluate the Forge system and Disko derivations from any supported client:
@@ -349,9 +427,8 @@ nix run .#nixos-anywhere -- \
 
 Stateful applications are added as independent, reversible slices:
 
-1. a Tangled knot;
-2. OpenBao with identity integration; and
-3. an optional private Attic evaluation, separate from the native cache.
+1. OpenBao with identity integration; and
+2. an optional private Attic evaluation, separate from the native cache.
 
 Each service must define its network exposure, state ownership, backup and
 restore procedure, monitoring, acceptance checks and rollback path.

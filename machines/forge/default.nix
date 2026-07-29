@@ -17,7 +17,10 @@
     useDHCP = false;
     interfaces.enp1s0f0.useDHCP = true;
   };
-  services.openssh.settings.AllowUsers = [ "roelc" ];
+  services.openssh.settings.AllowUsers = [
+    "git"
+    "roelc@10.77.0.2"
+  ];
 
   users.users.roelc = {
     isNormalUser = true;
