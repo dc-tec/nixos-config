@@ -160,6 +160,47 @@ directory, derive the restored WireGuard public key, and compare the restored
 SSH host-key fingerprints. A successful backup alone is not sufficient restore
 evidence.
 
+## Monitoring Foundation
+
+Prometheus retains 30 days of host metrics on the mirrored root filesystem and
+listens only on `127.0.0.1:9090`. Its node and SMART exporters also listen only
+on loopback. The node exporter includes the systemd and textfile collectors;
+the SMART exporter discovers and monitors all three local SSDs.
+
+Grafana listens on `10.77.0.1:3000` and the firewall permits that port only on
+`wg0`. It provides an anonymous read-only view to WireGuard peers, disables the
+login form and initial administrator account, and provisions its Prometheus
+datasource and `Forge Overview` dashboard from this repository. Grafana creates
+its database encryption key locally in `/var/lib/grafana/secret-key` before its
+first start. The key and Grafana database are disposable while all dashboards
+and datasources remain declarative and contain no credentials. Revisit that
+boundary before storing credentials or non-declarative state in Grafana.
+
+Successful backup and maintenance jobs trigger separate metric-writer units.
+They atomically publish their last-success timestamps to the node exporter's
+textfile directory without changing the result of the backup job. A persistent
+inventory timer runs daily at 04:00 with up to 30 minutes of randomized delay
+and records the Dedibackup repository object count and inventory timestamp.
+
+Inspect the monitoring foundation with:
+
+```console
+open http://10.77.0.1:3000/d/forge-overview/forge-overview
+ssh roelc@10.77.0.1 systemctl status \
+  prometheus.service \
+  prometheus-node-exporter.service \
+  prometheus-smartctl-exporter.service \
+  grafana.service
+ssh roelc@10.77.0.1 systemctl list-timers \
+  forge-backup-inventory-metrics.timer
+```
+
+The foundation was verified on 2026-07-29 with all three Prometheus targets
+healthy, both RAID arrays reporting no degraded members, all three SSDs
+reporting healthy SMART status, all four custom backup metrics present, and the
+provisioned dashboard reachable through WireGuard. Grafana was not reachable
+on the public interface.
+
 ## Captured Inventory
 
 The configuration was derived from this read-only inventory:
@@ -225,7 +266,7 @@ Apple Silicon workstation because the target closure is x86-64 Linux.
 Application services are intentionally outside this first host slice. Add them
 independently after the base system has booted and remote recovery is proven:
 
-1. monitoring;
+1. alert evaluation and external notification delivery;
 2. the Nix binary cache;
 3. Radicle and Tangled; and
 4. OpenBao and identity integration.

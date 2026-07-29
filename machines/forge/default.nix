@@ -5,6 +5,7 @@
     ./backup.nix
     ./disko.nix
     ./hardware.nix
+    ./monitoring.nix
     ./wireguard.nix
   ];
 
