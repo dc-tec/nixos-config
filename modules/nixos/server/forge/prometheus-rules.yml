@@ -13,7 +13,7 @@ groups:
 
       - alert: ForgeServiceFailed
         expr: >-
-          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|nginx|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics|forge-cache-.*)\\.service"} == 1
+          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|nginx|radicle-node|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics|forge-cache-.*|forge-radicle-.*)\\.service"} == 1
         for: 5m
         labels:
           severity: critical
@@ -145,6 +145,59 @@ groups:
         annotations:
           summary: "Forge Nix cache metrics are stale"
           description: "No successful cache metrics scan has been recorded within the last 15 minutes."
+
+  - name: forge-radicle
+    rules:
+      - alert: ForgeRadicleIdentityMissing
+        expr: forge_radicle_identity_present == 0
+        for: 10m
+        labels:
+          severity: critical
+          category: radicle
+        annotations:
+          summary: "Forge Radicle node identity is missing"
+          description: "The dedicated Radicle node private key has not been provisioned on Forge."
+
+      - alert: ForgeRadicleNodeUnavailable
+        expr: >-
+          (forge_radicle_identity_present == 1)
+          and
+          ((forge_radicle_node_active == 0)
+          or (forge_radicle_tcp_listening == 0)
+          or (forge_radicle_control_ready == 0))
+        for: 10m
+        labels:
+          severity: warning
+          category: radicle
+        annotations:
+          summary: "Forge Radicle node is unavailable"
+          description: "The Radicle identity is present, but the node service, protocol listener, or administrative interface is unavailable."
+
+      - alert: ForgeRadicleRepositoryUnavailable
+        expr: >-
+          (forge_radicle_repository_present == 0)
+          or
+          (forge_radicle_seed_policy_applied == 0)
+        for: 10m
+        labels:
+          severity: critical
+          category: radicle
+        annotations:
+          summary: "Forge is not replicating declared Radicle repository {{ $labels.rid }}"
+          description: "The repository is absent, has an invalid identity, or no longer uses the declared followed seeding policy."
+
+      - alert: ForgeRadicleMetricsStale
+        expr: >-
+          (time() - forge_radicle_last_scan_timestamp_seconds > 900)
+          or
+          absent(forge_radicle_last_scan_timestamp_seconds)
+        for: 10m
+        labels:
+          severity: warning
+          category: radicle
+        annotations:
+          summary: "Forge Radicle metrics are stale"
+          description: "No successful Radicle metrics scan has been recorded within the last 15 minutes."
 
   - name: forge-backup
     rules:

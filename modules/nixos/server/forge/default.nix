@@ -4,5 +4,6 @@ _: {
     ./backup.nix
     ./cache.nix
     ./monitoring.nix
+    ./radicle.nix
   ];
 }

@@ -33,6 +33,9 @@ in
         if [ -f /var/lib/forge-secrets/nix-cache-private-key ]; then
           printf '%s\n' /var/lib/forge-secrets/nix-cache-private-key
         fi
+        if [ -f /var/lib/forge-secrets/radicle-node ]; then
+          printf '%s\n' /var/lib/forge-secrets/radicle-node
+        fi
         ${lib.getExe' pkgs.findutils "find"} /etc/ssh \
           -maxdepth 1 \
           -type f \

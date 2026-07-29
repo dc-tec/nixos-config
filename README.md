@@ -72,7 +72,9 @@ workstation modules. This separation is explicit in `flake.nix`.
 - SOPS with age-backed secret decryption for workstation configuration;
 - WireGuard-only administration, Restic backups, Prometheus, Alertmanager and
   Grafana on Forge;
-- a signed, read-only native Nix binary cache for managed systems; and
+- a signed, read-only native Nix binary cache for managed systems;
+- a selectively replicating public Radicle node with a dedicated host
+  identity; and
 - repository-local packages for repeatable Forge provisioning and cache
   publication.
 

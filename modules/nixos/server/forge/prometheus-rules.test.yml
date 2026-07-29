@@ -284,6 +284,78 @@ tests:
               description: "No successful cache metrics scan has been recorded within the last 15 minutes."
 
   - interval: 1m
+    input_series:
+      - series: 'forge_radicle_identity_present{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeRadicleIdentityMissing
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: radicle
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Radicle node identity is missing"
+              description: "The dedicated Radicle node private key has not been provisioned on Forge."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_radicle_identity_present{instance="forge",job="node"}'
+        values: "1x15"
+      - series: 'forge_radicle_node_active{instance="forge",job="node"}'
+        values: "0x15"
+      - series: 'forge_radicle_tcp_listening{instance="forge",job="node"}'
+        values: "0x15"
+      - series: 'forge_radicle_control_ready{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeRadicleNodeUnavailable
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: radicle
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Radicle node is unavailable"
+              description: "The Radicle identity is present, but the node service, protocol listener, or administrative interface is unavailable."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_radicle_repository_present{instance="forge",job="node",rid="rad:z4FGmdE1XLWBUPTNBe4cJUQvJ5WyX"}'
+        values: "1x15"
+      - series: 'forge_radicle_seed_policy_applied{instance="forge",job="node",rid="rad:z4FGmdE1XLWBUPTNBe4cJUQvJ5WyX"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeRadicleRepositoryUnavailable
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: radicle
+              instance: forge
+              job: node
+              rid: rad:z4FGmdE1XLWBUPTNBe4cJUQvJ5WyX
+            exp_annotations:
+              summary: "Forge is not replicating declared Radicle repository rad:z4FGmdE1XLWBUPTNBe4cJUQvJ5WyX"
+              description: "The repository is absent, has an invalid identity, or no longer uses the declared followed seeding policy."
+
+  - interval: 1m
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeRadicleMetricsStale
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: radicle
+            exp_annotations:
+              summary: "Forge Radicle metrics are stale"
+              description: "No successful Radicle metrics scan has been recorded within the last 15 minutes."
+
+  - interval: 1m
     alert_rule_test:
       - eval_time: 30m
         alertname: ForgeBackupMaintenanceStale
