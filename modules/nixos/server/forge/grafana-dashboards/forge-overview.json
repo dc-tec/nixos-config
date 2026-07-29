@@ -835,6 +835,84 @@
       ],
       "title": "Backup objects",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "Unavailable"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Healthy"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 18
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min({__name__=~\"forge_radicle_(identity_present|node_active|tcp_listening|control_ready|repository_present|seed_policy_applied)\"})",
+          "instant": true,
+          "legendFormat": "Health",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Radicle health",
+      "type": "stat"
     }
   ],
   "refresh": "30s",
@@ -853,5 +931,5 @@
   "timezone": "browser",
   "title": "Forge Overview",
   "uid": "forge-overview",
-  "version": 1
+  "version": 2
 }

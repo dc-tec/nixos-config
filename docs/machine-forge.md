@@ -80,7 +80,8 @@ through rclone's FTP backend. The initial backup set contains state that cannot
 be reconstructed from this repository:
 
 - the WireGuard private key;
-- the Nix cache signing key; and
+- the Nix cache signing key;
+- the Radicle node identity key; and
 - the SSH host keys.
 
 Nix store paths, cache contents, logs, metrics and public repositories are not
@@ -227,6 +228,88 @@ nix store verify --no-contents --recursive "$hello"
 GitHub Actions continues to use Cachix. External runners do not receive Forge
 publication authority. Cache eviction remains an explicit operator action.
 
+## Radicle Node
+
+Forge runs a selective Radicle seed node on public TCP port `8776`. The node
+advertises `radicle.decort.tech:8776`; the DNS record remains DNS-only because
+the Radicle protocol does not traverse the Cloudflare HTTP proxy. The HTTP
+gateway and web explorer are not enabled.
+
+The node uses a dedicated identity rather than the workstation maintainer
+identity:
+
+```text
+Node ID: z6Mkv2Vt5s46dasz4m2Ht7rA8nnxDnwXp4Q6enhwt2V1RKMZ
+Address: z6Mkv2Vt5s46dasz4m2Ht7rA8nnxDnwXp4Q6enhwt2V1RKMZ@radicle.decort.tech:8776
+```
+
+The public key is committed in `public-keys.nix`. SecretSpec keeps the
+unencrypted private key in the operator's Apple Keychain and provisions it to:
+
+```text
+/var/lib/forge-secrets/radicle-node
+```
+
+An unencrypted key is used because the node must restart unattended. The file
+is root-owned with mode `0400` and is passed to the confined service as a
+systemd credential. Provision it over WireGuard with:
+
+```console
+secretspec check --profile default --scope forge-radicle \
+  --reason "Provision the Forge Radicle node identity"
+secretspec run --profile default --scope forge-radicle \
+  --reason "Provision the Forge Radicle node identity" -- \
+  provision-forge-radicle-key
+```
+
+The service is skipped when the key is absent instead of entering a restart
+loop. After provisioning a newly deployed host, start the node and apply the
+declared repository policy:
+
+```console
+ssh roelc@10.77.0.1 sudo systemctl start \
+  radicle-node.service \
+  forge-radicle-seed.service \
+  forge-radicle-metrics.service
+```
+
+The default seeding policy is `block`. `forge-radicle-seed.service` grants a
+`followed` policy only to the public repository identifiers declared in the
+Radicle module. It currently seeds `nixos-config`; removing a repository from
+that list does not delete its existing replica automatically.
+
+The service has an explicit memory and task budget so public replication cannot
+consume the engineering server without bound. Monitoring verifies the node's
+administrative interface, each declared repository identity, and its expected
+`followed` policy in addition to process and listener availability.
+
+Inspect the node and its policies with:
+
+```console
+ssh roelc@10.77.0.1 sudo rad-system node status
+ssh roelc@10.77.0.1 sudo rad-system node config --addresses
+ssh roelc@10.77.0.1 sudo rad-system seed
+ssh roelc@10.77.0.1 sudo journalctl -u radicle-node.service
+```
+
+From another Radicle node, verify the public path with:
+
+```console
+rad node connect \
+  z6Mkv2Vt5s46dasz4m2Ht7rA8nnxDnwXp4Q6enhwt2V1RKMZ@radicle.decort.tech:8776
+rad sync status
+```
+
+The encrypted Forge backup includes the node identity key. Replicated public
+repository data under `/var/lib/radicle` is reconstructible and deliberately
+excluded. The configured repository list restores the seeding policy after a
+new node starts. A restore must reproduce the same Node ID before the recovered
+node is advertised.
+
+To roll back the service, stop the node and remove the module from the Forge
+composition. Preserve the identity key until the old Node ID and address have
+been retired deliberately.
+
 ## Build and Deployment
 
 Evaluate the Forge system and Disko derivations from any supported client:
@@ -266,10 +349,9 @@ nix run .#nixos-anywhere -- \
 
 Stateful applications are added as independent, reversible slices:
 
-1. a Radicle node;
-2. a Tangled knot;
-3. OpenBao with identity integration; and
-4. an optional private Attic evaluation, separate from the native cache.
+1. a Tangled knot;
+2. OpenBao with identity integration; and
+3. an optional private Attic evaluation, separate from the native cache.
 
 Each service must define its network exposure, state ownership, backup and
 restore procedure, monitoring, acceptance checks and rollback path.
