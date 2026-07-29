@@ -30,6 +30,9 @@ in
     forge-state = dedibackup // {
       dynamicFilesFrom = ''
         printf '%s\n' /var/lib/wireguard/forge.key
+        if [ -f /var/lib/forge-secrets/nix-cache-private-key ]; then
+          printf '%s\n' /var/lib/forge-secrets/nix-cache-private-key
+        fi
         ${lib.getExe' pkgs.findutils "find"} /etc/ssh \
           -maxdepth 1 \
           -type f \

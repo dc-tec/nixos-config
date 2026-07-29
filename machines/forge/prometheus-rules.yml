@@ -13,7 +13,7 @@ groups:
 
       - alert: ForgeServiceFailed
         expr: >-
-          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics)\\.service"} == 1
+          node_systemd_unit_state{instance="forge",state="failed",name=~"(grafana|prometheus|prometheus-node-exporter|prometheus-smartctl-exporter|alertmanager|nginx|restic-backups-forge-state|restic-backups-forge-maintenance|forge-backup-.*-metrics|forge-cache-.*)\\.service"} == 1
         for: 5m
         labels:
           severity: critical
@@ -110,6 +110,41 @@ groups:
         annotations:
           summary: "Forge killed a process because of memory pressure"
           description: "The kernel recorded at least one OOM kill in the last 15 minutes."
+
+  - name: forge-nix-cache
+    rules:
+      - alert: ForgeNixCacheUnavailable
+        expr: forge_nix_cache_http_up == 0
+        for: 10m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "Forge Nix cache is unavailable"
+          description: "The public binary-cache metadata endpoint has been unreachable for ten minutes."
+
+      - alert: ForgeNixCacheSigningKeyMissing
+        expr: forge_nix_cache_signing_key_present == 0
+        for: 10m
+        labels:
+          severity: critical
+          category: cache
+        annotations:
+          summary: "Forge Nix cache signing key is missing"
+          description: "The private cache signing key has not been provisioned on forge."
+
+      - alert: ForgeNixCacheMetricsStale
+        expr: >-
+          (time() - forge_nix_cache_last_scan_timestamp_seconds > 900)
+          or
+          absent(forge_nix_cache_last_scan_timestamp_seconds)
+        for: 10m
+        labels:
+          severity: warning
+          category: cache
+        annotations:
+          summary: "Forge Nix cache metrics are stale"
+          description: "No successful cache metrics scan has been recorded within the last 15 minutes."
 
   - name: forge-backup
     rules:

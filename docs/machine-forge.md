@@ -85,6 +85,7 @@ Scaleway Dedibackup allocation. It deliberately protects only the host identity
 material that cannot be reconstructed from this repository:
 
 - `/var/lib/wireguard/forge.key`; and
+- `/var/lib/forge-secrets/nix-cache-private-key`, once provisioned; and
 - the SSH host key files under `/etc/ssh`.
 
 Nix store paths, `/cache`, logs, metrics, and public Git repositories remain
@@ -230,6 +231,80 @@ Alertmanager were connected, and no real alerts were pending or firing. A
 short-lived acceptance alert was received and expired through the loopback-only
 Alertmanager API. Alertmanager was not reachable on the public interface.
 
+## Native Nix Binary Cache
+
+The cache design uses Nix's native local binary-cache store rather than an
+Internet-facing Attic write API. `cache.decort.tech` serves the static cache
+over HTTPS and permits only `GET` and `HEAD`. There is no HTTP upload endpoint.
+The DNS-only Cloudflare record resolves directly to the forge public address so
+the host can obtain and renew its ACME certificate through the HTTP challenge.
+
+The cache data lives under `/cache/nix` on the independent cache SSD. Nix uses
+zstd compression and signs each published store path with the
+`cache.decort.tech-1` key. Shared workstation configuration trusts the public
+half committed at `keys/forge-cache.pub`; the private half is stored in the
+operator's Apple Keychain through SecretSpec and is provisioned only to:
+
+```text
+/var/lib/forge-secrets/nix-cache-private-key
+```
+
+The private key remains readable only by root. Cache contents are intentionally
+excluded from backup because they can be rebuilt. The signing key is included
+in the encrypted forge state backup after provisioning.
+
+Provision and verify the signing key over WireGuard before activating the
+cache configuration:
+
+```console
+secretspec check --profile default --scope forge-cache \
+  --reason "Provision the forge binary-cache signing key"
+secretspec run --profile default --scope forge-cache \
+  --reason "Provision the forge binary-cache signing key" -- \
+  ./scripts/provision-forge-cache-key
+```
+
+Publishing is a two-stage operation. The workstation first copies an already
+realized closure into the forge Nix store over the WireGuard-only SSH path. A
+root-only server command then copies and signs that closure into the static
+cache. The helper performs both steps without transferring the signing key:
+
+```console
+store_path="$(nix build --no-link --print-out-paths .#PACKAGE)"
+./scripts/publish-forge-cache "$store_path"
+```
+
+The Mac, Chad, Forge, and the other shared configurations use the cache as an
+additional substituter with priority 30. Exact cache hits remain platform
+specific: Forge and Chad can share `x86_64-linux` outputs, while the Apple
+Silicon workstation primarily reuses `aarch64-darwin` outputs that it has
+published previously.
+
+The node exporter records public endpoint health, signing-key presence, cache
+path count, logical cache bytes, and metric freshness. Prometheus alerts when
+the public endpoint or signing key is unavailable, when metrics become stale,
+or when the cache filesystem approaches its capacity limit. Native cache
+eviction is deliberately manual in the first slice; the cache must not be
+cleared merely because an automated age threshold was reached.
+
+After activation, publish a small closure and verify both its metadata and its
+signature from a client:
+
+```console
+hello="$(nix build --no-link --print-out-paths nixpkgs#hello)"
+./scripts/publish-forge-cache "$hello"
+narinfo="$(basename "$hello" | cut -d- -f1)"
+curl -fsSI "https://cache.decort.tech/$narinfo.narinfo"
+nix path-info --store https://cache.decort.tech "$hello"
+nix store verify --no-contents --recursive "$hello"
+```
+
+GitHub-hosted jobs continue to read from and publish to Cachix in this slice.
+They can be configured to read from the forge cache later, without receiving a
+write credential. Giving external runners forge cache publication authority
+remains outside this design. Attic may be evaluated separately on WireGuard
+with a disposable key and cache namespace.
+
 ## Captured Inventory
 
 The configuration was derived from this read-only inventory:
@@ -296,6 +371,6 @@ Application services are intentionally outside this first host slice. Add them
 independently after the base system has booted and remote recovery is proven:
 
 1. external alert delivery through Exchange Online;
-2. the Nix binary cache;
-3. Radicle and Tangled; and
-4. OpenBao and identity integration.
+2. Radicle and Tangled;
+3. OpenBao and identity integration; and
+4. a private Attic evaluation, separate from the trusted native cache.

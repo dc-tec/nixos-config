@@ -125,3 +125,37 @@ tests:
             exp_annotations:
               summary: "Forge state backup is stale"
               description: "No successful state backup has been recorded within the last 36 hours."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_nix_cache_http_up{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeNixCacheUnavailable
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              category: cache
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Nix cache is unavailable"
+              description: "The public binary-cache metadata endpoint has been unreachable for ten minutes."
+
+  - interval: 1m
+    input_series:
+      - series: 'forge_nix_cache_signing_key_present{instance="forge",job="node"}'
+        values: "0x15"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForgeNixCacheSigningKeyMissing
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              category: cache
+              instance: forge
+              job: node
+            exp_annotations:
+              summary: "Forge Nix cache signing key is missing"
+              description: "The private cache signing key has not been provisioned on forge."
