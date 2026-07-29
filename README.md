@@ -40,12 +40,14 @@ The configuration is structured into a three-tiered modular architecture that cl
 
 At the top level, the `machines/` directory defines the individual hosts. Each machine has a dedicated file (e.g., `machines/chad/default.nix`) that specifies its hardware configuration, network settings, and which modules to import. This is where you would define things like disk layouts, graphics drivers, and other host-specific parameters.
 
-The flake includes four reference machines:
+The flake includes five reference machines:
 
 - **chad**: A powerful desktop workstation running NixOS with ZFS, impermanence, and virtualization enabled.
 - **legion**: A NixOS laptop with a similar ZFS and impermanence setup, but tailored for a mobile environment.
 - **ghost**: A minimal WSL2 instance on Windows, configured to be stateless.
 - **darwin**: A macOS environment managed with `nix-darwin`.
+- **forge**: A minimal NixOS engineering server that hosts the public forge
+  stack and supporting infrastructure.
 
 ### Modules
 
@@ -53,7 +55,7 @@ The core logic is organized in the `modules/` directory, which is split into thr
 
 - **Shared Modules** (`modules/shared`): This is the foundation for all systems, regardless of the operating system. It includes common configurations for `home-manager`, development tools (`development/`), base system settings (`config/`), and essential utilities like ZSH, Git, and SSH (`utils/`). These modules ensure a consistent user experience across every machine.
 
-- **NixOS Modules** (`modules/nixos`): These modules are specific to Linux hosts. They handle system-level concerns like network connectivity (`connectivity/`), the desktop environment (Hyprland, applications, theming in `desktop/`), storage with ZFS (`storage/`), and virtualization with Docker and KVM (`virtualization/`).
+- **NixOS Modules** (`modules/nixos`): These modules are specific to Linux hosts. They handle system-level concerns like network connectivity (`connectivity/`), the desktop environment (Hyprland, applications, theming in `desktop/`), storage with ZFS (`storage/`), and virtualization with Docker and KVM (`virtualization/`). Opt-in profiles contain reusable host baselines, while roles compose workload-specific services such as the Forge stack.
 
 - **Darwin Modules** (`modules/darwin`): These modules target macOS. They configure macOS-specific desktop customizations (`desktop/`) and manage packages through Homebrew (`homebrew/`), integrating them cleanly into the Nix environment.
 

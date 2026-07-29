@@ -16,9 +16,12 @@ storage plan below. Applying it erases all three SSDs.
 
 ## Configuration Boundary
 
-The server uses the stable NixOS 26.05 package set and a dedicated minimal
-module stack. It does not inherit workstation Home Manager configuration,
-desktop theming, impermanence, personal SOPS material, or automatic upgrades.
+The server uses the stable NixOS 26.05 package set, the opt-in server profile
+under `modules/nixos/profiles/server`, and the workload composition under
+`modules/nixos/roles/forge`. Host identity, hardware, disk layout, and
+administration networking remain under `machines/forge`. It does not inherit
+workstation Home Manager configuration, desktop theming, impermanence,
+personal SOPS material, or automatic upgrades.
 The host selects `linuxPackages_latest` because current `nixos-anywhere` kexec
 images create mdraid metadata that requires Linux 6.19 or newer. An assertion
 prevents accidentally selecting an incompatible older kernel. Do not lower

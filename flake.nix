@@ -165,7 +165,7 @@
           };
           modules = [
             inputs.disko.nixosModules.disko
-            ./modules/server
+            ./modules/nixos/profiles/server
             hostModule
           ];
         };
@@ -244,7 +244,7 @@
                 nativeBuildInputs = [ forgePkgs.prometheus.cli ];
               }
               ''
-                cd ${./machines/forge}
+                cd ${./modules/nixos/roles/forge}
                 promtool test rules prometheus-rules.test.yml
                 touch "$out"
               '';

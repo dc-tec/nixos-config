@@ -2,12 +2,9 @@
 {
   imports = [
     (modulesPath + "/profiles/minimal.nix")
-    ./backup.nix
-    ./alerting.nix
-    ./cache.nix
+    ../../modules/nixos/roles/forge
     ./disko.nix
     ./hardware.nix
-    ./monitoring.nix
     ./wireguard.nix
   ];
 
