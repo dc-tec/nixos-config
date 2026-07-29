@@ -2,7 +2,7 @@
 {
   imports = [
     (modulesPath + "/profiles/minimal.nix")
-    ../../modules/nixos/roles/forge
+    ../../modules/nixos/server/forge
     ./disko.nix
     ./hardware.nix
     ./wireguard.nix

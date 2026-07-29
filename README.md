@@ -55,7 +55,7 @@ The core logic is organized in the `modules/` directory, which is split into thr
 
 - **Shared Modules** (`modules/shared`): This is the foundation for all systems, regardless of the operating system. It includes common configurations for `home-manager`, development tools (`development/`), base system settings (`config/`), and essential utilities like ZSH, Git, and SSH (`utils/`). These modules ensure a consistent user experience across every machine.
 
-- **NixOS Modules** (`modules/nixos`): These modules are specific to Linux hosts. They handle system-level concerns like network connectivity (`connectivity/`), the desktop environment (Hyprland, applications, theming in `desktop/`), storage with ZFS (`storage/`), and virtualization with Docker and KVM (`virtualization/`). Opt-in profiles contain reusable host baselines, while roles compose workload-specific services such as the Forge stack.
+- **NixOS Modules** (`modules/nixos`): These modules are specific to Linux hosts. They handle system-level concerns like network connectivity (`connectivity/`), the desktop environment (Hyprland, applications, theming in `desktop/`), storage with ZFS (`storage/`), and virtualization with Docker and KVM (`virtualization/`). The `server/` tree contains the reusable server baseline and the Forge engineering-server specialization.
 
 - **Darwin Modules** (`modules/darwin`): These modules target macOS. They configure macOS-specific desktop customizations (`desktop/`) and manage packages through Homebrew (`homebrew/`), integrating them cleanly into the Nix environment.
 
