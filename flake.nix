@@ -58,7 +58,6 @@
     # Custom Flakes
     nixvim = {
       url = "github:dc-tec/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     niks-cli.url = "github:dc-tec/niks-cli";
     flake-compat = {
