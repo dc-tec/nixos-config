@@ -32,11 +32,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785754423,
-        "narHash": "sha256-xYVTi6/3p4bFqoTYKrgUqXBQP8H1ZOq5qv7aqW6AcQ4=",
+        "lastModified": 1785797889,
+        "narHash": "sha256-JeGnzgdlGeZUMPwdOFE/1Pjkg9OzIQWgIpnqpbY7y/A=",
         "owner": "dc-tec",
         "repo": "archlens",
-        "rev": "1c5454f1d559c1e1b9744ea8b31037cc3ce44aa7",
+        "rev": "f3be325fa72db87dc6137ae085208f11ca4a60d5",
         "type": "github"
       },
       "original": {
@@ -1013,11 +1013,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1785755682,
-        "narHash": "sha256-mEUegott/zhZ7WvcOUEiHZSjhTAfKdZmYWLp7SjQCUA=",
+        "lastModified": 1785826997,
+        "narHash": "sha256-giHX3J2MqUu8LvdW5r7JlKaMU4Wqamc7RRiabAt69kI=",
         "owner": "dc-tec",
         "repo": "nixvim",
-        "rev": "c12ab6e339178dc58424d481432c824cfe6c85dd",
+        "rev": "d5f2a3377fc88d99277a8836dad9099eea45e6a1",
         "type": "github"
       },
       "original": {
