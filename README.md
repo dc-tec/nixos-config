@@ -2,7 +2,7 @@
 
 This repository contains the declarative configuration for the systems I
 actively manage: NixOS workstations, a WSL development environment, a macOS
-workstation and a dedicated engineering server.
+workstation, a headless lab host and a dedicated engineering server.
 
 The workstation configurations share development tools and user-level defaults
 where that is useful. The Forge server follows a separate, smaller composition
@@ -13,7 +13,7 @@ secrets or workstation state.
 
 | Host     | Platform              | Purpose                                                                             |
 | -------- | --------------------- | ----------------------------------------------------------------------------------- |
-| `chad`   | NixOS, x86-64         | Desktop workstation with encrypted ZFS, impermanence and virtualization             |
+| `chad`   | NixOS, x86-64         | Headless KVM/libvirt lab host with encrypted ZFS and remote unlock                  |
 | `legion` | NixOS, x86-64         | Laptop with encrypted ZFS, impermanence and wireless networking                     |
 | `ghost`  | NixOS on WSL2, x86-64 | Lightweight Windows development environment                                         |
 | `darwin` | macOS, Apple Silicon  | Daily workstation managed with nix-darwin, Home Manager and Homebrew                |
@@ -39,7 +39,8 @@ The flake composes each host from platform modules and a machine-specific
 definition:
 
 ```text
-chad, legion, ghost = shared modules + NixOS modules + machine definition
+legion, ghost        = shared modules + NixOS modules + machine definition
+chad                 = dedicated stable NixOS input + server baseline + persistence + machine definition
 darwin               = shared modules + Darwin modules + machine definition
 forge                = stable NixOS + Disko + server modules + machine definition
 ```
@@ -60,12 +61,13 @@ forge                = stable NixOS + Disko + server modules + machine definitio
   contains public identity material that is safe to commit.
 
 The workstation configurations use NixOS unstable as their primary package
-set. Forge uses the stable NixOS package set and does not inherit the shared
-workstation modules. This separation is explicit in `flake.nix`.
+set. Forge and Chad use separately pinned stable NixOS inputs and do not inherit
+the shared workstation modules. This separation is defined in `flake.nix`.
 
 ## Included configuration
 
-- encrypted ZFS roots and ephemeral system state on `chad` and `legion`;
+- encrypted ZFS on `chad` and `legion`, with ephemeral system state on `legion`;
+- a headless KVM/libvirt host on Chad with static LAN addressing and remote ZFS unlock;
 - Home Manager configuration shared across Linux and macOS workstations;
 - a separate NixVim flake for the editor configuration;
 - Hyprland on graphical NixOS hosts and declarative macOS desktop settings;
@@ -99,7 +101,7 @@ On an already configured host, `nh` uses this repository as its default flake:
 
 ```console
 # NixOS workstation
-nh os switch --hostname chad
+nh os switch --hostname legion
 
 # macOS workstation
 nh darwin switch --hostname darwin
@@ -109,7 +111,7 @@ Equivalent direct commands are:
 
 ```console
 # NixOS workstation
-doas nixos-rebuild switch --flake .#chad
+doas nixos-rebuild switch --flake .#legion
 
 # macOS workstation
 darwin-rebuild switch --flake .#darwin
@@ -119,6 +121,9 @@ Forge is built remotely from the Apple Silicon workstation and follows a
 test-before-switch workflow. See the
 [Forge build and deployment procedure](./docs/machine-forge.md#build-and-deployment)
 instead of applying the workstation commands to that host.
+
+Chad uses a build-before-reboot workflow with a retained rollback generation.
+See the [Chad upgrade and remote unlock procedure](./docs/machine-chad.md).
 
 ## Secrets and cache boundaries
 

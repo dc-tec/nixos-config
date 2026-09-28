@@ -423,6 +423,13 @@ nix run .#nixos-anywhere -- \
   --target-host roelc@FORGE_ADDRESS
 ```
 
+## Remote Development
+
+Forge can host the separately encrypted `forge-dev` NixOS virtual machine.
+Its storage boundary, bootstrap sequence, cmux SSH entry and initial
+SecretSpec/OpenBao Operator pilot are documented in
+[`machine-forge-dev.md`](./machine-forge-dev.md).
+
 ## Planned Services
 
 Stateful applications are added as independent, reversible slices:

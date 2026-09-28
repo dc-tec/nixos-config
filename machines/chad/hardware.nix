@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   modulesPath,
   pkgs,
@@ -47,6 +46,7 @@
     "/boot" = {
       device = "/dev/disk/by-label/EFI";
       fsType = "vfat";
+      options = [ "umask=0077" ];
     };
     "/nix" = {
       device = "rpool/local/nix";
@@ -77,26 +77,8 @@
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
-    graphics.enable = true;
-    nvidia = {
-      package = config.boot.kernelPackages.nvidiaPackages.latest;
-      powerManagement.enable = true;
-      open = false;
-      modesetting = {
-        enable = true;
-      };
-    };
   };
   services = {
     fstrim.enable = true;
-    blueman.enable = true;
   };
-
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "nvidia-x11"
-      "nvidia"
-      "nvidia-settings"
-    ];
 }

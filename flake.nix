@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-chad.url = "github:nixos/nixpkgs/nixos-26.05";
 
     nixpkgs-master.url = "github:nixos/nixpkgs";
 
@@ -149,7 +150,6 @@
 
       nixosHostModules = {
         legion = ./machines/legion/default.nix;
-        chad = ./machines/chad/default.nix;
         ghost = ./machines/ghost/default.nix;
       };
 
@@ -277,6 +277,7 @@
           nixos-chad = self.nixosConfigurations.chad.config.system.build.toplevel;
           nixos-ghost = self.nixosConfigurations.ghost.config.system.build.toplevel;
           nixos-forge = self.nixosConfigurations.forge.config.system.build.toplevel;
+          forge-dev-image = self.nixosConfigurations.forge-dev.config.system.build.images.qemu-efi;
           forge-disko = self.nixosConfigurations.forge.config.system.build.diskoScript;
         }
         // nixpkgs.lib.optionalAttrs (system == "aarch64-darwin") {
@@ -299,7 +300,16 @@
       nixosConfigurations =
         nixpkgs.lib.mapAttrs (_: hostModule: mkNixosConfiguration hostModule) nixosHostModules
         // {
+          chad = inputs.nixpkgs-chad.lib.nixosSystem {
+            specialArgs = { inherit publicKeys; };
+            modules = [
+              impermanence.nixosModule
+              ./modules/nixos/server
+              ./machines/chad/default.nix
+            ];
+          };
           forge = mkNixosServerConfiguration ./machines/forge/default.nix;
+          forge-dev = mkNixosServerConfiguration ./machines/forge-dev/default.nix;
         };
     };
 }
