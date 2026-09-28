@@ -387,7 +387,7 @@ gpg --list-secret-keys
 Secrets are automatically deployed during system builds to `/run/secrets/`:
 
 ```bash
-# NixOS systems (chad, legion, ghost)
+# NixOS workstations (legion, ghost)
 sudo nixos-rebuild switch --flake .#hostname
 
 # Darwin systems (macOS)
@@ -472,4 +472,4 @@ sops.secrets = lib.mkMerge [
 - [SOPS GitHub Repository](https://github.com/mozilla/sops)
 - [Age Encryption](https://age-encryption.org/)
 - [NixOS SOPS Module](https://github.com/Mic92/sops-nix)
-- [Age Key Generation](https://age-encryption.org/v1#generating-keys) 
+- [Age Key Generation](https://age-encryption.org/v1#generating-keys)

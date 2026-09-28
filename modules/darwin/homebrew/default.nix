@@ -52,6 +52,7 @@ _: {
     ];
 
     casks = [
+      "brave-browser"
       "thunderbird"
       "whatsapp"
       "mattermost"

@@ -50,8 +50,12 @@
           # Keep graphical applications off the deliberately minimal WSL host.
           ++ lib.optionals (config.dc-tec.isDarwin || (config.dc-tec.graphical.enable or false)) [
             bitwarden-desktop
-            brave
             ffmpeg
+          ]
+          # Use the signed Homebrew cask on Darwin so macOS privacy permissions
+          # remain attached to Brave across package updates.
+          ++ lib.optionals (config.dc-tec.isLinux && (config.dc-tec.graphical.enable or false)) [
+            brave
           ]
           # Codex and Claude Code use their faster npm update channel on Darwin.
           # Keep the Nix-managed packages on Linux.

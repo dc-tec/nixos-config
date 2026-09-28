@@ -4,7 +4,7 @@ Welcome to the documentation for deCort.tech's NixOS and Darwin system configura
 
 ## Machine Configurations
 
-- **[Chad Machine](machine-chad.html)** - Development workstation configuration
+- **[Chad Machine](machine-chad.html)** - Headless KVM/libvirt lab host and remote ZFS unlock
 - **[Legion Machine](machine-legion.html)** - Laptop system configuration
 - **[Ghost Machine](machine-ghost.html)** - WSL2 system configuration
 - **[Darwin Machine](machine-darwin.html)** - macOS system configuration

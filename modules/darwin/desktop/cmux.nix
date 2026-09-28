@@ -66,6 +66,21 @@ in
           theme = "dark";
         };
 
+        automation = {
+          # Only the top-level agent owns the workspace lifecycle indicator.
+          # Nested Codex agents remain visible in the Feed without leaving the
+          # parent workspace stuck in a running state.
+          suppressSubagentNotifications = true;
+        };
+
+        notifications = {
+          agentIdleReminder = true;
+          agentPermissionPrompt = true;
+          # A completed turn can still have a build or scheduled wakeup behind
+          # it. Notify only after that background work has drained.
+          agentTurnComplete = "whenIdle";
+        };
+
         shortcuts = {
           showModifierHoldHints = true;
           bindings = {
@@ -104,6 +119,7 @@ in
           openPortLinksInCmuxBrowser = true;
           openPullRequestLinksInCmuxBrowser = true;
           pathLastSegmentOnly = true;
+          loadingSpinnerPosition = "trailing";
           showAgentActivity = true;
           showBranchDirectory = true;
           showCustomMetadata = true;
@@ -112,6 +128,10 @@ in
           showProgress = true;
           showPullRequests = true;
           watchGitStatus = true;
+        };
+
+        workspaceGroups = {
+          newWorkspacePlacement = "afterCurrent";
         };
 
         sidebarAppearance = {

@@ -14,6 +14,18 @@
 | ctrl + alt - m       | open -a "Mail"                             |
 | ctrl + alt - d       | open -a docker                             |
 
+## Terminal Background
+
+| Key Combination  | Command                                               |
+| ---------------- | ----------------------------------------------------- |
+| cmd + shift - b  | Toggle the Adfinis background in cmux and kitty only |
+
+The background is off by default. Run `toggle-terminal-background status` to
+show the current state. The command also accepts `on`, `off`, and `toggle`.
+
+Restart kitty after the first system activation. Kitty creates its local
+control socket only when the application starts.
+
 ## Focus Window
 
 | Key Combination | Command                       |

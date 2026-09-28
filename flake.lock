@@ -32,16 +32,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1785797889,
-        "narHash": "sha256-JeGnzgdlGeZUMPwdOFE/1Pjkg9OzIQWgIpnqpbY7y/A=",
+        "lastModified": 1786043885,
+        "narHash": "sha256-guXDY6d5jQVDJPLYeufuT31DQaJIYA6jVbNNftqCB58=",
         "owner": "dc-tec",
-        "repo": "archlens",
-        "rev": "f3be325fa72db87dc6137ae085208f11ca4a60d5",
+        "repo": "archlens.nvim",
+        "rev": "c929e0089ceda35f6cc04573d5a33338e520b2a3",
         "type": "github"
       },
       "original": {
         "owner": "dc-tec",
-        "repo": "archlens",
+        "ref": "main",
+        "repo": "archlens.nvim",
         "type": "github"
       }
     },
@@ -255,11 +256,11 @@
         "nixpkgs-lib": "nixpkgs-lib_2"
       },
       "locked": {
-        "lastModified": 1782949081,
-        "narHash": "sha256-vp6Y/Grm98ESt6ceOkWiHWyZRDV3J1RID4w+6NWK9yA=",
+        "lastModified": 1785627969,
+        "narHash": "sha256-4dtXQk/NMePegK/nWp5NSeuZKLATItOq61lpEvmXqGw=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "17c9d6cdfc60c64f4ee8d306f9bc0b4ccb51481e",
+        "rev": "427bf4bd9435fdf21321c8cc628c24efc14c0f7a",
         "type": "github"
       },
       "original": {
@@ -816,6 +817,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-chad": {
+      "locked": {
+        "lastModified": 1790533781,
+        "narHash": "sha256-F+b8u43BVF5DlM0pz7JQSbtbwKy5PrHIT5zQUekXsD0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "cf5e76507c6e23b59f7e0ffcc7baa2a39ddd8442",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1697935651,
@@ -833,11 +850,11 @@
     },
     "nixpkgs-lib_2": {
       "locked": {
-        "lastModified": 1782614948,
-        "narHash": "sha256-ePjCwr1sNm9NYUqywL7QfK3JnlS015msC+eBu2zKlp8=",
+        "lastModified": 1785031560,
+        "narHash": "sha256-OmshNvn2vupOFpYinLUu+1Dnpu4n7Q5N3ggGVNHpkUI=",
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
-        "rev": "db3f255737b94216eb71cce308e2912cf6bc2d7c",
+        "rev": "0e79af5e3d4dcfcd676ab5ba3f95d2e3352e078c",
         "type": "github"
       },
       "original": {
@@ -940,11 +957,11 @@
     },
     "nixpkgs_6": {
       "locked": {
-        "lastModified": 1785318670,
-        "narHash": "sha256-dN6Ou5x/+23FZLEpYP3IffO+NyJFzUlGumt1uu3MMaY=",
+        "lastModified": 1785571196,
+        "narHash": "sha256-KoTsyMQqnXQZq8deCEnu4QkyldkwH/bpMMhUcfMdGIw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "0954f7ee2f6bb3dc7d4e3d0d8bcb8fd4bde4cfc5",
+        "rev": "148bab9c1c3c53136ecb44a6ea356a0ed5b39b06",
         "type": "github"
       },
       "original": {
@@ -1013,11 +1030,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1785826997,
-        "narHash": "sha256-giHX3J2MqUu8LvdW5r7JlKaMU4Wqamc7RRiabAt69kI=",
+        "lastModified": 1786044491,
+        "narHash": "sha256-eID1Wj8jKVbgMTG5QLwexYQ/kC7iygrnTCkwNv8djI0=",
         "owner": "dc-tec",
         "repo": "nixvim",
-        "rev": "d5f2a3377fc88d99277a8836dad9099eea45e6a1",
+        "rev": "b2689fa84f57d97808b5a17dbb06ce7265566cd1",
         "type": "github"
       },
       "original": {
@@ -1033,11 +1050,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1784814601,
-        "narHash": "sha256-T32JXjZ7kIbhBn8/Har171yGg6IBdl97cxAWameqZDE=",
+        "lastModified": 1785527278,
+        "narHash": "sha256-rYFSM491MFFA1V6oax5PngXbevGt6n0o8sKhwFoItE0=",
         "owner": "nix-community",
         "repo": "nixvim",
-        "rev": "f316e949e0ed9df0e1e0bf645c6dce721d4e230e",
+        "rev": "a19efae6c1afe426e8243d79f6dfbab186be6df8",
         "type": "github"
       },
       "original": {
@@ -1120,6 +1137,7 @@
         "nixos-anywhere": "nixos-anywhere",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_5",
+        "nixpkgs-chad": "nixpkgs-chad",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixvim": "nixvim",

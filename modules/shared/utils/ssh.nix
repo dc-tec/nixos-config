@@ -78,6 +78,16 @@
                 user = "git";
                 identityFile = "~/.ssh/roelc_gh";
               };
+              "forge-dev" = {
+                hostname = "10.77.0.1";
+                port = 2222;
+                user = "dev";
+                forwardAgent = false;
+                identitiesOnly = true;
+                identityFile = "~/.ssh/id_ed25519";
+                serverAliveInterval = 30;
+                serverAliveCountMax = 3;
+              };
               "chad" = {
                 hostname = "10.0.10.183";
                 user = "roelc";
