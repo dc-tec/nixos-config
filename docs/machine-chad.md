@@ -57,6 +57,39 @@ garbage collection are disabled. Retain a previous generation after future
 upgrades until encrypted-pool import, networking, and libvirt pass boot checks.
 The fresh installation does not retain generations from the previous pool.
 
+## Lab Access Network
+
+Chad is a peer of the Forge WireGuard hub, so the administration workstation
+can reach the lab host and its guest networks away from the LAN. Chad dials out
+with a 25-second keepalive; the home network needs no inbound port.
+
+| Item | Value |
+| --- | --- |
+| Chad tunnel address | `10.77.0.3/24` |
+| Hub endpoint | `vpn.decort.tech:51820` |
+| Routed lab guest range | `10.79.0.0/22` |
+| Private key | `/var/lib/wireguard/chad.key`, persisted under `/data` |
+
+The key is generated on Chad at first activation. Add its public key to
+`chadPublicKey` in `machines/forge/wireguard.nix` and deploy Forge:
+
+```shell
+doas sh -c 'wg pubkey < /var/lib/wireguard/chad.key'
+```
+
+The firewall accepts tunnel traffic from the workstation address `10.77.0.2`
+only: SSH to Chad, lab DNS, and forwarding to lab guests on TCP ports 22, 443,
+5000, 6443, 8200, 8443, and 50000. The hub's own address cannot open
+connections to Chad or the lab. Lab guests may reach the internet through
+masquerading on `br0`, but not private LAN ranges.
+
+Lab networks use libvirt's `open` forward mode with bridges named `lab-*`, so
+this firewall owns their forwarding, DHCP, and DNS rules. Libvirt NAT networks
+reject connections from the tunnel and remain local-only. The lab repository
+defines the guest networks; this host defines the policy for `10.79.0.0/22`.
+SSH keeps `DisableForwarding yes`; the LAN path remains available when Forge is
+down.
+
 ## Rebuild verification (2026-09-28)
 
 The fresh installation booted NixOS `26.05.20260927.cf5e765`, Linux `6.12.111`,

@@ -55,6 +55,7 @@ WireGuard is the administration boundary:
 | --- | --- |
 | Server address | `10.77.0.1/24` |
 | Workstation peer | `10.77.0.2/32` |
+| Chad lab host peer | `10.77.0.3/32`, routing `10.79.0.0/22` |
 | Public endpoint | `vpn.decort.tech:51820` |
 | Server private key | `/var/lib/wireguard/forge.key` |
 
@@ -64,6 +65,13 @@ proxy does not forward WireGuard. Administrative SSH is available at
 The public SSH listener also serves Tangled Git traffic, but `AllowUsers`
 restricts `roelc` to the WireGuard workstation address and permits only the
 Knot's dynamic `git` account from other networks.
+
+Forge relays workstation-initiated traffic to Chad and its lab guest range.
+The `forge-lab-relay` chain accepts only new flows from `10.77.0.2` and their
+replies; Chad and lab guests cannot open connections through Forge or reach its
+public interface. Chad's peer entry stays disabled until `chadPublicKey` is set.
+Relayed traffic is decrypted and re-encrypted on Forge, so lab administration
+protocols must be end-to-end encrypted. See `machine-chad.md` for the lab side.
 
 Inspect WireGuard and derive the server's public key with:
 

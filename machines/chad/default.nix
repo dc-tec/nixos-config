@@ -9,6 +9,7 @@
   imports = [
     ./hardware.nix
     ./disko.nix
+    ./wireguard.nix
   ];
 
   networking = {
@@ -106,6 +107,10 @@
         "/var/lib/nixos"
         {
           directory = "/root/.ssh";
+          mode = "0700";
+        }
+        {
+          directory = "/var/lib/wireguard";
           mode = "0700";
         }
       ];
