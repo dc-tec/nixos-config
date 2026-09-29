@@ -303,6 +303,7 @@
           chad = inputs.nixpkgs-chad.lib.nixosSystem {
             specialArgs = { inherit publicKeys; };
             modules = [
+              inputs.disko.nixosModules.disko
               impermanence.nixosModule
               ./modules/nixos/server
               ./machines/chad/default.nix

@@ -14,33 +14,68 @@ workstations. The system state version remains `24.05`.
 - Administration: SSH as `roelc` on TCP port 22, with `doas` for privileged
   commands. The host firewall permits port 22.
 - Virtualization: KVM and libvirt. The desktop and Docker daemon are disabled.
-- Storage: the existing encrypted `rpool`, with separate root, Nix store,
-  cache, and data datasets. The pool has three single-device top-level vdevs
-  and no disk redundancy.
+- Storage: encrypted SSD-only `rpool` across the two existing 250 GB SSDs,
+  with no disk redundancy. The 1 TB HDD contains a separate encrypted `bulk`
+  pool. Both pools use `ashift=12` and the `openzfs-2.4-linux` compatibility set.
+- ZFS ARC: capped at 4 GiB. Disk swap is disabled; zram remains enabled.
 
-The configuration keeps the deployed bind-mount locations under `/cache` and
-`/data`. In particular, libvirt uses `/cache/var/lib/libvirt`, and the SSH host
-keys remain under `/data/etc/ssh`. The upgrade does not move persistent data.
-Root-dataset rollback is disabled during this migration, so rebooting does not
-discard files from the existing root dataset. Local account passwords remain
-unchanged through `users.mutableUsers = true`.
+The disk layout is declared in `machines/chad/disko.nix` using persistent WWN
+identifiers. The boot SSD has a 1 GiB EFI partition. Both SSDs provide space to
+`rpool`; this is a stripe, so loss of either SSD loses the pool.
 
-Automatic upgrades and automatic Nix garbage collection are disabled. Upgrade
-the host manually and retain a previous generation until the new kernel,
-encrypted-pool import, networking, and libvirt have passed the boot checks.
+| Device | Persistent identifier | Use |
+| --- | --- | --- |
+| Samsung SSD 850 EVO 250 GB | `wwn-0x5002538d42594eae` | EFI partition and `rpool` |
+| Samsung SSD 850 EVO 250 GB | `wwn-0x5002538d426746d4` | `rpool` |
+| Seagate ST1000DM010 1 TB | `wwn-0x5000c500a22f749d` | `bulk` |
 
-## Boot verification (2026-09-28)
+Libvirt state and active VM disks use `rpool/local/lab`, mounted at
+`/cache/var/lib/libvirt` before stage 2 creates its bind mount at
+`/var/lib/libvirt`. VM images use the `images` subdirectory. SSH host keys remain
+under `/data/etc/ssh`.
+All active lab storage stays on SSD. The HDD is for disposable exports,
+archives, and installation media; it is not a backup of the host.
 
-Chad completed a reboot on NixOS `26.05.20260927.cf5e765`, Linux `6.12.111`,
-and OpenZFS `2.4.4`. Remote ZFS unlock completed, and normal SSH returned without
-console repairs. The address was present only on `br0`, both configured DNS
-servers were retained, DNS resolution worked, and no system units had failed.
-The pool was healthy, and the existing persistence mounts used their original
-datasets.
+The HDD is excluded from boot filesystem dependencies and automatic pool
+imports. After boot, unlock and mount it when required:
 
-Libvirt returned KVM domain capabilities. No guests remain defined; guest boot
-and workload tests are separate from these host checks. The NixOS 24.11
-generation `336` remains available for rollback. Backups remain deferred.
+```shell
+doas chad-bulk-open
+```
+
+Enter the `bulk` passphrase at the terminal prompt. The command imports the
+pool without mounting datasets, loads its encryption key, and mounts
+`bulk/data` at `/bulk`. To close it after use:
+
+```shell
+doas zpool export bulk
+```
+
+Local account passwords are locked. SSH keys provide administration, and
+`doas` permits privileged commands for `roelc`. Automatic upgrades and Nix
+garbage collection are disabled. Retain a previous generation after future
+upgrades until encrypted-pool import, networking, and libvirt pass boot checks.
+The fresh installation does not retain generations from the previous pool.
+
+## Rebuild verification (2026-09-28)
+
+The fresh installation booted NixOS `26.05.20260927.cf5e765`, Linux `6.12.111`,
+and OpenZFS `2.4.4`. Remote ZFS unlock and normal key-based SSH both succeeded.
+The static address appeared only on `br0`, both DNS servers were retained,
+DNS resolution worked, and no system units failed.
+
+`rpool` contains only the two SSDs and reports 462 GiB raw capacity, with
+approximately 444.5 GiB dataset availability after installation. Its datasets
+inherit encryption. Both `/cache/var/lib/libvirt` and `/var/lib/libvirt` resolve
+to `rpool/local/lab`. The running ARC maximum is 4 GiB; swap uses only zram.
+
+The 928 GiB HDD pool was exported before reboot and remained unimported after
+host startup. Before reboot, a separate import confirmed that its key was
+unavailable and `bulk/data` used `canmount=noauto`. Physical HDD removal and
+interactive use of `chad-bulk-open` remain untested.
+
+Libvirt reports KVM domain capabilities. No guests are defined. These host
+checks do not validate guest boot or lab workloads. Backups remain deferred.
 
 ## Upgrade procedure
 
@@ -136,61 +171,35 @@ Use this command only when the key does not already exist. Configuration follows
 the [NixOS remote unlock guidance](https://wiki.nixos.org/wiki/Remote_disk_unlocking)
 with systemd in the initramfs.
 
-## Original installation reference
+## Fresh installation
 
-The commands below describe the original installation and destroy existing
-partitions. They are not part of the host upgrade. Device names can change;
-identify disks by their persistent IDs before any new installation.
+The disk configuration destroys existing data on the three listed internal
+disks. Check each WWN, model, and capacity in an independent installer before
+running Disko. The attached USB device is not an installation target.
 
-```shell
-diska=/dev/sda
-sudo parted "$diska" -- mklabel gpt
-sudo parted "$diska" -- mkpart primary 512MiB -8GiB # zfs
-sudo parted "$diska" -- mkpart primary linux-swap -8GiB 100% # swap
-sudo parted "$diska" -- mkpart ESP fat32 1MiB 512MiB # boot
-sudo parted "$diska" -- set 3 esp on
+1. Boot a RAM-based NixOS installer and verify SSH access, the static address,
+   the gateway, and DNS. Confirm that its root filesystem is `tmpfs`, no target
+   disk is mounted, and no ZFS pool is imported.
+2. Build and copy the pinned `nixosConfigurations.chad.config.system.build.toplevel`
+   and `nixosConfigurations.chad.config.system.build.diskoScript` outputs to the
+   installer. Keep a copy outside Chad before erasing its disks.
+3. Enter and confirm the new passphrase through a terminal with hidden input.
+   Store it only in `/run/chad-install/pool.key`, owned by root with mode `0600`.
+   Both pools use this passphrase but have independent encryption roots.
+4. Run the built Disko script. It creates and mounts the SSD filesystems under
+   `/mnt`, creates the HDD pool, and sets both pools' key locations to `prompt`.
+   The passphrase file is required only during pool creation.
+5. Before installing the boot entry, place the normal SSH host keys and the
+   dedicated initramfs SSH host key under `/mnt/data/etc/ssh`. Preserve existing
+   keys when maintaining host identity, or generate new keys and verify their
+   fingerprints through a trusted channel.
+6. Install the built system with `nixos-install --root /mnt --system <store-path>
+   --no-root-passwd`. Export `bulk` and delete the RAM passphrase file.
+7. Verify the EFI boot entry, SSD pool membership, dataset mounts, encryption
+   properties, and static network configuration. Reboot and unlock `rpool`
+   through port 2222.
+8. Complete the host checks in the upgrade procedure. Confirm that `bulk`
+   remains unimported and that the host boots without an HDD unlock prompt.
 
-sudo mkswap -L swap "${diska}2"
-sudo mkfs.fat -F 32 -n EFI "${diska}3"
-
-diskb=/dev/sdb
-sudo parted "$diskb" -- mklabel gpt
-sudo parted "$diskb" -- mkpart primary 1MiB -8GiB # zfs
-
-diskc=/dev/sdc
-sudo parted "$diskc" -- mklabel gpt
-sudo parted "$diskc" -- mkpart primary 1MiB -8GiB # zfs
-
-zpool create -O mountpoint=none -O encryption=aes-256-gcm -O keyformat=passphrase rpool "${diska}1" "${diskb}1" "${diskc}1"
-
-zfs create -p -o mountpoint=legacy rpool/local
-zfs create -p -o mountpoint=legacy rpool/safe
-zfs create -p -o mountpoint=legacy rpool/local/root
-
-zfs snapshot rpool/local/root@blank
-zfs create -p -o mountpoint=legacy rpool/local/nix
-zfs set compression=lz4 rpool/local/nix
-zfs create -p -o mountpoint=legacy rpool/local/nix-store
-zfs set compression=lz4 rpool/local/nix-store
-zfs create -p -o mountpoint=legacy rpool/local/cache
-zfs set compression=lz4 rpool/local/cache
-zfs create -p -o mountpoint=legacy rpool/safe/data
-zfs set compression=lz4 rpool/safe/data
-
-mount -t zfs rpool/local/root /mnt
-
-mkdir -p /mnt/boot
-mount "${diska}3" /mnt/boot
-
-mkdir -p /mnt/nix/
-mount -t zfs rpool/local/nix /mnt/nix
-
-mkdir -p /mnt/nix/store
-mount -t zfs rpool/local/nix-store /mnt/nix/store
-
-mkdir -p /mnt/cache
-mount -t zfs rpool/local/cache /mnt/cache
-
-mkdir -p /mnt/data
-mount -t zfs rpool/safe/data /mnt/data
-```
+A completed build does not validate the installation, remote unlock, or boot.
+The storage rebuild removes all prior host generations and their rollback paths.
