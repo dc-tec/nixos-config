@@ -4,8 +4,6 @@ let
   workstation = "10.77.0.2";
   chad = "10.77.0.3";
   lab = "10.79.0.0/22";
-  # Set after Chad generates its key: `doas sh -c 'wg pubkey < /var/lib/wireguard/chad.key'`.
-  chadPublicKey = null;
   relayJumps = [
     "-o wg0 -d ${lab}"
     "-o wg0 -d ${chad}"
@@ -48,15 +46,15 @@ in
           publicKey = "TlQaR99wrLOWDtXPBjLgL5Lifrdfn9CIsIQs1BEq7l8=";
           allowedIPs = [ "10.77.0.2/32" ];
         }
-      ]
-      ++ lib.optional (chadPublicKey != null) {
-        # chad lab host; routes the lab guest networks
-        publicKey = chadPublicKey;
-        allowedIPs = [
-          "${chad}/32"
-          lab
-        ];
-      };
+        {
+          # chad lab host; routes the lab guest networks
+          publicKey = "g0M9wOOFDUGLBW9eygfENuXH/vFSBYlU/Xb/eJUvNRw=";
+          allowedIPs = [
+            "${chad}/32"
+            lab
+          ];
+        }
+      ];
     };
   };
 

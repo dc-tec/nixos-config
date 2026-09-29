@@ -70,8 +70,9 @@ with a 25-second keepalive; the home network needs no inbound port.
 | Routed lab guest range | `10.79.0.0/22` |
 | Private key | `/var/lib/wireguard/chad.key`, persisted under `/data` |
 
-The key is generated on Chad at first activation. Add its public key to
-`chadPublicKey` in `machines/forge/wireguard.nix` and deploy Forge:
+The key is generated on Chad at first activation. Forge's peer entry in
+`machines/forge/wireguard.nix` pins its public key. After replacing the key,
+update that entry and deploy Forge:
 
 ```shell
 doas sh -c 'wg pubkey < /var/lib/wireguard/chad.key'
