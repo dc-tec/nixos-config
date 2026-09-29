@@ -2,6 +2,7 @@
 let
   iptables = "${pkgs.iptables}/bin/iptables -w";
   workstation = "10.77.0.2";
+  tunnelAddress = "10.77.0.3";
   # Lab guest networks; libvirt defines them in `open` forward mode so that
   # this firewall, not libvirt, owns their forwarding policy.
   lab = "10.79.0.0/22";
@@ -22,7 +23,7 @@ in
 {
   networking = {
     wireguard.interfaces.wg0 = {
-      ips = [ "10.77.0.3/24" ];
+      ips = [ "${tunnelAddress}/24" ];
       privateKeyFile = "/var/lib/wireguard/chad.key";
       generatePrivateKeyFile = true;
       peers = [
@@ -42,8 +43,8 @@ in
         # Administration from the workstation peer only; the hub's own address
         # cannot open connections to Chad or the lab.
         ${iptables} -A nixos-fw -i wg0 -s ${workstation} -p tcp --dport 22 -j nixos-fw-accept
-        ${iptables} -A nixos-fw -i wg0 -s ${workstation} -d ${lab} -p udp --dport 53 -j nixos-fw-accept
-        ${iptables} -A nixos-fw -i wg0 -s ${workstation} -d ${lab} -p tcp --dport 53 -j nixos-fw-accept
+        ${iptables} -A nixos-fw -i wg0 -s ${workstation} -d ${tunnelAddress} -p udp --dport 53 -j nixos-fw-accept
+        ${iptables} -A nixos-fw -i wg0 -s ${workstation} -d ${tunnelAddress} -p tcp --dport 53 -j nixos-fw-accept
         # Libvirt adds no rules for open networks; their bridges are named lab-*.
         ${iptables} -A nixos-fw -i lab+ -p udp -m multiport --dports 53,67 -j nixos-fw-accept
         ${iptables} -A nixos-fw -i lab+ -p tcp --dport 53 -j nixos-fw-accept
@@ -70,6 +71,21 @@ in
         ${iptables} -t nat -A POSTROUTING -j chad-lab-nat
       '';
       extraStopCommands = removeJumps;
+    };
+  };
+
+  # Libvirt's per-network resolvers answer only queries arriving on their own
+  # bridge. This resolver serves the lab zone to the workstation over the
+  # tunnel; the foundation network resolver forwards the sibling subdomains.
+  services.dnsmasq = {
+    enable = true;
+    resolveLocalQueries = false;
+    settings = {
+      listen-address = tunnelAddress;
+      bind-dynamic = true;
+      no-resolv = true;
+      no-hosts = true;
+      server = [ "/lab.decort.tech/10.79.0.1" ];
     };
   };
 

@@ -79,7 +79,7 @@ doas sh -c 'wg pubkey < /var/lib/wireguard/chad.key'
 ```
 
 The firewall accepts tunnel traffic from the workstation address `10.77.0.2`
-only: SSH to Chad, lab DNS, and forwarding to lab guests on TCP ports 22, 443,
+only: SSH to Chad, lab DNS on `10.77.0.3`, and forwarding to lab guests on TCP ports 22, 443,
 5000, 6443, 8200, 8443, and 50000. The hub's own address cannot open
 connections to Chad or the lab. Lab guests may reach the internet through
 masquerading on `br0`, but not private LAN ranges.
@@ -90,6 +90,12 @@ reject connections from the tunnel and remain local-only. The lab repository
 defines the guest networks; this host defines the policy for `10.79.0.0/22`.
 SSH keeps `DisableForwarding yes`; the LAN path remains available when Forge is
 down.
+
+Libvirt's per-network resolvers answer only queries that arrive on their own
+bridge. A separate dnsmasq instance listens on `10.77.0.3` and forwards
+`lab.decort.tech` to the foundation network resolver, which forwards the other
+lab subdomains. On the workstation, `/etc/resolver/lab.decort.tech` contains
+`nameserver 10.77.0.3`.
 
 ## Rebuild verification (2026-09-28)
 
