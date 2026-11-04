@@ -84,6 +84,9 @@ only: SSH to Chad, lab DNS on `10.77.0.3`, and forwarding to lab guests on TCP p
 connections to Chad or the lab. Lab guests may reach the internet through
 masquerading on `br0`, but not private LAN ranges.
 
+The workstation can also reach the KeyHub PoC appliance manager at
+`10.79.3.50:50443`. This rule applies only to that guest and TCP port.
+
 Lab networks use libvirt's `open` forward mode with bridges named `lab-*`, so
 this firewall owns their forwarding, DHCP, and DNS rules. Libvirt NAT networks
 reject connections from the tunnel and remain local-only. The lab repository

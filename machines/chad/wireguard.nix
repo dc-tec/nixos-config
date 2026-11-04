@@ -53,6 +53,8 @@ in
         ${iptables} -N chad-lab-forward 2>/dev/null || true
         ${iptables} -F chad-lab-forward
         ${iptables} -A chad-lab-forward -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        # KeyHub PoC appliance manager; only the workstation may reach it.
+        ${iptables} -A chad-lab-forward -i wg0 -s ${workstation} -d 10.79.3.50 -p tcp --dport 50443 -j ACCEPT
         ${iptables} -A chad-lab-forward -i wg0 -s ${workstation} -d ${lab} -p tcp -m multiport --dports ${labPorts} -j ACCEPT
         ${iptables} -A chad-lab-forward -s ${lab} -d ${lab} -j ACCEPT
         ${iptables} -A chad-lab-forward -s ${lab} -o br0 -d 10.0.0.0/8 -j DROP
