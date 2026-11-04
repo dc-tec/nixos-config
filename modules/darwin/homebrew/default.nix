@@ -69,7 +69,6 @@ _: {
       "font-material-icons"
       "betterdisplay"
       "spotify"
-      "cursor"
       "cmux"
       "notion"
       "shottr"
@@ -78,7 +77,6 @@ _: {
       "citrix-workspace"
       "openvpn-connect"
       "zoom"
-      "lm-studio"
       "orbstack"
       "session-manager-plugin"
     ];

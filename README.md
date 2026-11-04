@@ -75,9 +75,6 @@ the shared workstation modules. This separation is defined in `flake.nix`.
 - WireGuard-only administration, Restic backups, Prometheus, Alertmanager and
   Grafana on Forge;
 - a signed, read-only native Nix binary cache for managed systems;
-- a selectively replicating public Radicle node with a dedicated host
-  identity;
-- a hardened Tangled Knot for self-hosted public Git repositories; and
 - repository-local packages for repeatable Forge provisioning and cache
   publication.
 
