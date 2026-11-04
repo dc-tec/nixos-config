@@ -4,6 +4,7 @@
 }:
 {
   imports = [
+    ./package-overrides.nix
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "aarch64-darwin";

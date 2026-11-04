@@ -13,10 +13,17 @@ let
   kittyStateFile = "${stateDirectory}/kitty.conf";
   logoPath = "${dataDirectory}/adfinis-logo.png";
 
+  # This tool only renders a local font into a PNG during the build.
+  renderPackages = import pkgs.path {
+    inherit (pkgs.stdenv.hostPlatform) system;
+    config = { };
+    overlays = [ ];
+  };
+
   adfinisLogo =
     pkgs.runCommand "adfinis-terminal-background.png"
       {
-        nativeBuildInputs = [ pkgs.imagemagick ];
+        nativeBuildInputs = [ renderPackages.imagemagick ];
       }
       ''
         magick \

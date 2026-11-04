@@ -53,10 +53,13 @@ forge                = stable NixOS + Disko + server modules + machine definitio
 - `modules/nixos/server/` contains the reusable server baseline and the Forge
   service composition.
 - `modules/darwin/` contains macOS system, desktop and Homebrew configuration.
+- `modules/security/` applies the shared certificate distrust policy.
 - `lib/` contains helper functions used by the module system.
 - `overlays/` defines local packages, selected stable packages and a small set
-  of packages taken from the current Nixpkgs master branch.
-- `pkgs/` contains local packages and Forge operator commands.
+  of packages taken from the current Nixpkgs master branch. Build compatibility
+  overrides are separate from certificate policy.
+- `pkgs/` contains local packages, Nix-packaged certificate tools, and Forge
+  operator commands.
 - `secrets/` contains SOPS-encrypted workstation secrets; `public-keys.nix`
   contains public identity material that is safe to commit.
 
@@ -146,13 +149,21 @@ nix build .#docs
 
 Documentation changes merged to `main` are built and deployed to GitHub Pages.
 
+- [Maintenance and activation](./docs/maintenance.md)
+- [Certificate distrust policy and checks](./docs/emudhra-hardening.md)
+- [Package compatibility overrides](./docs/package-overrides.md)
+
 ## Continuous integration
 
-GitHub Actions runs formatting and static checks, builds every NixOS host, and
-builds the Apple Silicon nix-darwin configuration on a macOS runner. Forge also
-has dedicated checks for its Disko layout and Prometheus alert rules. Successful
-pushes to `main` may publish build results to Cachix; pull requests are
-read-only cache consumers.
+GitHub Actions runs formatting, static checks, and certificate-policy checks.
+Host derivation comparisons select NixOS builds. Relevant Darwin changes run
+security checks on an Apple Silicon macOS runner and compare the system
+derivation before building it. Changes to shared security tests select the
+Darwin checks as well as the Linux quality checks.
+
+Forge has dedicated checks for its Disko layout and Prometheus alert rules.
+Successful pushes to `main` may publish build results to Cachix; pull requests
+are read-only cache consumers.
 
 ## Reuse
 

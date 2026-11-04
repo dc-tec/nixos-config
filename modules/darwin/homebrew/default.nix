@@ -49,6 +49,14 @@ _: {
       "trivy"
       "unbound"
       "qemu"
+      "git-lfs"
+      "poppler"
+      "saml2aws"
+      # Retain installed libraries during Homebrew cleanup checks.
+      "libnghttp3"
+      "libngtcp2"
+      "openssl@3"
+      "python@3.14"
     ];
 
     casks = [
@@ -57,6 +65,7 @@ _: {
       "whatsapp"
       "mattermost"
       "obsidian"
+      "obs"
       "chatgpt"
       "visual-studio-code"
       "raycast"

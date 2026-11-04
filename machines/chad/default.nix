@@ -10,6 +10,7 @@
     ./hardware.nix
     ./disko.nix
     ./wireguard.nix
+    ./package-overrides.nix
   ];
 
   networking = {
