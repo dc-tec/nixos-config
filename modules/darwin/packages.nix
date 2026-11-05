@@ -5,6 +5,12 @@
   pkgs,
   ...
 }:
+let
+  brewCachePolicy = ''
+    HOMEBREW_CLEANUP_MAX_AGE_DAYS=7
+    HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS=7
+  '';
+in
 {
   # Unstable Azure CLI currently depends on Fabric with unsupported Invoke 3.
   # Reuse the stable package and select the filtered CA bundle at runtime.
@@ -37,7 +43,22 @@
     packages.WireGuard = 1451685025;
   };
 
-  home-manager.users.${config.dc-tec.user.name}.home.packages = [
-    outputs.packages.${pkgs.stdenv.hostPlatform.system}.forge-tools
-  ];
+  home-manager.users.${config.dc-tec.user.name} = {
+    home = {
+      packages = [
+        outputs.packages.${pkgs.stdenv.hostPlatform.system}.forge-tools
+      ];
+
+      sessionVariables = {
+        # Keep worktrees and shells that change GOPATH on the same Go caches.
+        GOCACHE = "${config.dc-tec.user.homeDirectory}/Library/Caches/go-build";
+        GOMODCACHE = "${config.dc-tec.user.homeDirectory}/go/pkg/mod";
+      };
+
+      # Homebrew uses this path when XDG_CONFIG_HOME is unset.
+      file.".homebrew/brew.env".text = brewCachePolicy;
+    };
+
+    xdg.configFile."homebrew/brew.env".text = brewCachePolicy;
+  };
 }
