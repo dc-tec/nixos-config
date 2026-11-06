@@ -4,6 +4,7 @@
     ./alerting.nix
     ./backup.nix
     ./cache.nix
+    ./demo-access.nix
     ./development-vm.nix
     ./monitoring.nix
   ];
