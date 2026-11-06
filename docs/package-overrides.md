@@ -20,10 +20,11 @@ separate from `overlays/emudhra-security.nix`.
 `machines/chad/package-overrides.nix` applies the same kernel treatment to
 Chad's Linux 6.12 selection. It does not duplicate the shared tool overrides.
 
-Forge and Chad use QEMU/KVM. Their libvirt packages disable the unused Xen
-driver, which also removes Xen's Open vSwitch dependency from these hosts.
-This avoids rebuilding an unused virtual switch whose timing-sensitive tests
-fail on the CI runners.
+Forge and Chad use QEMU/KVM. `modules/nixos/server/kvm-libvirt.nix` disables the
+unused Xen driver throughout each host's package set. This covers the daemon,
+VM helper scripts, and native bridge setup commands that reference
+`pkgs.libvirt` directly. It removes Xen's Open vSwitch dependency, whose
+timing-sensitive tests fail on the CI runners.
 
 ## Darwin package overrides
 

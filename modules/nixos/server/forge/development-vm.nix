@@ -304,6 +304,8 @@ let
   };
 in
 {
+  imports = [ ../kvm-libvirt.nix ];
+
   networking = {
     bridges.br-dev.interfaces = [ ];
     interfaces.br-dev.ipv4.addresses = [
@@ -322,7 +324,6 @@ in
 
   virtualisation.libvirtd = {
     enable = true;
-    package = pkgs.libvirt.override { enableXen = false; };
     allowedBridges = [ "br-dev" ];
     onBoot = "ignore";
     onShutdown = "shutdown";
@@ -354,6 +355,8 @@ in
     services = {
       forge-dev-vm = {
         description = "Forge development virtual machine";
+        # Updated helper paths must not shut down the persistent guest.
+        restartIfChanged = false;
         after = [ "libvirtd.service" ];
         requires = [ "libvirtd.service" ];
         unitConfig = {

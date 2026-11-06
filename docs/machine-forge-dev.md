@@ -126,6 +126,9 @@ ssh roelc@10.77.0.1 sudo virsh --connect qemu:///system list --all
 
 After acceptance, repeat the rebuild with `switch`.
 
+The guest service does not restart when its helper store paths change. Restart
+`forge-dev-vm.service` only when a guest shutdown is intended.
+
 ## One-time Bootstrap
 
 Initialize the encrypted host storage interactively. This command creates and
