@@ -60,17 +60,6 @@ let
     description = "Verify and provision the Forge binary-cache signing key";
   };
 
-  provisionForgeRadicleKey = mkTool {
-    name = "provision-forge-radicle-key";
-    source = ./provision-forge-radicle-key.bash;
-    runtimeInputs = [
-      coreutils
-      openssh
-    ];
-    runtimeEnv.FORGE_RADICLE_PUBLIC_KEY = publicKeys.radicle.forge;
-    description = "Verify and provision the Forge Radicle node identity";
-  };
-
   nhDarwinSwitchPublish = mkTool {
     name = "nh-darwin-switch-publish";
     source = ./nh-darwin-switch-publish.bash;
@@ -88,7 +77,6 @@ in
     nhDarwinSwitchPublish
     provisionForgeBackupSecret
     provisionForgeCacheKey
-    provisionForgeRadicleKey
     publishForgeCache
     ;
 
@@ -98,7 +86,6 @@ in
       nhDarwinSwitchPublish
       provisionForgeBackupSecret
       provisionForgeCacheKey
-      provisionForgeRadicleKey
       publishForgeCache
     ];
   };
