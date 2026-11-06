@@ -56,6 +56,7 @@ WireGuard is the administration boundary:
 | Server address | `10.77.0.1/24` |
 | Workstation peer | `10.77.0.2/32` |
 | Chad lab host peer | `10.77.0.3/32`, routing `10.79.0.0/22` |
+| iPhone peer | `10.77.0.4/32`, restricted to T3 on the workstation |
 | Public endpoint | `vpn.decort.tech:51820` |
 | Server private key | `/var/lib/wireguard/forge.key` |
 
@@ -71,6 +72,13 @@ replies; Chad and lab guests cannot open connections through Forge or reach its
 public interface.
 Relayed traffic is decrypted and re-encrypted on Forge, so lab administration
 protocols must be end-to-end encrypted. See `machine-chad.md` for the lab side.
+
+The iPhone peer can open TCP connections only to `10.77.0.2:3773`. The
+`forge-t3-mobile` chain accepts those connections and their TCP replies. It
+blocks all other forwarding involving the phone. A separate input rule blocks
+the phone from Forge's services, including services allowed for other VPN peers.
+See [T3 access from iPhone](t3-iphone-wireguard.md) for the client configuration
+and the current HTTP transport boundary.
 
 Inspect WireGuard and derive the server's public key with:
 

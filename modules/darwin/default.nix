@@ -5,5 +5,6 @@ _: {
     ./homebrew
     ./packages.nix
     ./system.nix
+    ./t3-wireguard-proxy.nix
   ];
 }
