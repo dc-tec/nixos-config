@@ -201,6 +201,7 @@
 
   virtualisation.libvirtd = {
     enable = true;
+    package = pkgs.libvirt.override { enableXen = false; };
     qemu = {
       package = pkgs.qemu_kvm;
       swtpm.enable = true;

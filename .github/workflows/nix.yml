@@ -171,7 +171,7 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.darwin == 'true' }}
     runs-on: macos-26
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - name: Checkout
         # GitHub's macOS runner currently rejects the full SHA; track restoration in #85.

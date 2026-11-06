@@ -322,6 +322,7 @@ in
 
   virtualisation.libvirtd = {
     enable = true;
+    package = pkgs.libvirt.override { enableXen = false; };
     allowedBridges = [ "br-dev" ];
     onBoot = "ignore";
     onShutdown = "shutdown";
