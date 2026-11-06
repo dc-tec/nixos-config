@@ -51,7 +51,7 @@ After activating Forge, check the sockets and their listener addresses:
 
 ```console
 ssh roelc@10.77.0.1 systemctl status openbao-demo-gateway.socket openbao-demo-api.socket
-ssh roelc@10.77.0.1 ss -ltn '( sport = :8443 or sport = :28643 )'
+ssh roelc@10.77.0.1 "ss -ltn '( sport = :8443 or sport = :28643 )'"
 ```
 
 From the demo checkout on the workstation, verify Kubernetes and browser access:
