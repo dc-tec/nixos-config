@@ -18,12 +18,6 @@ let
     "-i wg0 -s ${iphone}"
     "-o wg0 -d ${iphone}"
   ];
-  removeMobileRules = ''
-    ${lib.concatMapStrings (
-      match: "${iptables} -D FORWARD ${match} -j forge-t3-mobile 2>/dev/null || true\n"
-    ) mobileJumps}
-    ${iptables} -D INPUT -i wg0 -s ${iphone} -j DROP 2>/dev/null || true
-  '';
 in
 {
   networking = {
@@ -61,7 +55,9 @@ in
         ${iptables} -C INPUT -i wg0 -s ${iphone} -j DROP 2>/dev/null || \
           ${iptables} -I INPUT -i wg0 -s ${iphone} -j DROP
       '';
-      extraStopCommands = removeRelayJumps + removeMobileRules;
+      # Keep the phone restricted while the firewall stops or reloads.
+      # extraCommands updates its chain without detaching the existing jumps.
+      extraStopCommands = removeRelayJumps;
     };
 
     wireguard.interfaces.wg0 = {

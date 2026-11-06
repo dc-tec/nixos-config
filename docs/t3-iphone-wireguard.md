@@ -10,6 +10,9 @@ blocks access to its own services, Chad, the lab networks, and other forwarding
 destinations. The phone has its own WireGuard key pair; its private key stays on
 the phone.
 
+The mobile restrictions stay installed while the host firewall stops or
+reloads. Reloading replaces the mobile chain rules atomically.
+
 ## Configure the iPhone
 
 In the WireGuard app, create a tunnel from scratch and generate a key pair.
