@@ -27,8 +27,11 @@ permissions:
   contents: read
 
 env:
-  # Rotate together with nixCache.forge in public-keys.nix.
-  FORGE_NIX_CACHE_PUBLIC_KEY: "cache.decort.tech-1:VDiJjxhvNqm2qFKdtfS0KJX+7FnS9ArGOnr7ujuD1rw="
+  # NIX_CONFIG applies after the user config written by the Cachix action.
+  # Rotate this verification key together with nixCache.forge in public-keys.nix.
+  NIX_CONFIG: |
+    extra-substituters = https://cache.decort.tech?priority=30
+    extra-trusted-public-keys = cache.decort.tech-1:VDiJjxhvNqm2qFKdtfS0KJX+7FnS9ArGOnr7ujuD1rw=
 
 concurrency:
   group: "nix-configurations-${{ github.ref }}"
@@ -52,10 +55,6 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
-        with:
-          extra_nix_config: |
-            extra-substituters = https://cache.decort.tech?priority=30
-            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -123,10 +122,6 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
-        with:
-          extra_nix_config: |
-            extra-substituters = https://cache.decort.tech?priority=30
-            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -159,10 +154,6 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
-        with:
-          extra_nix_config: |
-            extra-substituters = https://cache.decort.tech?priority=30
-            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -197,10 +188,6 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
-        with:
-          extra_nix_config: |
-            extra-substituters = https://cache.decort.tech?priority=30
-            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
