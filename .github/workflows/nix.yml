@@ -26,6 +26,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # Rotate together with nixCache.forge in public-keys.nix.
+  FORGE_NIX_CACHE_PUBLIC_KEY: "cache.decort.tech-1:VDiJjxhvNqm2qFKdtfS0KJX+7FnS9ArGOnr7ujuD1rw="
+
 concurrency:
   group: "nix-configurations-${{ github.ref }}"
   cancel-in-progress: true
@@ -48,6 +52,10 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.decort.tech?priority=30
+            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -115,6 +123,10 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.decort.tech?priority=30
+            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -147,6 +159,10 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.decort.tech?priority=30
+            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -181,6 +197,10 @@ jobs:
 
       - name: Install Nix
         uses: cachix/install-nix-action@2126ae7fc54c9df00dd18f7f18754393182c73cd # v31.9.1
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.decort.tech?priority=30
+            extra-trusted-public-keys = ${{ env.FORGE_NIX_CACHE_PUBLIC_KEY }}
 
       - name: Configure Cachix
         uses: cachix/cachix-action@5f2d7c5294214f71b873db4b969586b980625e71 # v17
@@ -192,35 +212,8 @@ jobs:
       - name: Verify Darwin CA distrust and Go toolchains
         run: nix build .#checks.aarch64-darwin.emudhra-security --print-build-logs
 
-      - name: Compare nix-darwin derivation
-        id: comparison
-        env:
-          BASE_SHA: ${{ needs.changes.outputs.base_sha }}
-          HEAD_SHA: ${{ needs.changes.outputs.head_sha }}
-        run: |
-          changed=true
-          if [[ -n "$BASE_SHA" && ! "$BASE_SHA" =~ ^0+$ ]]; then
-            repository="git+file://$GITHUB_WORKSPACE"
-            if base_drv="$(nix eval --raw \
-              "$repository?rev=$BASE_SHA#checks.aarch64-darwin.darwin-system.drvPath")" \
-              && head_drv="$(nix eval --raw \
-                "$repository?rev=$HEAD_SHA#checks.aarch64-darwin.darwin-system.drvPath")"; then
-              if [[ "$base_drv" == "$head_drv" ]]; then
-                changed=false
-              fi
-            else
-              echo "Darwin comparison failed; falling back to a full build" >&2
-            fi
-          fi
-          echo "changed=$changed" >> "$GITHUB_OUTPUT"
-
       - name: Build nix-darwin configuration
-        if: steps.comparison.outputs.changed == 'true'
         run: nix build .#checks.aarch64-darwin.darwin-system --print-build-logs
-
-      - name: Report unchanged nix-darwin configuration
-        if: steps.comparison.outputs.changed == 'false'
-        run: echo "The nix-darwin derivation is unchanged; skipping its build."
 
   # Stable branch-protection target for every platform and matrix entry above.
   gate:

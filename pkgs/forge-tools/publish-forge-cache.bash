@@ -14,7 +14,9 @@ if [[ "${#paths[@]}" -eq 0 ]]; then
   exit 2
 fi
 
-nix copy --substitute-on-destination --to "ssh-ng://${target}" -- "${paths[@]}"
+# Local builds are unsigned until Forge publishes them. Trust this authenticated
+# SSH transfer; public binary-cache consumers still require Forge's signature.
+nix copy --substitute-on-destination --no-check-sigs --to "ssh-ng://${target}" -- "${paths[@]}"
 
 remote_command="sudo forge-cache-publish --"
 for store_path in "${paths[@]}"; do

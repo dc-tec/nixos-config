@@ -230,6 +230,9 @@ store_path="$(nix build --no-link --print-out-paths .#PACKAGE)"
 publish-forge-cache "$store_path"
 ```
 
+The publisher accepts unsigned local build outputs over the authenticated SSH
+connection. Forge signs the cache entries for consumers.
+
 The `nhdsp` Zsh alias switches the Darwin configuration and publishes the
 activated closure. The existing `nhds` alias remains the switch-only path.
 Clients use the Forge cache as an additional substituter; cache hits remain
@@ -246,8 +249,10 @@ nix path-info --store https://cache.decort.tech "$hello"
 nix store verify --no-contents --recursive "$hello"
 ```
 
-GitHub Actions continues to use Cachix. External runners do not receive Forge
-publication authority. Cache eviction remains an explicit operator action.
+GitHub Actions reads from Cachix and the Forge cache. The workflow pins the
+Forge public signing key; rotate it together with `public-keys.nix`. External
+runners do not receive Forge publication authority. Cache eviction remains an
+operator action.
 
 ## Retired Git services
 

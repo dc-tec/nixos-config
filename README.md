@@ -157,9 +157,9 @@ Documentation changes merged to `main` are built and deployed to GitHub Pages.
 
 GitHub Actions runs formatting, static checks, and certificate-policy checks.
 Host derivation comparisons select NixOS builds. Relevant Darwin changes run
-security checks on an Apple Silicon macOS runner and compare the system
-derivation before building it. Changes to shared security tests select the
-Darwin checks as well as the Linux quality checks.
+security checks and build the selected system on an Apple Silicon macOS runner.
+Nix reuses unchanged outputs from the binary caches. Changes to shared security
+tests select the Darwin checks as well as the Linux quality checks.
 
 Forge has dedicated checks for its Disko layout and Prometheus alert rules.
 Successful pushes to `main` may publish build results to Cachix; pull requests
