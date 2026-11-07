@@ -6,7 +6,13 @@
   ...
 }:
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./hardware.nix
+    ./disko.nix
+    ./wireguard.nix
+    ./package-overrides.nix
+    ../../modules/nixos/server/kvm-libvirt.nix
+  ];
 
   networking = {
     hostName = "chad";
@@ -95,8 +101,7 @@
     ${pkgs.iproute2}/bin/ip -4 address flush dev enp27s0
   '';
 
-  # Keep the deployed mount locations. Moving these directories would hide
-  # existing data when the corresponding bind mounts become active.
+  # Keep host state on SSD-backed persistent datasets.
   environment.persistence = {
     "/data" = {
       hideMounts = true;
@@ -104,6 +109,10 @@
         "/var/lib/nixos"
         {
           directory = "/root/.ssh";
+          mode = "0700";
+        }
+        {
+          directory = "/var/lib/wireguard";
           mode = "0700";
         }
       ];
@@ -142,11 +151,9 @@
     };
   };
 
-  # Retain the deployed local passwords and avoid resetting the root dataset
-  # while migrating from the workstation configuration.
-  users.mutableUsers = lib.mkForce true;
+  # Fresh installations use SSH keys; no previous password database is needed.
+  users.mutableUsers = false;
   users.users = {
-    root.hashedPassword = lib.mkForce null;
     roelc = {
       isNormalUser = true;
       uid = 1000;
@@ -158,6 +165,7 @@
         "systemd-journal"
       ];
       shell = pkgs.zsh;
+      hashedPassword = "!";
       openssh.authorizedKeys.keys = [ publicKeys.ssh.roelc ];
     };
   };
@@ -189,6 +197,9 @@
     trim.enable = true;
   };
 
+  # The HDD is imported and unlocked on demand, independently of host boot.
+  systemd.tmpfiles.rules = [ "d /bulk 0750 root root -" ];
+
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
@@ -200,12 +211,35 @@
     onShutdown = "shutdown";
   };
 
-  # Keep the previous system closure available until the upgrade is verified.
+  # Enable collection only after the fresh installation passes boot checks.
   nix.gc.automatic = lib.mkForce false;
   environment.systemPackages = with pkgs; [
     ethtool
     pciutils
     usbutils
+    (writeShellApplication {
+      name = "chad-bulk-open";
+      runtimeInputs = [
+        config.boot.zfs.package
+        util-linux
+      ];
+      text = ''
+        if [[ "$EUID" -ne 0 ]]; then
+          echo "Run with doas chad-bulk-open" >&2
+          exit 1
+        fi
+        if ! zpool list -H bulk >/dev/null 2>&1; then
+          zpool import -N -o cachefile=none -d /dev/disk/by-id bulk
+        fi
+        if [[ "$(zfs get -H -o value keystatus bulk)" != available ]]; then
+          zfs load-key -L prompt bulk
+        fi
+        if ! mountpoint -q /bulk; then
+          zfs mount bulk/data
+        fi
+        findmnt /bulk
+      '';
+    })
   ];
   time.timeZone = "Europe/Amsterdam";
   i18n.defaultLocale = "en_IE.UTF-8";

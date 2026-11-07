@@ -46,7 +46,7 @@ while IFS= read -r path; do
     .github/workflows/nix.yml | .github/scripts/select-nix-builds.sh | .github/scripts/test-select-nix-builds.sh)
       force_all=true
       ;;
-    flake.nix | flake.lock | public-keys.nix | .sops.yaml | lib/* | overlays/* | pkgs/* | secrets/*)
+    flake.nix | flake.lock | public-keys.nix | .sops.yaml | lib/* | checks/* | overlays/* | pkgs/* | secrets/*)
       linux_candidate=true
       darwin_candidate=true
       ;;

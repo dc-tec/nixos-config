@@ -1,0 +1,13 @@
+--- a/tests/test_connector.py
++++ b/tests/test_connector.py
+@@ -4370,0 +4371,7 @@
++    async def fail_connection(
++        *args: object, sock: socket.socket, **kwargs: object
++    ) -> None:
++        # Mirror asyncio transport ownership when connection setup fails.
++        sock.close()
++        raise ssl.CertificateError
++
+@@ -4381 +4388 @@
+-                side_effect=ssl.CertificateError,
++                side_effect=fail_connection,

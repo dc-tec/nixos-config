@@ -49,7 +49,7 @@
           if config.dc-tec.isDarwin then
             null
           else if config.dc-tec.graphical.enable or false then
-            pkgs.pinentry-gtk2
+            pkgs.pinentry-gnome3
           else
             pkgs.pinentry-curses;
         extraConfig =

@@ -26,6 +26,41 @@ The VM uses `10.78.0.10/24` behind the host-only `br-dev` bridge. Forge
 provides outbound NAT. SSH is proxied only from WireGuard
 `10.77.0.1:2222`; the workstation does not need a route to the guest subnet.
 
+## OpenBao demo access
+
+Forge also forwards two TCP ports to the dedicated OpenBao Operator demo in
+`forge-dev`:
+
+| Listener | Guest destination | Purpose |
+| --- | --- | --- |
+| `10.77.0.1:8443` | `10.78.0.10:28443` | Demo browser services through the Kubernetes Gateway |
+| `10.77.0.1:28643` | `10.78.0.10:28643` | Dedicated demo Kubernetes API |
+
+`modules/nixos/server/forge/demo-access.nix` declares the
+`openbao-demo-gateway.socket` and `openbao-demo-api.socket` units. They start at
+boot and bind only to Forge's WireGuard address. The firewall permits these
+ports only from the workstation at `10.77.0.2`. TLS terminates in the guest;
+Forge forwards the encrypted connection.
+
+These listeners and firewall rules survive host reboots and firewall reloads.
+The guest must still be running with its encrypted storage unlocked. The
+demo repository's `make forge-access` command is a compatibility recovery tool
+for older host generations; the NixOS configuration owns normal access.
+
+After activating Forge, check the sockets and their listener addresses:
+
+```console
+ssh roelc@10.77.0.1 systemctl status openbao-demo-gateway.socket openbao-demo-api.socket
+ssh roelc@10.77.0.1 "ss -ltn '( sport = :8443 or sport = :28643 )'"
+```
+
+From the demo checkout on the workstation, verify Kubernetes and browser access:
+
+```console
+kubectl --kubeconfig .state/kubeconfig --context k3d-openbao-operator-demo get nodes
+curl --cacert .state/demo-ca.crt https://grafana.operator-demo.decort.tech:8443/api/health
+```
+
 ## Encryption Boundary
 
 The guest root disk and durable data disk live inside the 150 GiB sparse LUKS2
@@ -90,6 +125,9 @@ ssh roelc@10.77.0.1 sudo virsh --connect qemu:///system list --all
 ```
 
 After acceptance, repeat the rebuild with `switch`.
+
+The guest service does not restart when its helper store paths change. Restart
+`forge-dev-vm.service` only when a guest shutdown is intended.
 
 ## One-time Bootstrap
 

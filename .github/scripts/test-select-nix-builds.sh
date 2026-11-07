@@ -71,7 +71,7 @@ assert_selection \
 
 assert_selection \
   forge-only \
-  modules/nixos/server/forge/tangled.nix \
+  modules/nixos/server/forge/cache.nix \
   forge \
   '{"darwin":false,"hosts":["forge"]}'
 
@@ -88,8 +88,14 @@ assert_selection \
   '{"darwin":true,"hosts":[]}'
 
 assert_selection \
+  security-shell-tests \
+  checks/test-filter-ca-bundle.sh \
+  same \
+  '{"darwin":true,"hosts":[]}'
+
+assert_selection \
   linux-evaluation-failure \
-  modules/nixos/server/forge/tangled.nix \
+  modules/nixos/server/forge/cache.nix \
   fail \
   '{"darwin":false,"hosts":["legion","chad","ghost","forge"]}'
 

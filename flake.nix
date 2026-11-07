@@ -61,16 +61,6 @@
       url = "github:dc-tec/nixvim";
     };
     niks-cli.url = "github:dc-tec/niks-cli";
-    flake-compat = {
-      url = "github:NixOS/flake-compat";
-      flake = false;
-    };
-    tangled = {
-      url = "git+https://tangled.org/tangled.org/core?ref=refs/tags/v1.16.1-alpha";
-      inputs.flake-compat.follows = "flake-compat";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
-
     # Others
     nur.url = "github:nix-community/NUR";
     pre-commit-hooks = {
@@ -146,6 +136,8 @@
         sops-nix.darwinModules.sops
 
         ./modules/darwin
+        ./modules/build-compatibility.nix
+        ./modules/security/emudhra.nix
       ];
 
       nixosHostModules = {
@@ -175,6 +167,8 @@
           modules = [
             inputs.disko.nixosModules.disko
             ./modules/nixos/server
+            ./modules/build-compatibility.nix
+            ./modules/security/emudhra.nix
             hostModule
           ];
         };
@@ -242,6 +236,18 @@
               nixfmt.enable = true;
             };
           };
+          emudhra-security = import ./checks/emudhra-security.nix {
+            inherit system;
+            hosts =
+              if system == "aarch64-darwin" then
+                [ self.darwinConfigurations.darwin ]
+              else
+                [
+                  self.nixosConfigurations.forge
+                  self.nixosConfigurations.forge-dev
+                  self.nixosConfigurations.chad
+                ];
+          };
           ci-build-selection =
             let
               pkgs = mkPkgs system;
@@ -303,9 +309,12 @@
           chad = inputs.nixpkgs-chad.lib.nixosSystem {
             specialArgs = { inherit publicKeys; };
             modules = [
+              inputs.disko.nixosModules.disko
               impermanence.nixosModule
               ./modules/nixos/server
               ./machines/chad/default.nix
+              ./modules/build-compatibility.nix
+              ./modules/security/emudhra.nix
             ];
           };
           forge = mkNixosServerConfiguration ./machines/forge/default.nix;
