@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -7,6 +8,20 @@
 {
   config = {
     home-manager.users.${config.dc-tec.user.name} = {
+      # Lazygit cannot migrate theme files in the read-only Nix store.
+      catppuccin.sources.lazygit =
+        inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.lazygit.overrideAttrs
+          (old: {
+            nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.yq-go ];
+            postInstall = (old.postInstall or "") + ''
+              for theme in "$out"/*/*.yml; do
+                yq -i 'with(select(.gui.authorColors != null);
+                  .gui.theme.authorColors = .gui.authorColors | del(.gui.authorColors)
+                )' "$theme"
+              done
+            '';
+          });
+
       programs = {
         git = {
           enable = true;
